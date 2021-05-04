@@ -1,0 +1,52 @@
+{
+	"info": {
+		"_postman_id": "15d8dd5d-5c37-4249-8375-5332f1b49c6c",
+		"name": "Server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "[Category] Findall",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:65320/api/category/findall",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "65320",
+					"path": [
+						"api",
+						"category",
+						"findall"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Product] searchByCategoryID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:65320/api/product/search/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "65320",
+					"path": [
+						"api",
+						"product",
+						"search",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
