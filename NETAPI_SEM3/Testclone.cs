@@ -7,5 +7,9 @@ namespace NETAPI_SEM3
 {
 	public class Testclone
 	{
+		private Testclone()
+		{
+
+		}
 	}
 }
