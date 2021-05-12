@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NETAPI_SEM3.Controllers
 {
-	[Route("api/demo")]
+	[Route("api/admin")]
 	public class DemoController : Controller
 	{
 		private DemoService demoService;
@@ -18,12 +18,12 @@ namespace NETAPI_SEM3.Controllers
 		}
 
 		[Produces("application/json")]
-		[HttpGet("demo1")]
-		public IActionResult Demo1()
+		[HttpGet("getAllNews")]
+		public IActionResult getAllNews()
 		{
 			try
 			{
-				return Ok();
+				return Ok(demoService.getAllNews());
 			}
 			catch
 			{
