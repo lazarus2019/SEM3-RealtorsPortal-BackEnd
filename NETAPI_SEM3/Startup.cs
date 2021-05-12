@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NETAPI_SEM3.Middlewares;
+using NETAPI_SEM3.Models;
 using NETAPI_SEM3.Services;
 using System;
 using System.Collections.Generic;
@@ -29,7 +31,7 @@ namespace NETAPI_SEM3
 
 			// Khai bao ket noi database
 			var connectionString = configuration.GetConnectionString("DefaultConnection");
-			//services.AddDbContext<MyDBContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
+			services.AddDbContext<ProjectSem3DBContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
 			services.AddScoped<DemoService, DemoServiceImpl>();
 		}
 
@@ -39,6 +41,14 @@ namespace NETAPI_SEM3
 			{
 				app.UseDeveloperExceptionPage();
 			}
+
+			app.UseCors(builder => builder
+				.AllowAnyHeader()
+				.AllowAnyMethod()
+				.SetIsOriginAllowed((host) => true)
+				.AllowCredentials()
+			);
+			app.UseMiddleware<CorsMiddleware>();
 
 			app.UseRouting();
 			app.UseStaticFiles();
