@@ -28,11 +28,13 @@ namespace NETAPI_SEM3
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
+			services.AddControllers().AddNewtonsoftJson(options =>
+		options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 			// Khai bao ket noi database
 			var connectionString = configuration.GetConnectionString("DefaultConnection");
 			services.AddDbContext<ProjectSem3DBContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
-			services.AddScoped<DemoService, DemoServiceImpl>();
+			services.AddScoped<NewsService, NewsServiceImpl>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

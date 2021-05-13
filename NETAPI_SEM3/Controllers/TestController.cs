@@ -7,29 +7,27 @@ using System.Threading.Tasks;
 
 namespace NETAPI_SEM3.Controllers
 {
-	[Route("api/admin")]
-	public class DemoController : Controller
+	[Route("api/test")]
+	public class TestController : Controller
 	{
-		private DemoService demoService;
+		private NewsService newsService;
 
-		public DemoController(DemoService _demoService)
+		public TestController(NewsService _newsService)
 		{
-			demoService = _demoService;
+			newsService = _newsService;
 		}
-
 		[Produces("application/json")]
-		[HttpGet("getAllNews")]
-		public IActionResult getAllNews()
+		[HttpGet("getAllNewsCategory")]
+		public IActionResult getAllNewsCategory()
 		{
 			try
 			{
-				return Ok(demoService.getAllNews());
+				return Ok(newsService.getAllNewsCategory());
 			}
 			catch
 			{
 				return BadRequest();
 			}
 		}
-
 	}
 }

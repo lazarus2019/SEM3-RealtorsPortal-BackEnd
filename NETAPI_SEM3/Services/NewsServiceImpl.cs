@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace NETAPI_SEM3.Services
 {
-	public class DemoServiceImpl : DemoService
+	public class NewsServiceImpl : NewsService
 	{
 		#region Injection DB
 
 		private ProjectSem3DBContext db;
 
-		public DemoServiceImpl(ProjectSem3DBContext _db)
+		public NewsServiceImpl(ProjectSem3DBContext _db)
 		{
 			db = _db;
 		}
 
-		public bool addNews(News news)
+		public bool createNews(News news)
 		{
 			try
 			{
@@ -34,7 +34,17 @@ namespace NETAPI_SEM3.Services
 
 		public bool deleteNew(int newId)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				var news = db.News.Find(newId);
+				db.News.Remove(news);
+				db.SaveChanges();
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
 		#endregion
@@ -52,9 +62,21 @@ namespace NETAPI_SEM3.Services
 					Id = news.Id,
 					Title = news.Title,
 					Description = news.Description,
+					CreatedDate = news.CreatedDate,
+					Status = news.Status,
 					CategoryName = category.Name
 				}).ToList();
 			return listNews;
+		}
+
+		public List<NewsCategory> getAllNewsCategory()
+		{
+			return db.NewsCategories.ToList();
+		}
+
+		public List<MyNews> sortFilterNews(string title, string category, bool status)
+		{
+			throw new NotImplementedException();
 		}
 
 		public bool updateNew(News news)
