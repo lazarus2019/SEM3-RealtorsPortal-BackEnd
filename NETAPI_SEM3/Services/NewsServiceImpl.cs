@@ -47,6 +47,21 @@ namespace NETAPI_SEM3.Services
 			}
 		}
 
+		public MyNews findNews(int newsId)
+		{
+			var news = db.News.Find(newsId);
+			MyNews newsReturn = new MyNews
+			{
+				Id = news.Id,
+				Description = news.Description,
+				CategoryName = news.Category.Name,
+				CreatedDate = news.CreatedDate,
+				Status = news.Status,
+				Title = news.Title
+			};
+				return newsReturn;
+		}
+
 		#endregion
 
 		#region findAll
@@ -74,14 +89,33 @@ namespace NETAPI_SEM3.Services
 			return db.NewsCategories.ToList();
 		}
 
-		public List<MyNews> sortFilterNews(string title, string category, bool status)
+		public List<MyNews> sortFilterNews(string title, string category, string status)
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool updateNew(News news)
+		public bool updateNews(News news)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				var oldNews = db.News.Find(news.Id);
+				if(oldNews != null)
+				{
+					oldNews.Description = news.Description;
+					oldNews.Title = news.Title;
+					oldNews.CategoryId = news.CategoryId;
+					db.SaveChanges();
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
 		#endregion
