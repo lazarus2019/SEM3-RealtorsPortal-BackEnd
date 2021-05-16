@@ -13,8 +13,9 @@ namespace NETAPI_SEM3.Data
     {
         public AutoMapperProfile()
         {
-            CreateMap<MemberViewModel, Member>().ReverseMap();
             CreateMap<PropertyViewModel, Property>().ReverseMap();
+            CreateMap<MemberViewModel, Member>().ReverseMap();
+            CreateMap<AdspackageViewModel, AdPackage>().ReverseMap();
         }
     }
 }

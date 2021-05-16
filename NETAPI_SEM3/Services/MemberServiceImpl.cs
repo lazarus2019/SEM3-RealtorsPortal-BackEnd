@@ -20,7 +20,6 @@ namespace NETAPI_SEM3.Services
 
         public IEnumerable<Member> GetAllMember()
         {
-            //return _db.Members.Join(_db.Roles, m => m.RoleId, r => r.RoleId, (m, r) => m).ToList();
             return _db.Members.Include(m => m.Role).ToList();
         }
     }

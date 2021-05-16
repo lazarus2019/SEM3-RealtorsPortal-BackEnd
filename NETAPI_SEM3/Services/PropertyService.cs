@@ -10,6 +10,7 @@ namespace NETAPI_SEM3.Services
     {
         public IEnumerable<Property> GetAllProperty();
         public Property GetPropertyByid(int id);
-        public bool UpdateStatus(int id, Property property);
+        public bool DeleteProperty(int id);
+        public Property UpdateProperty(Property property);
     }
 }

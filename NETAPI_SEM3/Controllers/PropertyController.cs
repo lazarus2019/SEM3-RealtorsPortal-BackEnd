@@ -5,6 +5,7 @@ using NETAPI_SEM3.Services;
 using NETAPI_SEM3.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -40,7 +41,10 @@ namespace NETAPI_SEM3.Controllers
         {
             try
             {
-                return Ok(_propertyService.GetPropertyByid(id));
+                var property = _propertyService.GetPropertyByid(id);
+                Debug.WriteLine("member: " + property.Member.FullName);
+                return Ok(_mapper.Map<Property, PropertyViewModel>(property));
+                //return Ok(_propertyService.GetPropertyByid(id));
             }
             catch
             {
@@ -48,15 +52,13 @@ namespace NETAPI_SEM3.Controllers
             }
         }
 
-        [HttpPut]
-        public IActionResult UpdateStatus(int id, [FromBody] PropertyViewModel model)
+        [HttpPut("updateStatus")]
+        public IActionResult UpdateStatus([FromBody] PropertyViewModel model)
         {
             try
             {
-                var newProperty = _mapper.Map<PropertyViewModel, Property>(model);
-                var result = _propertyService.GetPropertyByid(id);
-
-                return Ok(_mapper.Map<Property, PropertyViewModel>(newProperty));
+                var property =  _propertyService.UpdateProperty(_mapper.Map<PropertyViewModel, Property>(model));
+                return Ok(null);
 
             }
             catch
@@ -64,5 +66,55 @@ namespace NETAPI_SEM3.Controllers
                 return BadRequest();
             }
         }
+        
+        [HttpPut("update")]
+        public IActionResult UpdateProperty([FromBody] PropertyViewModel model)
+        {
+            try
+            {
+                var property =  _propertyService.UpdateProperty(_mapper.Map<PropertyViewModel, Property>(model));
+                return Ok(property);
+
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+             
+        [HttpDelete("{id:int}")]
+        public IActionResult DeleteProperty(int id)
+        {
+            try
+            {
+                Debug.WriteLine("id: " + id);
+                return Ok(_propertyService.DeleteProperty(id));
+
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        
+        [HttpPost()]
+        public IActionResult AddNewProperty([FromBody] PropertyViewModel model)
+        {
+            try
+            {
+                foreach(var image in model.PropertyImagePath)
+                {
+                    Debug.WriteLine("image: " + image);
+                }
+                return Ok(_mapper.Map<PropertyViewModel, Property>(model));
+
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+
     }
 }
