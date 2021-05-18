@@ -51,7 +51,7 @@ namespace NETAPI_SEM3.Services
 					CreatedDate = news.CreatedDate,
 					Status = news.Status,
 					CategoryName = category.Name,
-					ThumbnailName = db.NewsImages.First(image=> image.NewsId == news.Id).Name
+					ThumbnailName = db.NewsImages.First(image => image.NewsId == news.Id).Name
 				}).ToList();
 			return listNews;
 		}
@@ -164,12 +164,6 @@ namespace NETAPI_SEM3.Services
 			return db.NewsImages.Where(image => image.NewsId == newsId).ToList();
 		}
 
-		public string getThumbnailNews(int newsId)
-		{
-			return db.NewsImages.First(image => image.NewsId == newsId).Name;
-		}
-
 		#endregion
-
 	}
 }
