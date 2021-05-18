@@ -33,6 +33,20 @@ namespace NETAPI_SEM3.Controllers
 			}
 		}
 
+		[Produces("application/json")]
+		[HttpGet("findNews/{newsId}")]
+		public IActionResult findNews(int newsId)
+		{
+			try
+			{
+				return Ok(newsService.findNews(newsId));
+			}
+			catch
+			{
+				return BadRequest();
+			}
+		}
+
 		[Produces("text/plain")]
 		[HttpDelete("delete/{newId}")]
 		public IActionResult deleteNews(int newId)
@@ -58,7 +72,27 @@ namespace NETAPI_SEM3.Controllers
 		{
 			try
 			{
-				if (newsService.createNews(news))
+				var returnId = newsService.createNews(news);
+				if (returnId != 0)
+				{
+					return Ok(returnId);
+				}
+				return BadRequest();
+			}
+			catch
+			{
+				return BadRequest();
+			}
+		}
+
+		[Produces("application/json")]
+		[HttpPut("updateNews")]
+		[Consumes("application/json")]
+		public IActionResult updateNews([FromBody] News news)
+		{
+			try
+			{
+				if (newsService.updateNews(news))
 				{
 					return Ok();
 				}
@@ -71,12 +105,12 @@ namespace NETAPI_SEM3.Controllers
 		}
 
 		[Produces("application/json")]
-		[HttpGet("sortFilterNews/{title}/{category}/status")]
-		public IActionResult sortFilterNews(string title, string category, bool status)
+		[HttpGet("sortFilterNews/{title}/{category}/{status}")]
+		public IActionResult sortFilterNews(string title, string category, string status)
 		{
 			try
 			{
-				return Ok(newsService.getAllNews());
+				return Ok(newsService.sortFilterNews(title, category, status));
 			}
 			catch
 			{
@@ -91,6 +125,20 @@ namespace NETAPI_SEM3.Controllers
 			try
 			{
 				return Ok(newsService.getAllNewsCategory());
+			}
+			catch
+			{
+				return BadRequest();
+			}
+		}
+
+		[Produces("application/json")]
+		[HttpGet("getGallery/{newsId}")]
+		public IActionResult getGallery(int newsId)
+		{
+			try
+			{
+				return Ok(newsService.getGallery(newsId));
 			}
 			catch
 			{

@@ -18,13 +18,76 @@ namespace NETAPI_SEM3.Services
 			db = _db;
 		}
 
-		public bool createNews(News news)
+		#endregion
+
+		#region News CRUD
+
+		public int createNews(News news)
 		{
 			try
 			{
 				db.News.Add(news);
 				db.SaveChanges();
-				return true;
+				var lastId = db.News.Max(news => news.Id);
+				return lastId;
+			}
+			catch
+			{
+				return 0;
+			}
+		}
+
+		public List<MyNews> getAllNews()
+		{
+			var listNews = db.News.Join(
+				db.NewsCategories,
+				news => news.CategoryId,
+				category => category.Id,
+				(news, category) => new MyNews
+				{
+					Id = news.Id,
+					Title = news.Title,
+					Description = news.Description,
+					CreatedDate = news.CreatedDate,
+					Status = news.Status,
+					CategoryName = category.Name,
+					ThumbnailName = db.NewsImages.First(image=> image.NewsId == news.Id).Name
+				}).ToList();
+			return listNews;
+		}
+
+		public MyNews findNews(int newsId)
+		{
+			var news = db.News.Find(newsId);
+			MyNews newsReturn = new MyNews
+			{
+				Id = news.Id,
+				Description = news.Description,
+				CategoryName = news.Category.Name,
+				CreatedDate = news.CreatedDate,
+				Status = news.Status,
+				Title = news.Title
+			};
+			return newsReturn;
+		}
+
+		public bool updateNews(News news)
+		{
+			try
+			{
+				var oldNews = db.News.Find(news.Id);
+				if (oldNews != null)
+				{
+					oldNews.Description = news.Description;
+					oldNews.Title = news.Title;
+					oldNews.CategoryId = news.CategoryId;
+					db.SaveChanges();
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 			catch
 			{
@@ -47,77 +110,66 @@ namespace NETAPI_SEM3.Services
 			}
 		}
 
-		public MyNews findNews(int newsId)
+		#endregion
+
+		#region News Sort & Filter
+
+		public List<MyNews> sortFilterNews(string title, string category, string status)
 		{
-			var news = db.News.Find(newsId);
-			MyNews newsReturn = new MyNews
+			var rawListNews = new List<News>();
+			if (title.Equals(".all"))
 			{
-				Id = news.Id,
-				Description = news.Description,
-				CategoryName = news.Category.Name,
-				CreatedDate = news.CreatedDate,
-				Status = news.Status,
-				Title = news.Title
-			};
-				return newsReturn;
+				rawListNews = db.News.ToList();
+			}
+			else
+			{
+				rawListNews = db.News.Where(news => news.Title.ToLower().Contains(title.ToLower())).ToList();
+			}
+			if (!category.Equals("all"))
+			{
+				rawListNews = rawListNews.Where(news => news.Category.Name.ToLower().Equals(category.ToLower())).ToList();
+			}
+			if (!status.Equals("all"))
+			{
+				rawListNews = rawListNews.Where(news => news.Status.ToLower().Equals(status.ToLower())).ToList();
+			}
+			var listNews = rawListNews.Join(
+					db.NewsCategories,
+					news => news.CategoryId,
+					category => category.Id,
+					(news, category) => new MyNews
+					{
+						Id = news.Id,
+						Title = news.Title,
+						Description = news.Description,
+						CreatedDate = news.CreatedDate,
+						Status = news.Status,
+						CategoryName = category.Name
+					}).ToList();
+			return listNews;
+
 		}
 
 		#endregion
 
-		#region findAll
-
-		public List<MyNews> getAllNews()
-		{
-			var listNews = db.News.Join(
-				db.NewsCategories,
-				news => news.CategoryId,
-				category => category.Id,
-				(news, category) => new MyNews
-				{
-					Id = news.Id,
-					Title = news.Title,
-					Description = news.Description,
-					CreatedDate = news.CreatedDate,
-					Status = news.Status,
-					CategoryName = category.Name
-				}).ToList();
-			return listNews;
-		}
+		#region NewsCategory, Gallery, Thumbnail
 
 		public List<NewsCategory> getAllNewsCategory()
 		{
 			return db.NewsCategories.ToList();
 		}
 
-		public List<MyNews> sortFilterNews(string title, string category, string status)
+		public List<NewsImage> getGallery(int newsId)
 		{
-			throw new NotImplementedException();
+			return db.NewsImages.Where(image => image.NewsId == newsId).ToList();
 		}
 
-		public bool updateNews(News news)
+		public string getThumbnailNews(int newsId)
 		{
-			try
-			{
-				var oldNews = db.News.Find(news.Id);
-				if(oldNews != null)
-				{
-					oldNews.Description = news.Description;
-					oldNews.Title = news.Title;
-					oldNews.CategoryId = news.CategoryId;
-					db.SaveChanges();
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			catch
-			{
-				return false;
-			}
+			return db.NewsImages.First(image => image.NewsId == newsId).Name;
 		}
 
 		#endregion
+
 	}
 }

@@ -12,7 +12,7 @@ namespace NETAPI_SEM3.Services
 		public List<MyNews> getAllNews();
 		public MyNews findNews(int newsId);
 
-		public bool createNews(News news);
+		public int createNews(News news);
 
 		public bool updateNews(News news);
 
@@ -21,5 +21,8 @@ namespace NETAPI_SEM3.Services
 		public List<MyNews> sortFilterNews(string title, string category, string status);
 
 		public List<NewsCategory> getAllNewsCategory();
+
+		public List<NewsImage> getGallery(int newsId);
+		public string getThumbnailNews(int newsId);
 	}
 }
