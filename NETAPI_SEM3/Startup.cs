@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +36,16 @@ namespace NETAPI_SEM3
 			var connectionString = configuration.GetConnectionString("DefaultConnection");
 			services.AddDbContext<ProjectSem3DBContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
 			services.AddScoped<NewsService, NewsServiceImpl>();
+			services.AddScoped<NewsImageService, NewsImageServiceImpl>();
+
+
+			// Upload Image
+			services.Configure<FormOptions>(o =>
+			{
+				o.ValueLengthLimit = int.MaxValue;
+				o.MultipartBodyLengthLimit = int.MaxValue;
+				o.MemoryBufferThreshold = int.MaxValue;
+			});
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -52,8 +63,11 @@ namespace NETAPI_SEM3
 			);
 			app.UseMiddleware<CorsMiddleware>();
 
-			app.UseRouting();
+			// Upload Image
 			app.UseStaticFiles();
+
+
+			app.UseRouting();
 
 			app.UseEndpoints(endpoints =>
 			{
