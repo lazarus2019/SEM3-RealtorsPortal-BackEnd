@@ -28,6 +28,7 @@ namespace NETAPI_SEM3.Models
         public int CategoryId { get; set; }
         public int? MemberId { get; set; }
         public string Description { get; set; }
+        public int? Test { get; set; }
 
         public virtual Category Category { get; set; }
         public virtual City City { get; set; }

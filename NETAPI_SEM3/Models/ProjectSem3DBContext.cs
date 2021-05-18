@@ -28,6 +28,7 @@ namespace NETAPI_SEM3.Models
         public virtual DbSet<MemberPackageDetail> MemberPackageDetails { get; set; }
         public virtual DbSet<News> News { get; set; }
         public virtual DbSet<NewsCategory> NewsCategories { get; set; }
+        public virtual DbSet<NewsImage> NewsImages { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<Property> Properties { get; set; }
         public virtual DbSet<PropertyImage> PropertyImages { get; set; }
@@ -298,6 +299,10 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.Description).HasColumnType("text");
 
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Title)
                     .HasMaxLength(250)
                     .IsUnicode(false);
@@ -315,6 +320,22 @@ namespace NETAPI_SEM3.Models
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<NewsImage>(entity =>
+            {
+                entity.ToTable("News_Image");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NewsId).HasColumnName("News_Id");
+
+                entity.HasOne(d => d.News)
+                    .WithMany(p => p.NewsImages)
+                    .HasForeignKey(d => d.NewsId)
+                    .HasConstraintName("FK_News_Image_News");
             });
 
             modelBuilder.Entity<Payment>(entity =>
@@ -372,6 +393,8 @@ namespace NETAPI_SEM3.Models
                     .HasColumnName("Sold_Date");
 
                 entity.Property(e => e.StatusId).HasColumnName("Status_Id");
+
+                entity.Property(e => e.Test).HasColumnName("test");
 
                 entity.Property(e => e.Title).HasColumnType("text");
 
@@ -458,9 +481,39 @@ namespace NETAPI_SEM3.Models
 
             modelBuilder.Entity<Setting>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.ToTable("Setting");
 
-                entity.Property(e => e.SettingId).HasColumnName("Setting_Id");
+                entity.Property(e => e.AboutUsTitle)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Address)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Description).HasColumnType("text");
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Phone)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Reviews).HasColumnType("text");
+
+                entity.Property(e => e.Services)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ThumbnailAboutUs).HasColumnType("text");
+
+                entity.Property(e => e.ThumbnailHome).HasColumnType("text");
+
+                entity.Property(e => e.ThumbnailWebsite).HasColumnType("text");
             });
 
             modelBuilder.Entity<Status>(entity =>
