@@ -9,7 +9,9 @@ namespace NETAPI_SEM3.Services.User
 {
     public interface IndexService 
     {
-        public List<Property> LoadTopProperty() ;
+        public List<NewProperty> LoadTopProperty() ;
+        public List<Country> LoadCountries();
+        public List<Category> LoadCategories();
         public List<PopularLocations> LoadPopularLocations(); 
     }
 }

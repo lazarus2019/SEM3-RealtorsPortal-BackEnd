@@ -37,6 +37,7 @@ namespace NETAPI_SEM3
             services.AddDbContext<DatabaseContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
             services.AddScoped<IndexService, IndexServiceImpl>();
             services.AddScoped<ListingService, ListingServiceImpl>();
+            services.AddScoped<CategoryService, CategoryServiceImpl>();
 
         }
 

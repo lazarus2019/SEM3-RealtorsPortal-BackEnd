@@ -23,12 +23,26 @@ namespace NETAPI_SEM3.Controllers.User
         {
             try
             {
-                var listings = listingService.getAll();
+                var listings = listingService.GetAllListing();
                 return Ok(listings); 
             }
             catch 
             {
                 return BadRequest(); 
+            }
+        }
+        [Produces("application/json")]
+        [HttpGet("propertydetail/{propertyId}")]
+        public IActionResult PropertyDetail(int propertyId)
+        {
+            try
+            {
+                var detail = listingService.PropertyDetail(propertyId);
+                return Ok(detail);
+            }
+            catch
+            {
+                return BadRequest();
             }
         }
     }

@@ -24,13 +24,12 @@ namespace NETAPI_SEM3.Controllers.User
         {
             try
             {
-                var properties = indexService.LoadTopProperty(); 
-                
+                var properties = indexService.LoadTopProperty();                 
                 return Ok(properties);
             }
-            catch
+            catch( Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
         [Produces("application/json")]
@@ -42,6 +41,32 @@ namespace NETAPI_SEM3.Controllers.User
                 var categories = indexService.LoadPopularLocations(); 
                 
                 return Ok(categories);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("loadcountries")]
+        public IActionResult LoadCountries()
+        {
+            try
+            {
+                var countries = indexService.LoadCountries();
+                return Ok(countries); 
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("loadcategories")]
+        public IActionResult LoadCategories()
+        {
+            try
+            {
+                var countries = indexService.LoadCategories();
+                return Ok(countries); 
             }
             catch
             {

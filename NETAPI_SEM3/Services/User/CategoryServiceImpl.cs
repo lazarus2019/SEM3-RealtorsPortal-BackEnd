@@ -2,48 +2,28 @@
 using NETAPI_SEM3.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace NETAPI_SEM3.Services.User
 {
-    public class IndexServiceImpl : IndexService
+    public class CategoryServiceImpl : CategoryService
     {
         private DatabaseContext db;
-        public IndexServiceImpl(DatabaseContext _db)
+        public CategoryServiceImpl(DatabaseContext _db)
         {
             db = _db;
         }
 
-        public List<Category> LoadCategories()
+        public List<Category> getAllCategory()
         {
-            return db.Categories.ToList(); 
+            return db.Categories.ToList();
         }
 
-        public List<Country> LoadCountries()
+        public List<NewProperty> PropertyByCategory(int categoryId)
         {
-            return db.Countries.ToList(); 
-        }
-
-        public List<PopularLocations> LoadPopularLocations()
-        {
-            return db.Cities.Select(
-                c => new PopularLocations
-                {
-                    CityId = c.CityId,
-                    Name = c.Name,
-                    NumberProperties = c.Properties.Count()
-                }).OrderByDescending( c=> c.NumberProperties).Take(4).ToList();
-        }
-
-        public List<NewProperty> LoadTopProperty()
-        {
-            var results = db.Properties
-                .OrderByDescending(p => p.UploadDate)
-                .OrderBy(p => p.Price)
-                .OrderByDescending(p => p.Area)
-                .Take(6).Select(p => new NewProperty
+            return db.Properties.Where(p => p.CategoryId == categoryId).Select(
+                p => new NewProperty
                 {
                     PropertyId = p.PropertyId,
                     Address = p.Address,
@@ -56,6 +36,7 @@ namespace NETAPI_SEM3.Services.User
                     Description = p.Description,
                     MemberId = p.MemberId,
                     MemberName = p.Member.FullName,
+                    MemberType = p.Member.Role.Name,
                     Price = (double)p.Price,
                     RoomNumber = p.RoomNumber,
                     SoldDate = p.SoldDate,
@@ -64,13 +45,9 @@ namespace NETAPI_SEM3.Services.User
                     StatusName = p.Status.Name,
                     Title = p.Title,
                     Type = p.Type,
-                    Images = p.PropertyImages.ToList()
-                })
-                .ToList();
 
-            return results;
-            /*
-                */
+                    Images = p.PropertyImages.ToList()
+                }).ToList(); 
         }
     }
 }
