@@ -9,7 +9,7 @@ namespace NETAPI_SEM3.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int? NewsId { get; set; }
+        public int NewsId { get; set; }
 
         public virtual News News { get; set; }
     }
