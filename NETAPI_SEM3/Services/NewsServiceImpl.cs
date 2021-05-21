@@ -63,6 +63,7 @@ namespace NETAPI_SEM3.Services
 			{
 				Id = news.Id,
 				Description = news.Description,
+				CategoryId = news.CategoryId,
 				CategoryName = news.Category.Name,
 				CreatedDate = news.CreatedDate,
 				Status = news.Status,

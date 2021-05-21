@@ -1,6 +1,7 @@
 ﻿using NETAPI_SEM3.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,6 +19,8 @@ namespace NETAPI_SEM3.Services
 		}
 
 		#endregion
+
+		#region News Image - Create & Delete
 		public bool createNewsImage(NewsImage image)
 		{
 			try
@@ -31,5 +34,21 @@ namespace NETAPI_SEM3.Services
 				return false;
 			}
 		}
+
+		public bool deleteNewsImage(int newsImageId)
+		{
+			try
+			{
+				var newsImage = db.NewsImages.Find(newsImageId);
+				db.NewsImages.Remove(newsImage);
+				db.SaveChanges();
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+		#endregion
 	}
 }
