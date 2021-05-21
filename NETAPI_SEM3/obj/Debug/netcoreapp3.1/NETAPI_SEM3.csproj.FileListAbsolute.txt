@@ -155,3 +155,6 @@ D:\NTS2019\SEM3_Project\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\obj\Debug\netcor
 D:\NTS2019\SEM3_Project\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\obj\Debug\netcoreapp3.1\NETAPI_SEM3.dll
 D:\NTS2019\SEM3_Project\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\obj\Debug\netcoreapp3.1\NETAPI_SEM3.pdb
 D:\NTS2019\SEM3_Project\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\obj\Debug\netcoreapp3.1\NETAPI_SEM3.genruntimeconfig.cache
+D:\NTS2019\SEM3_Project\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.JsonPatch.dll
+D:\NTS2019\SEM3_Project\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\NTS2019\SEM3_Project\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll

@@ -3,22 +3,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NETAPI_SEM3.Models;
 using NETAPI_SEM3.Services;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 namespace NETAPI_SEM3.Controllers
 {
 
-	[Route("api/upload")]
+	[Route("api/image")]
 	[ApiController]
 	public class ImageController : ControllerBase
 	{
+		#region Injection
 		private NewsImageService newsImageService;
 		private IWebHostEnvironment iwebHostEnvironment;
 
@@ -28,39 +25,40 @@ namespace NETAPI_SEM3.Controllers
 			newsImageService = _newsImageService;
 		}
 
+		#endregion
+
 		[DisableRequestSizeLimit]
-		[HttpPost("news/{newsId}")]
-		public IActionResult UploadNews(int newsId, IFormFile file)
+		[HttpPost("upload/{id}/{directName}")]
+		public IActionResult UploadImage(int id, string directName, IFormFile file)
 		{
 			try
 			{
-				Debug.WriteLine(newsId);
-				Debug.WriteLine(file.FileName);
-				var folderName = Path.Combine("images", "news");
+				var folderName = Path.Combine("images", directName);
 				var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
 				if (file.Length > 0)
 				{
 					var dateTime = DateTime.Now.ToString("ddMMyyyyHHmmss");
 					var fileName = dateTime + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-					var fullPath = Path.Combine(iwebHostEnvironment.WebRootPath, "images/news", fileName);
+					var fullPath = Path.Combine(iwebHostEnvironment.WebRootPath, "images/" + directName, fileName);
 					var dbPath = Path.Combine(folderName, fileName);
 
 					using (var stream = new FileStream(fullPath, FileMode.Create))
 					{
 						file.CopyTo(stream);
 					}
-					if (newsId != 0)
+					if (id != 0)
 					{
-						var image = new NewsImage
+						if (directName.ToLower().Equals("news"))
 						{
-							NewsId = newsId,
-							Name = fileName
-						};
-						var result = newsImageService.createNewsImage(image);
-						if (!result)
-						{
+							var result = createNewsImage(id, fileName);
+							if (!result)
+							{
 							return StatusCode(500, "Lỗi k tạo được newsImage");
+							}
+						}else if (directName.ToLower().Equals("property"))
+						{
+
 						}
 					}
 					else
@@ -81,5 +79,86 @@ namespace NETAPI_SEM3.Controllers
 				return StatusCode(500, $"Internal server error: {ex}");
 			}
 		}
-	}
+
+		[HttpDelete("delete/{id}/{name}/{directName}")]
+		public IActionResult DeleteImage(int id, string name, string directName)
+		{
+			var result = false;
+			if (directName.ToLower().Equals("news"))
+			{
+				result = deleteNewsImage(id);
+				if(!result)
+				{
+					return StatusCode(500, "Can not delete file in database");
+				}
+			}
+			if (directName.ToLower().Equals("property"))
+			{
+
+			}
+			
+			string fullPath = Path.Combine(iwebHostEnvironment.WebRootPath, "images/" + directName, name);
+
+			if (result)
+			{
+				if (System.IO.File.Exists(fullPath))
+				{
+					try
+					{
+					System.IO.File.Delete(fullPath);
+						return Ok();
+					}
+					catch
+					{
+						return StatusCode(500, "Can not delete file folder wwwroot");
+					}
+				}
+			}
+			else
+			{
+				return StatusCode(500, "Can not delete file in database");
+			}
+
+			return StatusCode(500, "Can not perform delete image in database & folder!");
+		}
+
+
+		#region Image News
+		public bool createNewsImage(int newsId, string fileName)
+		{
+			try
+			{
+				var image = new NewsImage
+				{
+					NewsId = newsId,
+					Name = fileName
+				};
+				var result = newsImageService.createNewsImage(image);
+				if (!result)
+				{
+					return false;
+				}
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+
+		}
+
+				public bool deleteNewsImage(int newsImageId)
+		{
+			if (newsImageService.deleteNewsImage(newsImageId))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		#endregion
+
+	} 
 }
