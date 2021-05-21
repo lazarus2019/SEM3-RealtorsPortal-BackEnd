@@ -35,8 +35,10 @@ namespace NETAPI_SEM3
 			// Khai bao ket noi database
 			var connectionString = configuration.GetConnectionString("DefaultConnection");
 			services.AddDbContext<ProjectSem3DBContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
+			// Add services
 			services.AddScoped<NewsService, NewsServiceImpl>();
 			services.AddScoped<NewsImageService, NewsImageServiceImpl>();
+			services.AddScoped<ProfileService, ProfileServiceImpl>();
 
 
 			// Upload Image
