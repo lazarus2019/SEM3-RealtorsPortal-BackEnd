@@ -4,12 +4,13 @@ using NETAPI_SEM3.Models;
 using NETAPI_SEM3.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace NETAPI_SEM3.Controllers
 {
-	[Route("api/admin")]
+	[Route("api/admin/news")]
 	public class NewsController : Controller
 	{
 		private NewsService newsService;
@@ -72,6 +73,11 @@ namespace NETAPI_SEM3.Controllers
 		{
 			try
 			{
+				Debug.WriteLine(news.CategoryId);
+				Debug.WriteLine(news.Description);
+				Debug.WriteLine(news.CreatedDate);
+				Debug.WriteLine(news.Status);
+				Debug.WriteLine(news.Title);
 				var returnId = newsService.createNews(news);
 				if (returnId != 0)
 				{

@@ -128,7 +128,7 @@ namespace NETAPI_SEM3.Controllers
 		{
 			try
 			{
-				var image = new NewsImage
+				var image = new Image
 				{
 					NewsId = newsId,
 					Name = fileName
