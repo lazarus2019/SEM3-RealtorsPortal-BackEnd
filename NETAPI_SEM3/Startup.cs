@@ -39,6 +39,7 @@ namespace NETAPI_SEM3
 			services.AddScoped<NewsService, NewsServiceImpl>();
 			services.AddScoped<NewsImageService, NewsImageServiceImpl>();
 			services.AddScoped<ProfileService, ProfileServiceImpl>();
+			services.AddScoped<FAQService, FAQServiceImpl>();
 
 
 			// Upload Image
