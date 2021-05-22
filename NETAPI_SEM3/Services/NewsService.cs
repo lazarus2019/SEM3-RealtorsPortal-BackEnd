@@ -22,6 +22,6 @@ namespace NETAPI_SEM3.Services
 
 		public List<NewsCategory> getAllNewsCategory();
 
-		public List<NewsImage> getGallery(int newsId);
+		public List<Image> getGallery(int newsId);
 	}
 }

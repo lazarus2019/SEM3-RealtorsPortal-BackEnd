@@ -8,7 +8,7 @@ namespace NETAPI_SEM3.Services
 {
 	public interface NewsImageService
 	{
-		public bool createNewsImage(NewsImage image);
+		public bool createNewsImage(Image image);
 
 		public bool deleteNewsImage(int newsImageId);
 	}

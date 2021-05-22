@@ -28,7 +28,7 @@ namespace NETAPI_SEM3.Services
 			{
 				db.News.Add(news);
 				db.SaveChanges();
-				var lastId = db.News.Max(news => news.Id);
+				var lastId = db.News.Max(news => news.NewsId);
 				return lastId;
 			}
 			catch
@@ -42,16 +42,16 @@ namespace NETAPI_SEM3.Services
 			var listNews = db.News.Join(
 				db.NewsCategories,
 				news => news.CategoryId,
-				category => category.Id,
+				category => category.NewsCategoryId,
 				(news, category) => new MyNews
 				{
-					Id = news.Id,
+					NewsId = news.NewsId,
 					Title = news.Title,
 					Description = news.Description,
 					CreatedDate = news.CreatedDate,
 					Status = news.Status,
 					CategoryName = category.Name,
-					ThumbnailName = db.NewsImages.First(image => image.NewsId == news.Id).Name
+					ThumbnailName = db.Images.First(image => image.NewsId == news.NewsId).Name
 				}).ToList();
 			return listNews;
 		}
@@ -61,7 +61,7 @@ namespace NETAPI_SEM3.Services
 			var news = db.News.Find(newsId);
 			MyNews newsReturn = new MyNews
 			{
-				Id = news.Id,
+				NewsId = news.NewsId,
 				Description = news.Description,
 				CategoryId = news.CategoryId,
 				CategoryName = news.Category.Name,
@@ -76,7 +76,7 @@ namespace NETAPI_SEM3.Services
 		{
 			try
 			{
-				var oldNews = db.News.Find(news.Id);
+				var oldNews = db.News.Find(news.NewsId);
 				if (oldNews != null)
 				{
 					oldNews.Description = news.Description;
@@ -137,10 +137,10 @@ namespace NETAPI_SEM3.Services
 			var listNews = rawListNews.Join(
 					db.NewsCategories,
 					news => news.CategoryId,
-					category => category.Id,
+					category => category.NewsCategoryId,
 					(news, category) => new MyNews
 					{
-						Id = news.Id,
+						NewsId = news.NewsId,
 						Title = news.Title,
 						Description = news.Description,
 						CreatedDate = news.CreatedDate,
@@ -160,9 +160,9 @@ namespace NETAPI_SEM3.Services
 			return db.NewsCategories.ToList();
 		}
 
-		public List<NewsImage> getGallery(int newsId)
+		public List<Image> getGallery(int newsId)
 		{
-			return db.NewsImages.Where(image => image.NewsId == newsId).ToList();
+			return db.Images.Where(image => image.NewsId == newsId).ToList();
 		}
 
 		#endregion

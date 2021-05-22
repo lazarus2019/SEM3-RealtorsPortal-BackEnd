@@ -21,11 +21,11 @@ namespace NETAPI_SEM3.Services
 		#endregion
 
 		#region News Image - Create & Delete
-		public bool createNewsImage(NewsImage image)
+		public bool createNewsImage(Image image)
 		{
 			try
 			{
-				db.NewsImages.Add(image);
+				db.Images.Add(image);
 				db.SaveChanges();
 				return true;
 			}
@@ -39,8 +39,8 @@ namespace NETAPI_SEM3.Services
 		{
 			try
 			{
-				var newsImage = db.NewsImages.Find(newsImageId);
-				db.NewsImages.Remove(newsImage);
+				var newsImage = db.Images.Find(newsImageId);
+				db.Images.Remove(newsImage);
 				db.SaveChanges();
 				return true;
 			}
