@@ -19,11 +19,14 @@ namespace NETAPI_SEM3.Models
         public int? RoleId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+        public string EmailPassword { get; set; }
         public string FullName { get; set; }
+        public string Phone { get; set; }
         public string Email { get; set; }
         public bool Status { get; set; }
         public string Photo { get; set; }
-        public DateTime Birthday { get; set; }
+        public DateTime CreateDate { get; set; }
+        public string VerifyCode { get; set; }
 
         public virtual Role Role { get; set; }
         public virtual ICollection<Invoice> InvoiceMemberAs { get; set; }

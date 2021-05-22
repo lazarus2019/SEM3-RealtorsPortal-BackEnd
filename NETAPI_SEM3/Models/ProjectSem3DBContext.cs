@@ -17,21 +17,21 @@ namespace NETAPI_SEM3.Models
         {
         }
 
+        public virtual DbSet<AboutU> AboutUs { get; set; }
         public virtual DbSet<AdPackage> AdPackages { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
-        public virtual DbSet<CustomerContact> CustomerContacts { get; set; }
+        public virtual DbSet<Faq> Faqs { get; set; }
+        public virtual DbSet<Image> Images { get; set; }
         public virtual DbSet<Invoice> Invoices { get; set; }
         public virtual DbSet<Mailbox> Mailboxes { get; set; }
         public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<MemberPackageDetail> MemberPackageDetails { get; set; }
         public virtual DbSet<News> News { get; set; }
         public virtual DbSet<NewsCategory> NewsCategories { get; set; }
-        public virtual DbSet<NewsImage> NewsImages { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<Property> Properties { get; set; }
-        public virtual DbSet<PropertyImage> PropertyImages { get; set; }
         public virtual DbSet<Region> Regions { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Setting> Settings { get; set; }
@@ -49,6 +49,19 @@ namespace NETAPI_SEM3.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<AboutU>(entity =>
+            {
+                entity.HasKey(e => e.AboutId);
+
+                entity.Property(e => e.AboutId).HasColumnName("About_Id");
+
+                entity.Property(e => e.Description).HasColumnType("text");
+
+                entity.Property(e => e.Question).HasColumnType("text");
+
+                entity.Property(e => e.Title).HasColumnType("text");
+            });
 
             modelBuilder.Entity<AdPackage>(entity =>
             {
@@ -110,34 +123,42 @@ namespace NETAPI_SEM3.Models
                 entity.Property(e => e.Name).HasColumnType("text");
             });
 
-            modelBuilder.Entity<CustomerContact>(entity =>
+            modelBuilder.Entity<Faq>(entity =>
             {
-                entity.HasKey(e => e.ContactId);
+                entity.ToTable("FAQ");
 
-                entity.ToTable("Customer_Contact");
+                entity.Property(e => e.FaqId).HasColumnName("FAQ_Id");
 
-                entity.Property(e => e.ContactId).HasColumnName("Contact_Id");
+                entity.Property(e => e.Description).HasColumnType("text");
 
-                entity.Property(e => e.CategoryId).HasColumnName("Category_Id");
-
-                entity.Property(e => e.CustomerContent)
-                    .HasColumnType("text")
-                    .HasColumnName("Customer_Content");
-
-                entity.Property(e => e.CustomerName)
-                    .HasMaxLength(150)
-                    .IsUnicode(false)
-                    .HasColumnName("Customer_Name");
-
-                entity.Property(e => e.CustomerPhone)
+                entity.Property(e => e.Title)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("Customer_Phone");
+                    .IsUnicode(false);
+            });
 
-                entity.HasOne(d => d.Category)
-                    .WithMany(p => p.CustomerContacts)
-                    .HasForeignKey(d => d.CategoryId)
-                    .HasConstraintName("FK_Customer_Contact_Category");
+            modelBuilder.Entity<Image>(entity =>
+            {
+                entity.ToTable("Image");
+
+                entity.Property(e => e.ImageId).HasColumnName("Image_Id");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NewsId).HasColumnName("News_Id");
+
+                entity.Property(e => e.PropertyId).HasColumnName("Property_Id");
+
+                entity.HasOne(d => d.News)
+                    .WithMany(p => p.Images)
+                    .HasForeignKey(d => d.NewsId)
+                    .HasConstraintName("FK_Image_News");
+
+                entity.HasOne(d => d.Property)
+                    .WithMany(p => p.Images)
+                    .HasForeignKey(d => d.PropertyId)
+                    .HasConstraintName("FK_Property_Image_Property");
             });
 
             modelBuilder.Entity<Invoice>(entity =>
@@ -223,11 +244,18 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.MemberId).HasColumnName("Member_Id");
 
-                entity.Property(e => e.Birthday).HasColumnType("date");
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("date")
+                    .HasColumnName("Create_Date");
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(250)
                     .IsUnicode(false);
+
+                entity.Property(e => e.EmailPassword)
+                    .HasMaxLength(250)
+                    .IsUnicode(false)
+                    .HasColumnName("Email_Password");
 
                 entity.Property(e => e.FullName)
                     .HasMaxLength(250)
@@ -235,6 +263,10 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.Password)
                     .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Phone)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Photo)
@@ -247,6 +279,11 @@ namespace NETAPI_SEM3.Models
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
+
+                entity.Property(e => e.VerifyCode)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("Verify_Code");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Members)
@@ -291,6 +328,8 @@ namespace NETAPI_SEM3.Models
 
             modelBuilder.Entity<News>(entity =>
             {
+                entity.Property(e => e.NewsId).HasColumnName("News_Id");
+
                 entity.Property(e => e.CategoryId).HasColumnName("Category_Id");
 
                 entity.Property(e => e.CreatedDate)
@@ -317,25 +356,11 @@ namespace NETAPI_SEM3.Models
             {
                 entity.ToTable("News_Category");
 
+                entity.Property(e => e.NewsCategoryId).HasColumnName("News_Category_Id");
+
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<NewsImage>(entity =>
-            {
-                entity.ToTable("News_Image");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.NewsId).HasColumnName("News_Id");
-
-                entity.HasOne(d => d.News)
-                    .WithMany(p => p.NewsImages)
-                    .HasForeignKey(d => d.NewsId)
-                    .HasConstraintName("FK_News_Image_News");
             });
 
             modelBuilder.Entity<Payment>(entity =>
@@ -368,19 +393,27 @@ namespace NETAPI_SEM3.Models
                 entity.Property(e => e.PropertyId).HasColumnName("Property_Id");
 
                 entity.Property(e => e.Address)
+                    .IsRequired()
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.BedNumber).HasColumnName("Bed_Number");
 
+                entity.Property(e => e.BuildYear)
+                    .HasColumnType("date")
+                    .HasColumnName("Build_Year");
+
                 entity.Property(e => e.CategoryId).HasColumnName("Category_Id");
 
                 entity.Property(e => e.CityId)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("City_Id");
 
                 entity.Property(e => e.Description).HasColumnType("text");
+
+                entity.Property(e => e.GoogleMap).HasColumnType("text");
 
                 entity.Property(e => e.MemberId).HasColumnName("Member_Id");
 
@@ -394,9 +427,14 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.StatusId).HasColumnName("Status_Id");
 
-                entity.Property(e => e.Test).HasColumnName("test");
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                entity.Property(e => e.Title).HasColumnType("text");
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UploadDate)
                     .HasColumnType("date")
@@ -411,39 +449,20 @@ namespace NETAPI_SEM3.Models
                 entity.HasOne(d => d.City)
                     .WithMany(p => p.Properties)
                     .HasForeignKey(d => d.CityId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Property_City");
 
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.Properties)
                     .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Property_Member");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Properties)
                     .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Property_Status");
-            });
-
-            modelBuilder.Entity<PropertyImage>(entity =>
-            {
-                entity.HasKey(e => e.ImageId);
-
-                entity.ToTable("Property_Image");
-
-                entity.Property(e => e.ImageId).HasColumnName("Image_Id");
-
-                entity.Property(e => e.Description).HasColumnType("text");
-
-                entity.Property(e => e.Path)
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PropertyId).HasColumnName("Property_Id");
-
-                entity.HasOne(d => d.Property)
-                    .WithMany(p => p.PropertyImages)
-                    .HasForeignKey(d => d.PropertyId)
-                    .HasConstraintName("FK_Property_Image_Property");
             });
 
             modelBuilder.Entity<Region>(entity =>

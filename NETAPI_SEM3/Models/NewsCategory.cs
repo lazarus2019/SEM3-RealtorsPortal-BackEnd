@@ -12,7 +12,7 @@ namespace NETAPI_SEM3.Models
             News = new HashSet<News>();
         }
 
-        public int Id { get; set; }
+        public int NewsCategoryId { get; set; }
         public string Name { get; set; }
 
         public virtual ICollection<News> News { get; set; }

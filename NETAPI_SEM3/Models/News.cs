@@ -9,17 +9,17 @@ namespace NETAPI_SEM3.Models
     {
         public News()
         {
-            NewsImages = new HashSet<NewsImage>();
+            Images = new HashSet<Image>();
         }
 
-        public int Id { get; set; }
+        public int NewsId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public int CategoryId { get; set; }
-        public DateTime? CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
         public string Status { get; set; }
 
         public virtual NewsCategory Category { get; set; }
-        public virtual ICollection<NewsImage> NewsImages { get; set; }
+        public virtual ICollection<Image> Images { get; set; }
     }
 }
