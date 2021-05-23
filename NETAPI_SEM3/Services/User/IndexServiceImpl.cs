@@ -64,13 +64,47 @@ namespace NETAPI_SEM3.Services.User
                     StatusName = p.Status.Name,
                     Title = p.Title,
                     Type = p.Type,
-                    Images = p.PropertyImages.ToList()
+                    Images = p.Images.ToList()
                 })
                 .ToList();
 
             return results;
             /*
                 */
+        }
+
+        public List<NewProperty> SearchProperty(string keyword, string category, string country)
+        {
+            var results = db.Properties
+                .Where(p => p.Title.ToLower().Contains(keyword.Trim().ToLower()) )
+                .Where(p => p.Category.Name.ToLower().Contains(category.Trim().ToLower()) )
+                .Where(p => p.City.Region.Country.Name.ToLower().Contains(country.Trim().ToLower()) )
+                .Select(p => new NewProperty
+                {
+                    PropertyId = p.PropertyId,
+                    Address = p.Address,
+                    Area = p.Area,
+                    BedNumber = p.BedNumber,
+                    CategoryId = p.CategoryId,
+                    CategoryName = p.Category.Name,
+                    CityId = p.CityId,
+                    CityName = p.City.Name,
+                    Description = p.Description,
+                    MemberId = p.MemberId,
+                    MemberName = p.Member.FullName,
+                    Price = (double)p.Price,
+                    RoomNumber = p.RoomNumber,
+                    SoldDate = p.SoldDate,
+                    UploadDate = p.UploadDate,
+                    StatusId = p.StatusId,
+                    StatusName = p.Status.Name,
+                    Title = p.Title,
+                    Type = p.Type,
+                    Images = p.Images.ToList()
+                })
+                .ToList();
+
+            return results;
         }
     }
 }

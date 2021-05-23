@@ -46,7 +46,7 @@ namespace NETAPI_SEM3.Services.User
                     Title = p.Title,
                     Type = p.Type,
 
-                    Images = p.PropertyImages.ToList()
+                    Images = p.Images.ToList()
                 }).ToList(); 
         }
     }

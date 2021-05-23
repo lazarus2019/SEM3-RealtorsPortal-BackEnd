@@ -30,6 +30,7 @@ namespace NETAPI_SEM3.Entities
         public string MemberName { get; set; }
         public string MemberType { get; set; }
         public string Description { get; set; }
-        public List<PropertyImage> Images { get; set; }
+        public List<Image> Images { get; set; }
+
     }
 }

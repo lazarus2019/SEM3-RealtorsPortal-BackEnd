@@ -9,9 +9,9 @@ namespace NETAPI_SEM3.Models
     {
         public Property()
         {
+            Images = new HashSet<Image>();
             Invoices = new HashSet<Invoice>();
             Mailboxes = new HashSet<Mailbox>();
-            PropertyImages = new HashSet<PropertyImage>();
         }
 
         public int PropertyId { get; set; }
@@ -36,8 +36,8 @@ namespace NETAPI_SEM3.Models
         public virtual City City { get; set; }
         public virtual Member Member { get; set; }
         public virtual Status Status { get; set; }
+        public virtual ICollection<Image> Images { get; set; }
         public virtual ICollection<Invoice> Invoices { get; set; }
         public virtual ICollection<Mailbox> Mailboxes { get; set; }
-        public virtual ICollection<PropertyImage> PropertyImages { get; set; }
     }
 }
