@@ -38,6 +38,9 @@ namespace NETAPI_SEM3
             services.AddScoped<IndexService, IndexServiceImpl>();
             services.AddScoped<ListingService, ListingServiceImpl>();
             services.AddScoped<CategoryService, CategoryServiceImpl>();
+            services.AddScoped<MailboxService, MailboxServiceImpl>();
+            services.AddScoped<UserService,UserServiceImpl>();
+
 
         }
 

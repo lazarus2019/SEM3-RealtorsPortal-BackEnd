@@ -9,12 +9,14 @@ namespace NETAPI_SEM3.Models
     {
         public Country()
         {
-            Regions = new HashSet<Region>();
+            Cities = new HashSet<City>();
         }
 
         public string CountryId { get; set; }
         public string Name { get; set; }
+        public string RegionId { get; set; }
 
-        public virtual ICollection<Region> Regions { get; set; }
+        public virtual Region Region { get; set; }
+        public virtual ICollection<City> Cities { get; set; }
     }
 }

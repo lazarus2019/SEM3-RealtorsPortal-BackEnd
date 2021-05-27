@@ -16,7 +16,7 @@ namespace NETAPI_SEM3.Models
         public int PaymentId { get; set; }
         public string PaymentMethod { get; set; }
         public string TotalPrice { get; set; }
-        public string PaypalCard { get; set; }
+        public string Card { get; set; }
         public int? MemberId { get; set; }
 
         public virtual ICollection<Invoice> Invoices { get; set; }

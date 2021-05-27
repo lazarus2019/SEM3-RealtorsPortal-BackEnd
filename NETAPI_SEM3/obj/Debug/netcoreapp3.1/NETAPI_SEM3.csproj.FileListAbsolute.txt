@@ -316,3 +316,8 @@ C:\Users\LENOVO\source\repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\n
 C:\Users\LENOVO\source\repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.JsonPatch.dll
 C:\Users\LENOVO\source\repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\LENOVO\source\repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\obj\Debug\netcoreapp3.1\NETAPI_SEM3.csprojAssemblyReference.cache
+C:\Users\LENOVO\source\repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\LENOVO\source\repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\LENOVO\source\repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\LENOVO\source\repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Core.dll
+C:\Users\LENOVO\source\repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll

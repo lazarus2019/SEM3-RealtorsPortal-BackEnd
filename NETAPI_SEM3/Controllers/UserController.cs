@@ -7,23 +7,24 @@ using System.Threading.Tasks;
 
 namespace NETAPI_SEM3.Controllers
 {
-	[Route("api/demo")]
-	public class DemoController : Controller
+	[Route("api/user")]
+	public class UserController : Controller
 	{
-		private DemoService demoService;
+		private UserService userService;
 
-		public DemoController(DemoService _demoService)
+		public UserController(UserService _userService)
 		{
-			demoService = _demoService;
+			userService = _userService;
 		}
 
 		[Produces("application/json")]
-		[HttpGet("demo1")]
-		public IActionResult Demo1()
+		[HttpGet("getsetting")]
+		public IActionResult GetSetting()
 		{
 			try
 			{
-				return Ok();
+				var setting = userService.GetSetting();
+				return Ok(setting);
 			}
 			catch
 			{
