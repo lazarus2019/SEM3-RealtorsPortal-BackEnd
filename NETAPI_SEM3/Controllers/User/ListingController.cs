@@ -33,7 +33,7 @@ namespace NETAPI_SEM3.Controllers.User
         }
         [Produces("application/json")]
         [HttpGet("propertydetail/{propertyId}")]
-        public IActionResult PropertyDetail(int propertyId)
+        public IActionResult  PropertyDetail(int propertyId)
         {
             try
             {
