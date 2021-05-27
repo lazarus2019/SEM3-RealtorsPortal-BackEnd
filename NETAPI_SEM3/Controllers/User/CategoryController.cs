@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NETAPI_SEM3.Services;
 using NETAPI_SEM3.Services.User;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,11 @@ namespace NETAPI_SEM3.Controllers.User
     public class CategoryController : Controller
     {
         private CategoryService categoryService;
-        public CategoryController(CategoryService _categoryService)
+        private UserService userService;
+        public CategoryController(CategoryService _categoryService, UserService _userService)
         {
             categoryService = _categoryService;
+            userService = _userService; 
         }
 
         [Produces("application/json")]

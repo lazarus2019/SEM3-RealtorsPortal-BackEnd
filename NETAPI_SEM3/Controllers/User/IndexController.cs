@@ -32,6 +32,7 @@ namespace NETAPI_SEM3.Controllers.User
                 return BadRequest(e.Message);
             }
         }
+
         [Produces("application/json")]
         [HttpGet("loadpopularlocation")]
         public IActionResult LoadCategoriesNumber()
@@ -73,5 +74,6 @@ namespace NETAPI_SEM3.Controllers.User
                 return BadRequest();
             }
         }
+
     }
 }
