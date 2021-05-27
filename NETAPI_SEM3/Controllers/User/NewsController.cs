@@ -46,5 +46,19 @@ namespace NETAPI_SEM3.Controllers.User
                 return BadRequest();
             }
         }
+
+        [Produces("application/json")]
+        [HttpGet("getGallery/{newsId}")]
+        public IActionResult getGallery(int newsId)
+        {
+            try
+            {
+                return Ok(newsBlogService.getGallery(newsId));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }
