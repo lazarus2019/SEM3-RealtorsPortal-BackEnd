@@ -1,4 +1,4 @@
-﻿using NETAPI_SEM3.Entities;
+﻿using NETAPI_SEM3.Models;
 using NETAPI_SEM3.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -10,5 +10,9 @@ namespace NETAPI_SEM3.Services
     public interface MemberService
     {
         public IEnumerable<Member> GetAllMember();
+        public IEnumerable<Member> SearchMember(string fullName, string roleId, string status);
+
+        public bool UpdateStatus(int id, bool status);
+
     }
 }

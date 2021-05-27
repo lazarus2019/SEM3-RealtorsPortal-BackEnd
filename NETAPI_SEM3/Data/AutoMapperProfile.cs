@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using NETAPI_SEM3.Entities;
+using NETAPI_SEM3.Models;
 using NETAPI_SEM3.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,8 @@ namespace NETAPI_SEM3.Data
             CreateMap<PropertyViewModel, Property>().ReverseMap();
             CreateMap<MemberViewModel, Member>().ReverseMap();
             CreateMap<AdspackageViewModel, AdPackage>().ReverseMap();
+            CreateMap<InvoiceViewModel, Invoice>().ReverseMap();
+            CreateMap<AdsPackageDetailViewModel, MemberPackageDetail>().ReverseMap();
         }
     }
 }

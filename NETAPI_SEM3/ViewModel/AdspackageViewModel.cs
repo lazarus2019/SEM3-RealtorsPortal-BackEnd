@@ -13,6 +13,8 @@ namespace NETAPI_SEM3.ViewModel
         public int Period { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
-        public int Amount { get; set; }
+        public bool StatusBuy { get; set; }
+        public int PostNumber { get; set; }
+        public bool isDelete { get; set; }
     }
 }

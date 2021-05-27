@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NETAPI_SEM3.Entities;
+using NETAPI_SEM3.Models;
 using NETAPI_SEM3.ViewModel;
 using NETAPI_SEM3.Services;
 using AutoMapper;
@@ -17,7 +17,7 @@ using System.Diagnostics;
 
 namespace NETAPI_SEM3.Controllers
 {
-    [Route("api/member/")]
+    [Route("api/member")]
     public class MemberController : Controller
     {
         private readonly MemberService _memberService;
@@ -38,8 +38,9 @@ namespace NETAPI_SEM3.Controllers
             {
                 return Ok(_memberService.GetAllMember());
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest();
             }
         }
@@ -61,6 +62,32 @@ namespace NETAPI_SEM3.Controllers
             }
         }
 
+        [HttpGet("search/{fullName}/{roleId}/{status}")]
+        public IActionResult SearchMember(string fullName, string roleId, string status)
+        {
+            try
+            {
+                return Ok(_memberService.SearchMember(fullName, roleId, status));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("updateStatus/{id:int}")]
+        public IActionResult UpdateStatus(int id, [FromBody] bool status)
+        {
+            try
+            {
+                _memberService.UpdateStatus(id, status);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
 
     }
 }

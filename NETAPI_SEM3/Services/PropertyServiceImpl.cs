@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NETAPI_SEM3.Entities;
+using NETAPI_SEM3.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,56 +20,134 @@ namespace NETAPI_SEM3.Services
 
         public bool DeleteProperty(int id)
         {
-            var property = _db.Properties.Find(id);
-            _db.Properties.Remove(property);
-            return false;
+            try
+            {
+                var property = _db.Properties.Find(id);
+                _db.Properties.Remove(property);
+                _db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public IEnumerable<Property> GetAllProperty()
         {
             return _db.Properties
              .Include(p => p.Member)
-             .ThenInclude(m => m.Role)
              .Include(p => p.Category)
              .Include(p => p.City)
+             .ThenInclude(ci => ci.Country)
+             .ThenInclude(co => co.Region)
              .Include(p => p.Status)
-             .Include(p => p.PropertyImages)
              .ToList();
         }
 
         public Property GetPropertyByid(int id)
         {
-            return _db.Properties
-              .Include(p => p.Member)
-              .ThenInclude(m => m.Role)
-              .Include(p => p.Category)
-              .Include(p => p.City)
-              .Include(p => p.Status)
-              .Include(p => p.PropertyImages)
-              .Where(p => p.PropertyId == id)
-              .FirstOrDefault();
+            try
+            {
+                return _db.Properties
+                .Include(p => p.Member)
+                .Include(p => p.Category)
+                .Include(p => p.Status)
+                .Include(p => p.City)
+                .ThenInclude(ci => ci.Country)
+                .ThenInclude(co => co.Region)
+                .FirstOrDefault(p => p.PropertyId == id);
+            }
+            catch
+            {
+                return null;
+            }
+
         }
 
-        public Property UpdateProperty(Property property)
+        public bool UpdateProperty(Property property)
         {
-            Debug.WriteLine(property.PropertyId);
-            if (property != null)
+            try
             {
-                _db.Properties.Add(property);
+                var p = _db.Properties.Find(property.PropertyId);
+                p = property;
+                _db.Properties.Update(p);
+                _db.SaveChanges();
+                return true;
             }
-            _db.SaveChanges();
-            return null;
+            catch
+            {
+                return false;
+            }
         }
 
-        public Property AddNewProperty(Property property)
+        public int CreateProperty(Property property)
         {
-            Debug.WriteLine(property.PropertyId);
-            if (property != null)
+            try
             {
-                _db.Properties.Add(property);
+                if (property != null)
+                {
+                    _db.Properties.Add(property);
+                    _db.SaveChanges();
+                }
+                var lastId = _db.Properties.Max(p => p.PropertyId);
+                return lastId;
             }
-            _db.SaveChanges();
-            return null;
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return 0;
+            }
+        }
+
+        public bool UpdateStatus(int id, int statusId)
+        {
+            try
+            {
+                var property = _db.Properties.Find(id);
+                property.StatusId = statusId;
+                _db.Properties.Update(property);
+                _db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public IEnumerable<Property> SearchProperty(string title, string partners, string categoryId, string statusId)
+        {
+            IEnumerable<Property> properties = _db.Properties
+                     .Include(p => p.Member)
+                     .Include(p => p.Category)
+                     .Include(p => p.Status)
+                     .Include(p => p.City)
+                     .ThenInclude(ci => ci.Country)
+                     .ThenInclude(co => co.Region)
+                     .ToList();
+            if (!title.Equals(".all"))
+            {
+                properties = properties.Where(p => p.Title.ToLower().Contains(title.ToLower())).ToList();
+            }
+            if (!partners.Equals(".all"))
+            {
+                properties = properties.Where(p => p.Member.FullName.ToLower().Contains(partners.ToLower()) || p.Member.Username.Equals(partners)).ToList();
+            }
+            if (!categoryId.Equals("all"))
+            {
+                properties = properties.Where(p => p.CategoryId == int.Parse(categoryId)).ToList();
+            }
+            if (!statusId.Equals("all"))
+            {
+                properties = properties.Where(p => p.StatusId == int.Parse(statusId)).ToList();
+            }
+            return properties;
+        }
+
+        public List<Image> getGallery(int propertyId)
+        {
+            return _db.Images.Where(i => i.PropertyId == propertyId).ToList();
         }
 
     }

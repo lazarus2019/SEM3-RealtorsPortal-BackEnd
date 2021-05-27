@@ -16,6 +16,6 @@ namespace NETAPI_SEM3.ViewModel
         public string Email { get; set; }
         public bool Status { get; set; }
         public string Photo { get; set; }
-        public DateTime Birthday { get; set; }
+        public DateTime createDate { get; set; }
     }
 }
