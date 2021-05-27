@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace NETAPI_SEM3.Entities
         public int CategoryId { get; set; }
         public DateTime CreatedDate { get; set; }
         public string Status { get; set; }
-       
+        public string ThumbailName { get; set; }
+
     }
 }

@@ -28,7 +28,7 @@ namespace NETAPI_SEM3.Entities
         public int MemberId { get; set; }
   
         public string Description { get; set; }
-        public List<Image> Images { get; set; }
+        
 
     }
 }
