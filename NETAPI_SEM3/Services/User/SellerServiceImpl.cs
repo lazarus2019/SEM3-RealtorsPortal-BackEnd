@@ -17,7 +17,7 @@ namespace NETAPI_SEM3.Services.User
 
         public List<Member> LoadAgent()
         {
-            var result1 = db.Members.Where(m => m.RoleId == 2)
+            var result1 = db.Members.Where(m => m.RoleId.Equals("2"))
                 .ToList();
 
             return result1;
@@ -30,7 +30,7 @@ namespace NETAPI_SEM3.Services.User
 
         public List<Member> LoadSeller()
         {
-            var result =  db.Members.Where( m => m.RoleId == 3)
+            var result =  db.Members.Where( m => m.RoleId.Equals("3"))
                 .ToList();
 
             return result;
@@ -45,16 +45,10 @@ namespace NETAPI_SEM3.Services.User
                 FullName = m.FullName,
                 RoleId = m.RoleId,
                 Username = m.Username,
-                Password = m.Password,
                 Phone = m.Phone,
-                Email = m.Email,
                 Status = m.Status,
                 Photo = m.Photo,
                 CreateDate = m.CreateDate,
-                VerifyCode = m.VerifyCode,
-                Description = m.Description
-                
-             
 
             }).SingleOrDefault(p => p.MemberId == sellerId);
         }

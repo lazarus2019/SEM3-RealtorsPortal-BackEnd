@@ -17,7 +17,7 @@ namespace NETAPI_SEM3.Services.User
 
         public List<Member> loadAgentAU()
         {
-            var result1 = db.Members.Where(m => m.RoleId == 2)
+            var result1 = db.Members.Where(m => m.RoleId.Equals("2"))
                .ToList();
 
             return result1;
