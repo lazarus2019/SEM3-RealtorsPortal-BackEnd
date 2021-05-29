@@ -9,6 +9,7 @@ namespace NETAPI_SEM3.Services
     public interface InvoiceService
     {
         public Invoice CreateInvoice(Invoice invoice);
+        public bool CheckPackage(int memberId);
 
     }
 }

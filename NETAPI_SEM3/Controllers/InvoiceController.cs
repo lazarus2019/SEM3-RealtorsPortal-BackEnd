@@ -15,22 +15,28 @@ namespace NETAPI_SEM3.Controllers
     public class InvoiceController : Controller
     {
         private readonly InvoiceService _invoiceService;
+        private readonly MemberService _memberService;
         private readonly IMapper _mapper;
 
-        public InvoiceController(InvoiceService invoiceService, IMapper mapper)
+        public InvoiceController(InvoiceService invoiceService, MemberService memberService, IMapper mapper)
         {
             this._invoiceService = invoiceService;
+            this._memberService = memberService;
             this._mapper = mapper;
         }
 
-        [HttpPost("create")]
-        public IActionResult CreateInvoice([FromBody] InvoiceViewModel model)
+        [HttpPost("create/{userId}")]
+        public IActionResult CreateInvoice(string userId, [FromBody] InvoiceViewModel model)
         {
             try
             {
-                Debug.WriteLine("packageId: " + model.PackageId);
-                model.MemberId = 4;
+                var memberId = _memberService.GetMemberId(userId);
+
+                _invoiceService.CheckPackage(memberId);
+
+                model.MemberId = memberId;
                 var invoice = _mapper.Map<Invoice>(model);
+
                 return Ok(_invoiceService.CreateInvoice(invoice));
             }
             catch

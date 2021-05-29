@@ -239,6 +239,11 @@ namespace NETAPI_SEM3.Models
                 entity.Property(e => e.PropertyId).HasColumnName("Property_Id");
 
                 entity.Property(e => e.Time).HasColumnType("date");
+
+                entity.HasOne(d => d.Property)
+                    .WithMany(p => p.Mailboxes)
+                    .HasForeignKey(d => d.PropertyId)
+                    .HasConstraintName("FK_Mailbox_Property");
             });
 
             modelBuilder.Entity<Member>(entity =>
@@ -252,6 +257,10 @@ namespace NETAPI_SEM3.Models
                 entity.Property(e => e.CreateDate)
                     .HasColumnType("date")
                     .HasColumnName("Create_Date");
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.FullName)
                     .HasMaxLength(250)
@@ -356,12 +365,6 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.CategoryId).HasColumnName("Category_Id");
 
-                entity.Property(e => e.CityId)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("City_Id");
-
                 entity.Property(e => e.Description).IsRequired();
 
                 entity.Property(e => e.GoogleMap).HasColumnType("text");
@@ -394,12 +397,6 @@ namespace NETAPI_SEM3.Models
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Property_Category");
-
-                entity.HasOne(d => d.City)
-                    .WithMany(p => p.Properties)
-                    .HasForeignKey(d => d.CityId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Property_City");
 
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.Properties)

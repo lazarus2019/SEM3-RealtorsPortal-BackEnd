@@ -11,8 +11,10 @@ namespace NETAPI_SEM3.Services
     {
         public IEnumerable<Member> GetAllMember();
         public IEnumerable<Member> SearchMember(string fullName, string roleId, string status);
-
         public bool UpdateStatus(int id, bool status);
+        public int GetMemberId(string userId);
+        public bool CreateMember(Member member);
+
 
     }
 }

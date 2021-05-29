@@ -15,5 +15,7 @@ namespace NETAPI_SEM3.Models
         public int? PropertyId { get; set; }
         public DateTime? Time { get; set; }
         public bool? IsRead { get; set; }
+
+        public virtual Property Property { get; set; }
     }
 }

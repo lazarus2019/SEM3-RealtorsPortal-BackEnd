@@ -39,8 +39,6 @@ namespace NETAPI_SEM3
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DatabaseContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
 
-
-
             services.Configure<IdentityOptions>(options =>
             {
                 // Default Password settings.
@@ -52,24 +50,12 @@ namespace NETAPI_SEM3
                 options.Password.RequiredUniqueChars = 1;
             });
 
-
-
-            //services.AddIdentity<User, IdentityRole>(options =>
-            //{
-            //    options.User.RequireUniqueEmail = false;
-            //})
-            //.AddEntityFrameworkStores<DatabaseContext>()
-            //.AddDefaultTokenProviders();
-
-            //configuration Identity
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DatabaseContext>();
-
-
-
-
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<DatabaseContext>()
+                .AddDefaultTokenProviders();
 
             //Configure Service
-           services.AddScoped<DemoService, DemoServiceImpl>();
+            services.AddScoped<DemoService, DemoServiceImpl>();
             services.AddScoped<AdsPackageService, AdsPackageServiceImpl>();
             services.AddScoped<MemberService, MemberServiceImpl>();
             services.AddScoped<PropertyService, PropertyServiceImpl>();
@@ -108,6 +94,10 @@ namespace NETAPI_SEM3
             app.UseRouting();
             app.UseStaticFiles();
 
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseCors(builder => builder
                 .AllowAnyHeader()
                 .AllowAnyMethod()
@@ -115,11 +105,10 @@ namespace NETAPI_SEM3
                 .AllowCredentials()
             );
             app.UseMiddleware<CorsMiddleware>();
-            //app.UseMiddleware<JWTMiddleware>();
-            
+            app.UseMiddleware<JWTMiddleware>();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+
+
 
 
             app.UseEndpoints(endpoints =>

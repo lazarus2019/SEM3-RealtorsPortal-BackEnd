@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using NETAPI_SEM3.Models;
 using NETAPI_SEM3.ViewModel;
 using System;
@@ -19,9 +20,31 @@ namespace NETAPI_SEM3.Services
             this._db = db;
         }
 
+        public bool CreateMember(Member member)
+        {
+            try
+            {
+                if (member != null)
+                {
+                    _db.Members.Add(member);
+                    _db.SaveChanges();
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public IEnumerable<Member> GetAllMember()
         {
             return _db.Members.Where(m => m.RoleId != "1").ToList();
+        }
+
+        public int GetMemberId(string userId)
+        {
+            return _db.Members.FirstOrDefault(m => m.AccountId.Equals(userId)).MemberId;
         }
 
         public IEnumerable<Member> SearchMember(string fullName, string roleId, string status)
@@ -48,7 +71,7 @@ namespace NETAPI_SEM3.Services
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                
+
                 return null;
             }
         }

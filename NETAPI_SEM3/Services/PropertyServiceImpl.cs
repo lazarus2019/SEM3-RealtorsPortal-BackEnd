@@ -35,12 +35,12 @@ namespace NETAPI_SEM3.Services
 
         public IEnumerable<Property> GetAllProperty()
         {
-            return _db.Properties
+            return _db.Properties.OrderBy(p => p.StatusId == 4)
              .Include(p => p.Member)
              .Include(p => p.Category)
-             .Include(p => p.City)
-             .ThenInclude(ci => ci.Country)
-             .ThenInclude(co => co.Region)
+             //.Include(p => p.City)
+             //.ThenInclude(ci => ci.Country)
+             //.ThenInclude(co => co.Region)
              .Include(p => p.Status)
              .ToList();
         }
@@ -53,9 +53,9 @@ namespace NETAPI_SEM3.Services
                 .Include(p => p.Member)
                 .Include(p => p.Category)
                 .Include(p => p.Status)
-                .Include(p => p.City)
-                .ThenInclude(ci => ci.Country)
-                .ThenInclude(co => co.Region)
+                //.Include(p => p.City)
+                //.ThenInclude(ci => ci.Country)
+                //.ThenInclude(co => co.Region)
                 .FirstOrDefault(p => p.PropertyId == id);
             }
             catch
@@ -69,13 +69,13 @@ namespace NETAPI_SEM3.Services
         {
             try
             {
-                var p = _db.Properties.Find(property.PropertyId);
-                p = property;
-                _db.Properties.Update(p);
+                //var p = _db.Properties.Find(property.PropertyId);
+                //p = property;
+                _db.Properties.Update(property);
                 _db.SaveChanges();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
                 return false;
             }
@@ -90,8 +90,7 @@ namespace NETAPI_SEM3.Services
                     _db.Properties.Add(property);
                     _db.SaveChanges();
                 }
-                var lastId = _db.Properties.Max(p => p.PropertyId);
-                return lastId;
+                return property.PropertyId;
             }
             catch (Exception ex)
             {
@@ -122,9 +121,9 @@ namespace NETAPI_SEM3.Services
                      .Include(p => p.Member)
                      .Include(p => p.Category)
                      .Include(p => p.Status)
-                     .Include(p => p.City)
-                     .ThenInclude(ci => ci.Country)
-                     .ThenInclude(co => co.Region)
+                     //.Include(p => p.City)
+                     //.ThenInclude(ci => ci.Country)
+                     //.ThenInclude(co => co.Region)
                      .ToList();
             if (!title.Equals(".all"))
             {
@@ -145,10 +144,14 @@ namespace NETAPI_SEM3.Services
             return properties;
         }
 
-        public List<Image> getGallery(int propertyId)
+        public List<Image> GetGallery(int propertyId)
         {
             return _db.Images.Where(i => i.PropertyId == propertyId).ToList();
         }
 
+        public int CountProperty(int memberId)
+        {
+            return _db.Properties.Count(p => p.MemberId == memberId && p.StatusId == 1);
+        }
     }
 }

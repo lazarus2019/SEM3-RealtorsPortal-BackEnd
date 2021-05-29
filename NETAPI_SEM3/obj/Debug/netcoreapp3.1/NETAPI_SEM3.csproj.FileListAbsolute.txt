@@ -341,3 +341,8 @@ C:\Users\Viet Nguyen\Source\Repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\De
 C:\Users\Viet Nguyen\Source\Repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Core.dll
 C:\Users\Viet Nguyen\Source\Repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll
 C:\Users\Viet Nguyen\Source\Repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.OpenApi.dll
+C:\Users\Viet Nguyen\Source\Repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\System.Net.Http.Formatting.dll
+C:\Users\Viet Nguyen\Source\Repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.WebApiCompatShim.dll
+C:\Users\Viet Nguyen\Source\Repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\Viet Nguyen\Source\Repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyModel.dll
+C:\Users\Viet Nguyen\Source\Repos\SEM3-RealtorsPortal-BackEnd\NETAPI_SEM3\obj\Debug\netcoreapp3.1\NETAPI_SEM3.MvcApplicationPartsAssemblyInfo.cs

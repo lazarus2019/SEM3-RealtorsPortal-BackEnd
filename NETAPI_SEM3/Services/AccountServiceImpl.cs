@@ -30,7 +30,6 @@ namespace NETAPI_SEM3.Services
 
         public IEnumerable<Member> GetAllMember()
         {
-            //return _db.Members.Include(m => m.Role).Where(m => m.Status == true).ToList();
             return _db.Members.Where(m => m.Status == true).ToList();
         }
 

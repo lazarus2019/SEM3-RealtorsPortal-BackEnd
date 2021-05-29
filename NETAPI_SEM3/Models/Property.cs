@@ -10,11 +10,11 @@ namespace NETAPI_SEM3.Models
         public Property()
         {
             Images = new HashSet<Image>();
+            Mailboxes = new HashSet<Mailbox>();
         }
 
         public int PropertyId { get; set; }
         public string Title { get; set; }
-        public string CityId { get; set; }
         public string Address { get; set; }
         public string GoogleMap { get; set; }
         public decimal Price { get; set; }
@@ -30,9 +30,9 @@ namespace NETAPI_SEM3.Models
         public string Description { get; set; }
 
         public virtual Category Category { get; set; }
-        public virtual City City { get; set; }
         public virtual Member Member { get; set; }
         public virtual Status Status { get; set; }
         public virtual ICollection<Image> Images { get; set; }
+        public virtual ICollection<Mailbox> Mailboxes { get; set; }
     }
 }

@@ -16,6 +16,23 @@ namespace NETAPI_SEM3.Services
             this._db = db;
         }
 
+        public bool CheckPackage(int memberId)
+        {
+            try
+            {
+
+                var packageDetail = _db.MemberPackageDetails.SingleOrDefault(pd => pd.MemberId == memberId);
+                _db.Remove(packageDetail);
+                _db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
         public Invoice CreateInvoice(Invoice invoice)
         {
             try

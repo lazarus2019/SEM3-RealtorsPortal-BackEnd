@@ -17,12 +17,21 @@ namespace NETAPI_SEM3.Controllers
     public class PropertyController : Controller
     {
         private readonly PropertyService _propertyService;
+        private readonly AdsPackageService _adsPackageService;
+        private readonly MemberService _memberService;
         private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public PropertyController(PropertyService propertyService, IMapper mapper, UserManager<IdentityUser> userManager)
+        public PropertyController(
+            PropertyService propertyService, 
+            AdsPackageService adsPackageService,
+            MemberService memberService,
+            IMapper mapper, 
+            UserManager<IdentityUser> userManager)
         {
             this._propertyService = propertyService;
+            this._adsPackageService = adsPackageService;
+            this._memberService = memberService;
             this._mapper = mapper;
             this._userManager = userManager;
         }
@@ -81,8 +90,6 @@ namespace NETAPI_SEM3.Controllers
         {
             try
             {
-                Debug.WriteLine("id property: " + model.PropertyId);
-
                 _propertyService.UpdateProperty(_mapper.Map<Property>(model));
                 return Ok();
             }
@@ -117,7 +124,7 @@ namespace NETAPI_SEM3.Controllers
             {
                 model.UploadDate = DateTime.Now;
                 model.StatusId = 4;
-                model.MemberId = 1;
+                model.MemberId = 3;
                 var property = _mapper.Map<Property>(model);
 
                 return Ok(_propertyService.CreateProperty(property));
@@ -148,11 +155,37 @@ namespace NETAPI_SEM3.Controllers
         }
 
         [HttpGet("getGallery/{propertyId}")]
-        public IActionResult getGallery(int propertyId)
+        public IActionResult GetGallery(int propertyId)
         {
             try
             {
-                return Ok(_propertyService.getGallery(propertyId));
+                return Ok(_propertyService.GetGallery(propertyId));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("checktoaddnew/{userId}")]
+        public IActionResult CheckToAddNew(string userId)
+        {
+            try
+            {
+                var memberId = _memberService.GetMemberId(userId);
+                var packageId = _adsPackageService.GetPackageIdByMemberId(memberId);
+                var postLimit = _adsPackageService.GetPostLimit(packageId);
+                var countProperty = _propertyService.CountProperty(memberId);
+
+                var result = true;
+                if(countProperty < postLimit)
+                {
+                    result = true;
+                } else
+                {
+                    result = false;
+                }
+                return Ok(result);
             }
             catch
             {

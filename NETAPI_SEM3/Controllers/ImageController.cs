@@ -34,8 +34,7 @@ namespace NETAPI_SEM3.Controllers
         [HttpPost("upload/{id}/{directName}")]
         public IActionResult UploadNews(int id, string directName, IFormFile file)
         {
-            Debug.WriteLine(id);
-            Debug.WriteLine(directName);
+           
             try
             {
                 var folderName = Path.Combine("images", directName);

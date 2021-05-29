@@ -16,12 +16,14 @@ namespace NETAPI_SEM3.Controllers
     public class AdsPackageController : Controller
     {
         private readonly IMapper _mapper;
+        private readonly MemberService _memberService;
         private readonly AdsPackageService _adsPackageService;
 
-        public AdsPackageController(AdsPackageService adsPackageService, IMapper mapper)
+        public AdsPackageController(AdsPackageService adsPackageService, IMapper mapper, MemberService memberService)
         {
             this._adsPackageService = adsPackageService;
             this._mapper = mapper;
+            this._memberService = memberService;
         }
 
         //[MyAuthorize(Roles = "Admin")]
@@ -160,12 +162,27 @@ namespace NETAPI_SEM3.Controllers
         }
 
         [Produces("application/json")]
-        [HttpGet("search/{name}/{price}")]
-        public IActionResult SearchProperty(string name, string price)
+        [HttpGet("search/{name}/{status}/{price}")]
+        public IActionResult SearchProperty(string name, string status, string price)
         {
             try
             {
-                return Ok(_adsPackageService.SearchAdsPackage(name, price));
+                return Ok(_adsPackageService.SearchAdsPackage(status, name, price));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("checkexpiry/{userId}")]
+        public IActionResult CheckExpiryDate(string userId)
+        {
+            try
+            {
+                var memberId = _memberService.GetMemberId(userId);
+                var result = _adsPackageService.CheckExpiryDate(memberId);
+                return Ok(result);
             }
             catch
             {

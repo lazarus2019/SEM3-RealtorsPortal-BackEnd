@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using NETAPI_SEM3.Services;
@@ -35,7 +36,7 @@ namespace NETAPI_SEM3.Middlewares
         private void attachUserToContext(HttpContext httpContext, AccountService accountService, string token, IConfiguration configuration)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(configuration["JWT:Secret"]);
+            var key = Encoding.ASCII.GetBytes(configuration["Tokens:Key"]);
             tokenHandler.ValidateToken(token, new Microsoft.IdentityModel.Tokens.TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
@@ -46,7 +47,7 @@ namespace NETAPI_SEM3.Middlewares
             }, out SecurityToken validatedToken);
             var jwtToken = (JwtSecurityToken)validatedToken;
             var username = jwtToken.Claims.First(x => x.Type == "Username").Value;
-            httpContext.Items["account"] = accountService.Find(username);
+            httpContext.Items["account"] = accountService.Find(username);           
         }
     }
 

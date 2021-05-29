@@ -13,12 +13,14 @@ using System.Threading.Tasks;
 namespace NETAPI_SEM3.Security
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class MyAuthorizeAttribute: Attribute, IAuthorizationFilter
+    public class MyAuthorizeAttribute : Attribute, IAuthorizationFilter
     {
+
+
         public string Roles { get; set; }
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            if(context.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
+            if (context.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
             {
                 var hasAllowAnonymousAttribute = controllerActionDescriptor.MethodInfo.GetCustomAttributes(inherit: true).Any(a => a.GetType() == typeof(AllowAnonymousAttribute));
                 if (hasAllowAnonymousAttribute)
@@ -27,7 +29,8 @@ namespace NETAPI_SEM3.Security
                 }
             }
             var account = (Member)context.HttpContext.Items["account"];
-            if(account == null)
+            
+            if (account == null)
             {
                 context.Result = new JsonResult(new
                 {
@@ -39,17 +42,17 @@ namespace NETAPI_SEM3.Security
             }
             else
             {
-                //string[] roles = Roles.Split(new char[] { ',' });
-                //if(!roles.Any(r => account.Role.Name.Contains(r)))
-                //{
-                //    context.Result = new JsonResult(new
-                //    {
-                //        message = "Unauthorized"
-                //    })
-                //    {
-                //        StatusCode = StatusCodes.Status401Unauthorized
-                //    };
-                //}
+                string[] roles = Roles.Split(new char[] { ',' });
+                if (!roles.Any(r => account.RoleId.Contains(r)))
+                {
+                    context.Result = new JsonResult(new
+                    {
+                        message = "Authorized"
+                    })
+                    {
+                        StatusCode = StatusCodes.Status200OK
+                    };
+                }
             }
         }
     }

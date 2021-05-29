@@ -16,6 +16,7 @@ namespace NETAPI_SEM3.Models
 
         public int MemberId { get; set; }
         public string AccountId { get; set; }
+        public string Email { get; set; }
         public string RoleId { get; set; }
         public string Username { get; set; }
         public string FullName { get; set; }

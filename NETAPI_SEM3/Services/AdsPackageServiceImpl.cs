@@ -74,10 +74,17 @@ namespace NETAPI_SEM3.Services
             return _db.AdPackages.Where(a => a.IsDelete == false && a.StatusBuy == true).ToList();
         }
 
-        public IEnumerable<AdPackage> SearchAdsPackage(string name, string price)
+        public IEnumerable<AdPackage> SearchAdsPackage(string status, string name, string price)
         {
-            IEnumerable<AdPackage> adPackages = _db.AdPackages.Where(a => a.IsDelete == false).ToList();
-            if(!name.Equals(".all"))
+            IEnumerable<AdPackage> adPackages = null;
+            if (status.Equals("true"))
+            {
+                adPackages = _db.AdPackages.Where(a => a.IsDelete == false && a.StatusBuy == bool.Parse(status)).ToList();
+            } else
+            {
+                adPackages = _db.AdPackages.Where(a => a.IsDelete == false).ToList();
+            }
+            if (!name.Equals(".all"))
             {
                 adPackages = adPackages.Where(a => a.NameAdPackage.ToLower().Contains(name.ToLower())).ToList();
             }
@@ -86,11 +93,6 @@ namespace NETAPI_SEM3.Services
                 adPackages = adPackages.Where(a => a.Price <= Convert.ToDecimal(price)).ToList();
             }
             return adPackages;
-        }
-
-        public IEnumerable<AdPackage> SearchAdsPackageForSalePage(string price, string name)
-        {
-            throw new NotImplementedException();
         }
 
         public double GetMaxPrice()
@@ -110,7 +112,7 @@ namespace NETAPI_SEM3.Services
             {
                 return false;
             }
-        }        
+        }
 
         public AdPackage CreateAdsPackage(AdPackage adPackage)
         {
@@ -149,6 +151,33 @@ namespace NETAPI_SEM3.Services
         public int GetPeriodDay(int id)
         {
             return _db.AdPackages.FirstOrDefault(a => a.PackageId == id).Period ?? default(int);
+        }
+
+        public int GetPostLimit(int packageId)
+        {
+            return _db.AdPackages.FirstOrDefault(a => a.PackageId == packageId).PostNumber ?? default(int);
+        }
+
+        public int GetPackageIdByMemberId(int memberId)
+        {
+            return _db.MemberPackageDetails.SingleOrDefault(pd => pd.MemberId == memberId).PackageId;
+        }
+
+        public bool CheckExpiryDate(int memberId)
+        {
+            var expiryDate = _db.MemberPackageDetails.SingleOrDefault(pd => pd.MemberId == memberId).ExpiryDate ?? default(DateTime);
+            var today = DateTime.Now;
+            var result = true;
+
+            if (today.CompareTo(expiryDate) > 0)
+            {
+                result = false;
+            }
+            else if (today.CompareTo(expiryDate) <= 0)
+            {
+                result = true;
+            }
+            return result;
         }
     }
 }

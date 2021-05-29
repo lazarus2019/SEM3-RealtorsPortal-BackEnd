@@ -14,10 +14,13 @@ using MailKit.Net.Smtp;
 using MailKit.Net.Pop3;
 using MailKit.Security;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
+using NETAPI_SEM3.Security;
 
 namespace NETAPI_SEM3.Controllers
 {
     [Route("api/member")]
+    [MyAuthorize(Roles = "1")]
     public class MemberController : Controller
     {
         private readonly MemberService _memberService;
@@ -41,23 +44,6 @@ namespace NETAPI_SEM3.Controllers
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest();
-            }
-        }
-
-        [HttpPost("sendEmail")]
-        public IActionResult Send([FromBody] MailRequest mailRequest)
-        {
-            try
-            {
-                Debug.WriteLine("subject: " + mailRequest.subject);
-                Debug.WriteLine("subject: " + mailRequest.email);
-                var mailHelper = new MailHelper(_configuration);
-                mailHelper.Send(mailRequest.email, _configuration["Gmail:Username"], mailRequest.subject, mailRequest.content);
-                return Ok();
-            }
-            catch
-            {
                 return BadRequest();
             }
         }
