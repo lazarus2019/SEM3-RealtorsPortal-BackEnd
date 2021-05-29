@@ -35,6 +35,7 @@ namespace DemoSession16.Helpers
                 };
                 var mailMessage = new MailMessage(from, to);
                 mailMessage.Subject = subject;
+                //mailMessage.IsBodyHtml = true;
                 mailMessage.Body = body;
                 smtpClient.Send(mailMessage);
                 return true;
@@ -87,21 +88,25 @@ namespace DemoSession16.Helpers
             }
         }
 
-        public string GetMailBody(string username)
+        public string GetMailBody(string userId, string token)
         {
-            string url = "http://localhost:5000/api/account/api/account/register?username=" + username;
+            //string url = $"{_configuration["AppUrl"]}/api/auth/confirmemail?userid={user.Id}&token={validEmailToken}";
 
+            string url = "http://localhost:5000/api/account/emailconfirmation?userId=" + userId + "&token=" + token;
+
+
+          
             return string.Format(@"<div style='text-align:center;'>
                      <h1>Welcome to our Web Site</h1>
                         <h3>Click below button for verify your Email Id</h3>
                         <form method='post' action='{0}' style='display: inline;'>
-                            <button type='submit' style='display: block; 
+                            <button type='submit' style='display: inline; 
                                 text-align: center; font-weight: bold; background-color: #008cba; 
                                 border-radius: 10px; color: #ffffff; cursor: pointer; width: 100%; padding: 10px;'>
                                 Confirm Email
                             </ button >
                         </ form >
-                    </ div > ", url, username);
+                    </ div > ", url, userId);
         }
     }
 }

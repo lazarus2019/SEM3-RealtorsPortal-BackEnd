@@ -25,6 +25,7 @@ using DemoSession16.Helpers;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using Microsoft.Extensions.Logging;
 using System.Security.Policy;
+using System.Diagnostics;
 
 namespace NETAPI_SEM3.Controllers
 {
@@ -84,7 +85,8 @@ namespace NETAPI_SEM3.Controllers
 
 
             //if (!await _userManager.IsEmailConfirmedAsync(user))
-            //    return Unauthorized(new AuthResponseDto { ErrorMessage = "Email is not confirmed" });
+            //  return BadRequest("Your email was not confirmed.");
+
 
             //check password
             if (!await _userManager.CheckPasswordAsync(user, model.Password))
@@ -147,11 +149,11 @@ namespace NETAPI_SEM3.Controllers
             var user = new IdentityUser
             {
                 UserName = model.Username,
-                Email = model.Username,
+                Email = model.Email,
 
             };
 
-            // tạo account aspnetuser
+            // create account aspnetuser
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
@@ -159,6 +161,7 @@ namespace NETAPI_SEM3.Controllers
                 // set role
                 await _userManager.AddToRoleAsync(user, model.Role);
 
+                // create Member
                 var member = new Member
                 {
                     AccountId = user.Id,
@@ -167,22 +170,19 @@ namespace NETAPI_SEM3.Controllers
                     Status = true,
                     Email = user.Email,
                     RoleId = model.Role,
-                    Phone = "avatar.png",
+                    Photo = "avatar.png",
                     CreateDate = DateTime.Now
                 };
-                // TODO: 
                 _memberService.CreateMember(member);
-                //confirm email
+
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                var confirmLink = Url.Action("EmailConfirmation", "api/account", new { userId = user.Id, token = token }, Request.Scheme);
-
-                //_logger.Log(LogLevel.Warning, confirmLink);
-
+                var encodedEmailToken = Encoding.UTF8.GetBytes(token);
+                var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
 
                 var mailHelper = new MailHelper(_configuration);
-                //var body = mailHelper.GetMailBody(model.Username);
-                mailHelper.Send(_configuration["Gmail:Username"], model.Email, "Confirm Your Email", confirmLink);
+                var body = mailHelper.GetMailBody(user.Id, validEmailToken);
+                mailHelper.Send(_configuration["Gmail:Username"], model.Email, "Confirm Your Email", body);
 
                 return Ok();
             }
@@ -194,20 +194,41 @@ namespace NETAPI_SEM3.Controllers
         [HttpGet("emailconfirmation")]
         public async Task<IActionResult> EmailConfirmation([FromQuery] string userId, [FromQuery] string token)
         {
-            if(userId == null || token == null)
+            //var contentError = new ContentResult
+            //{
+            //    ContentType = "text/html",
+            //    Content = "<div>Loi hihi</div>"
+            //};
+
+            var contentError = BadRequest();
+
+            if (userId == null || token == null)
             {
-                return BadRequest("UserId or token is invalid");
+                return contentError;
             }
+
+            var decodedToken = WebEncoders.Base64UrlDecode(token);
+            string normalToken = Encoding.UTF8.GetString(decodedToken);
+
+            //var callback = QueryHelpers.AddQueryString(userForRegistration.ClientURI, param);
+
 
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
-                return BadRequest("Invalid Email Confirmation Request");
+                return contentError;
 
-            var confirmResult = await _userManager.ConfirmEmailAsync(user, token);
+            var confirmResult = await _userManager.ConfirmEmailAsync(user, normalToken);
+
             if (!confirmResult.Succeeded)
-                return BadRequest("Invalid Email Confirmation Request");
+                return contentError;
 
-            return Ok();
+            //return new ContentResult
+            //{
+            //    ContentType = "text/html",
+            //    Content = "<div>Hello World</div>"
+            //};
+
+            return Redirect("https://google.com");
         }
     }
 }
