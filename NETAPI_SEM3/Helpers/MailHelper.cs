@@ -1,12 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
-using MimeKit;
-using NETAPI_SEM3.ViewModel;
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
 
 namespace DemoSession16.Helpers
 {
@@ -46,6 +42,9 @@ namespace DemoSession16.Helpers
                 return false;
             }
         }
+
+
+
 
         public bool Send(string from, string to, string subject, string body, string htmlAttachment)
         {
@@ -90,9 +89,7 @@ namespace DemoSession16.Helpers
 
         public string GetMailBody(string userId, string token)
         {
-            //string url = $"{_configuration["AppUrl"]}/api/auth/confirmemail?userid={user.Id}&token={validEmailToken}";
-
-            string url = "http://localhost:5000/api/account/emailconfirmation?userId=" + userId + "&token=" + token;
+            string url = $"http://localhost:5000/api/account/emailconfirmation?userId=" + userId + "&token=" + token;
 
 
           

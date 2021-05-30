@@ -66,6 +66,14 @@ namespace NETAPI_SEM3
             services.AddScoped<ImageService, ImageServiceImpl>();
             services.AddScoped<InvoiceService, InvoiceServiceImpl>();
             services.AddScoped<AccountService, AccountServiceImpl>();
+
+
+            var emailConfig = configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+
+            services.AddScoped<EmailService, EmailServiceImpl>();
             //Configure AutoMapper
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

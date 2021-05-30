@@ -26,6 +26,10 @@ using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using Microsoft.Extensions.Logging;
 using System.Security.Policy;
 using System.Diagnostics;
+using System.Net;
+using System.ComponentModel.DataAnnotations;
+using NETAPI_SEM3.Mails;
+using System.Net.Mail;
 
 namespace NETAPI_SEM3.Controllers
 {
@@ -38,6 +42,7 @@ namespace NETAPI_SEM3.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly EmailService _emailService;
 
         public AccountController(
             AccountService accountService,
@@ -45,15 +50,20 @@ namespace NETAPI_SEM3.Controllers
             IConfiguration configuration,
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            RoleManager<IdentityRole> roleManager
+            RoleManager<IdentityRole> roleManager,
+            EmailService emailService
             )
         {
+
+
+
             this._accountService = accountService;
             this._memberService = memberService;
             this._configuration = configuration;
             this._userManager = userManager;
             this._signInManager = signInManager;
             this._roleManager = roleManager;
+            this._emailService = emailService;
         }
 
         [HttpPost("sendEmail")]
@@ -76,17 +86,21 @@ namespace NETAPI_SEM3.Controllers
         public async Task<IActionResult> Login([FromBody] AccountViewModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
 
             var user = await _userManager.FindByNameAsync(model.Username);
 
             if (user == null)
+            {
                 return BadRequest("Username or password is incorrect.");
+            }
 
-
-            //if (!await _userManager.IsEmailConfirmedAsync(user))
-            //  return BadRequest("Your email was not confirmed.");
-
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+            {
+                return BadRequest("Your email was not confirmed.");
+            }
 
             //check password
             if (!await _userManager.CheckPasswordAsync(user, model.Password))
@@ -111,9 +125,6 @@ namespace NETAPI_SEM3.Controllers
         {
             var user = await _userManager.FindByEmailAsync(model.Username);
 
-            // danh sách role của thằng user
-            //var roles = await _userManager.GetRolesAsync(user);
-            //var role = await _userManager.GetRolesAsync(user);
             IdentityOptions _options = new IdentityOptions();
 
             var claims = new List<Claim>
@@ -139,12 +150,16 @@ namespace NETAPI_SEM3.Controllers
         public async Task<IActionResult> Register([FromBody] AccountViewModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
 
             var hasUser = await _userManager.FindByEmailAsync(model.Username);//check username exist
 
             if (hasUser != null)
+            {
                 return BadRequest("email da ton tai");
+            }
 
             var user = new IdentityUser
             {
@@ -179,30 +194,28 @@ namespace NETAPI_SEM3.Controllers
 
                 var encodedEmailToken = Encoding.UTF8.GetBytes(token);
                 var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
+                var param = new Dictionary<string, string>
+                {
+                    {"token", validEmailToken },
+                    {"email", user.Email }
+                };
 
-                var mailHelper = new MailHelper(_configuration);
-                var body = mailHelper.GetMailBody(user.Id, validEmailToken);
-                mailHelper.Send(_configuration["Gmail:Username"], model.Email, "Confirm Your Email", body);
+                var callback = QueryHelpers.AddQueryString(model.ClientURI, param);
 
-                return Ok();
+                var message = new SendMailMessage(new string[] { model.Email }, "Email Confirmation", callback, null);
+                await _emailService.SendEmailAsync(message);
             }
+            return Ok();
 
-            return BadRequest("Register is unsuccessful.");
         }
 
-
         [HttpGet("emailconfirmation")]
-        public async Task<IActionResult> EmailConfirmation([FromQuery] string userId, [FromQuery] string token)
+        public async Task<IActionResult> EmailConfirmation([FromQuery] string token, [FromQuery] string email)
         {
-            //var contentError = new ContentResult
-            //{
-            //    ContentType = "text/html",
-            //    Content = "<div>Loi hihi</div>"
-            //};
 
             var contentError = BadRequest();
 
-            if (userId == null || token == null)
+            if (email == null || token == null)
             {
                 return contentError;
             }
@@ -210,25 +223,79 @@ namespace NETAPI_SEM3.Controllers
             var decodedToken = WebEncoders.Base64UrlDecode(token);
             string normalToken = Encoding.UTF8.GetString(decodedToken);
 
-            //var callback = QueryHelpers.AddQueryString(userForRegistration.ClientURI, param);
-
-
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
+            {
                 return contentError;
+            }
 
             var confirmResult = await _userManager.ConfirmEmailAsync(user, normalToken);
 
             if (!confirmResult.Succeeded)
+            {
                 return contentError;
+            }
 
-            //return new ContentResult
-            //{
-            //    ContentType = "text/html",
-            //    Content = "<div>Hello World</div>"
-            //};
-
-            return Redirect("https://google.com");
+            return Ok();
         }
+
+        [HttpPost("forgotpassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPassword forgotPassword)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var user = await _userManager.FindByEmailAsync(forgotPassword.Email);
+            if (user == null)
+                return BadRequest("Invalid Request");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedEmailToken = Encoding.UTF8.GetBytes(token);
+            var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
+
+            var param = new Dictionary<string, string>
+            {
+                {"token", validEmailToken },
+                {"email", forgotPassword.Email }
+            };
+
+            var callback = QueryHelpers.AddQueryString(forgotPassword.ClientURI, param);
+
+            var message = new SendMailMessage(new string[] { forgotPassword.Email }, "Reset password token", callback, null);
+            await _emailService.SendEmailAsync(message);
+
+            return Ok();
+        }
+
+        [HttpPost("resetpassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPassword resetPassword)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var user = await _userManager.FindByEmailAsync(resetPassword.Email);
+            if (user == null)
+            {
+                return BadRequest("Invalid Request");
+            }
+
+            var decodedToken = WebEncoders.Base64UrlDecode(resetPassword.Token);
+            string normalToken = Encoding.UTF8.GetString(decodedToken);
+
+            var resetPassResult = await _userManager.ResetPasswordAsync(user, normalToken, resetPassword.Password);
+            if (!resetPassResult.Succeeded)
+            {
+                var errors = resetPassResult.Errors.Select(e => e.Description);
+
+                return BadRequest(new { Errors = errors });
+            }
+
+            return Ok();
+        }
+
     }
 }
