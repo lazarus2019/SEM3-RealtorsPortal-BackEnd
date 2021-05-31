@@ -102,10 +102,15 @@ namespace NETAPI_SEM3.Controllers
                 return BadRequest("Your email was not confirmed.");
             }
 
+            if (await _userManager.GetLockoutEnabledAsync(user) == false)
+            {
+                return BadRequest("Your account was locked.");
+            }
+
             //check password
             if (!await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                return Unauthorized("Invalid Authentication");
+                return BadRequest("Username or password is incorrect.");
             }
 
             var resultToken = await GenerateToken(model);
@@ -154,18 +159,24 @@ namespace NETAPI_SEM3.Controllers
                 return BadRequest(ModelState);
             }
 
-            var hasUser = await _userManager.FindByEmailAsync(model.Username);//check username exist
-
+            //check username
+            var hasUser = await _userManager.FindByNameAsync(model.Username);
             if (hasUser != null)
             {
-                return BadRequest("email da ton tai");
+                return BadRequest("Username was exist, choose another.");
+            }
+
+            //check email
+            var hasEmail = await _userManager.FindByEmailAsync(model.Email);
+            if (hasEmail != null)
+            {
+                return BadRequest(new { e = "Your email was exist, choose another." });
             }
 
             var user = new IdentityUser
             {
                 UserName = model.Username,
-                Email = model.Email,
-
+                Email = model.Email
             };
 
             // create account aspnetuser
@@ -191,7 +202,6 @@ namespace NETAPI_SEM3.Controllers
                 _memberService.CreateMember(member);
 
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
                 var encodedEmailToken = Encoding.UTF8.GetBytes(token);
                 var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
                 var param = new Dictionary<string, string>
@@ -212,12 +222,9 @@ namespace NETAPI_SEM3.Controllers
         [HttpGet("emailconfirmation")]
         public async Task<IActionResult> EmailConfirmation([FromQuery] string token, [FromQuery] string email)
         {
-
-            var contentError = BadRequest();
-
             if (email == null || token == null)
             {
-                return contentError;
+                return BadRequest("Something wrong, please try again.");
             }
 
             var decodedToken = WebEncoders.Base64UrlDecode(token);
@@ -226,14 +233,14 @@ namespace NETAPI_SEM3.Controllers
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                return contentError;
+                return BadRequest("Account not found.");
             }
 
             var confirmResult = await _userManager.ConfirmEmailAsync(user, normalToken);
 
             if (!confirmResult.Succeeded)
             {
-                return contentError;
+                return BadRequest("Something wrong, please try again.");
             }
 
             return Ok();
@@ -249,7 +256,7 @@ namespace NETAPI_SEM3.Controllers
 
             var user = await _userManager.FindByEmailAsync(forgotPassword.Email);
             if (user == null)
-                return BadRequest("Invalid Request");
+                return BadRequest("Account not found.");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedEmailToken = Encoding.UTF8.GetBytes(token);
@@ -280,7 +287,7 @@ namespace NETAPI_SEM3.Controllers
             var user = await _userManager.FindByEmailAsync(resetPassword.Email);
             if (user == null)
             {
-                return BadRequest("Invalid Request");
+                return BadRequest("Accountn not found.");
             }
 
             var decodedToken = WebEncoders.Base64UrlDecode(resetPassword.Token);
@@ -297,5 +304,27 @@ namespace NETAPI_SEM3.Controllers
             return Ok();
         }
 
+        [HttpPost("resendemailconfirm")]
+        public async Task<IActionResult> ResendEmailConfirm([FromBody] AccountViewModel model)
+        {
+            var user = new IdentityUser
+            {
+                Email = model.Email
+            };
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var encodedEmailToken = Encoding.UTF8.GetBytes(token);
+            var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
+            var param = new Dictionary<string, string>
+                {
+                    {"token", validEmailToken },
+                    {"email", model.Email }
+                };
+
+            var callback = QueryHelpers.AddQueryString(model.ClientURI, param);
+
+            var message = new SendMailMessage(new string[] { model.Email }, "Email Confirmation", callback, null);
+            await _emailService.SendEmailAsync(message);
+            return Ok();
+        }
     }
 }

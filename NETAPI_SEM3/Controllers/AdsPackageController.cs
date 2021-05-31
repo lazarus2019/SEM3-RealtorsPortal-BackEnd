@@ -26,7 +26,6 @@ namespace NETAPI_SEM3.Controllers
             this._memberService = memberService;
         }
 
-        //[MyAuthorize(Roles = "Admin")]
         [HttpGet("getall")]
         public IActionResult GetAllAdsPackage()
         {
@@ -39,15 +38,43 @@ namespace NETAPI_SEM3.Controllers
                 Console.WriteLine(ex.Message);
                 return BadRequest();
             }
+        }        
+        
+    
+        
+        [HttpGet("getall/{page}")]
+        public IActionResult GetAllAdsPackagePage(int page)
+        {
+            try
+            {
+                return Ok(_adsPackageService.GetAllAdsPackagePage(page));
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest();
+            }
         }
 
-        //[MyAuthorize(Roles = "Admin, Agent")]
         [HttpGet("getallforsalepage")]
         public IActionResult GetAllAdsPackageForSalePage()
         {
             try
             {
                 return Ok(_adsPackageService.GetAllAdsPackageForSalePage());
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("getallforsalepage/{page}")]
+        public IActionResult GetAllAdsPackageForSalePagePerPage(int page)
+        {
+            try
+            {
+                return Ok(_adsPackageService.GetAllAdsPackageForSalePagePerPage(page));
             }
             catch
             {
@@ -144,14 +171,14 @@ namespace NETAPI_SEM3.Controllers
             }
         }
 
-        [HttpPost("createadsdetail")]
-        public IActionResult CreateAdsPackageDetailViewModel([FromBody] AdsPackageDetailViewModel model)
+        [HttpPost("createadsdetail/{userId}")]
+        public IActionResult CreateAdsPackageDetailViewModel([FromBody] AdsPackageDetailViewModel model, string userId)
         {
             try
             {
+                model.MemberId = _memberService.GetMemberId(userId);
                 var periodDay = _adsPackageService.GetPeriodDay(model.PackageId);
                 model.ExpiryDate = DateTime.UtcNow.AddDays(periodDay);
-                model.MemberId = 4;
                 var adPackageDetail = _mapper.Map<MemberPackageDetail>(model);
                 return Ok(_adsPackageService.CreateMemberPackageDetail(adPackageDetail));
             }
@@ -163,11 +190,25 @@ namespace NETAPI_SEM3.Controllers
 
         [Produces("application/json")]
         [HttpGet("search/{name}/{status}/{price}")]
-        public IActionResult SearchProperty(string name, string status, string price)
+        public IActionResult SearchAdPackage(string name, string status, string price)
         {
             try
             {
                 return Ok(_adsPackageService.SearchAdsPackage(status, name, price));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Produces("application/json")]
+        [HttpGet("search/{name}/{status}/{price}/{page}")]
+        public IActionResult SearchAdPackagePage(string name, string status, string price, int page)
+        {
+            try
+            {
+                return Ok(_adsPackageService.SearchAdsPackagePage(status, name, price, page));
             }
             catch
             {

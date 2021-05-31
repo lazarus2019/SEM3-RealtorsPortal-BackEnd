@@ -48,9 +48,16 @@ namespace NETAPI_SEM3.Services
             }
         }
 
-        public IEnumerable<AdPackage> GetAllAdsPackage()
+        public int GetAllAdsPackage()
         {
-            return _db.AdPackages.Where(a => a.IsDelete == false).ToList();
+            return _db.AdPackages.Where(a => a.IsDelete == false).Count();
+        }
+
+        public IEnumerable<AdPackage> GetAllAdsPackagePage(int page)
+        {
+            var start = 10 * (page - 1);
+            var adPackage = _db.AdPackages.Where(a => a.IsDelete == false).ToList();
+            return adPackage.Skip(start).Take(10).ToList();
         }
 
         public bool UpdateStatus(int id, bool status)
@@ -69,12 +76,40 @@ namespace NETAPI_SEM3.Services
             }
         }
 
-        public IEnumerable<AdPackage> GetAllAdsPackageForSalePage()
+        public int GetAllAdsPackageForSalePage()
         {
-            return _db.AdPackages.Where(a => a.IsDelete == false && a.StatusBuy == true).ToList();
+            return _db.AdPackages.Where(a => a.IsDelete == false && a.StatusBuy == true).Count();
         }
 
-        public IEnumerable<AdPackage> SearchAdsPackage(string status, string name, string price)
+        public IEnumerable<AdPackage> GetAllAdsPackageForSalePagePerPage(int page)
+        {
+            var start = 10 * (page - 1);
+            var adPackage = _db.AdPackages.Where(a => a.IsDelete == false && a.StatusBuy == true).ToList();
+            return adPackage.Skip(start).Take(10).ToList();
+        }
+
+        public int SearchAdsPackage(string status, string name, string price)
+        {
+            IEnumerable<AdPackage> adPackages = null;
+            if (status.Equals("true"))
+            {
+                adPackages = _db.AdPackages.Where(a => a.IsDelete == false && a.StatusBuy == bool.Parse(status)).ToList();
+            } else
+            {
+                adPackages = _db.AdPackages.Where(a => a.IsDelete == false).ToList();
+            }
+            if (!name.Equals(".all"))
+            {
+                adPackages = adPackages.Where(a => a.NameAdPackage.ToLower().Contains(name.ToLower())).ToList();
+            }
+            if (!price.Equals(".all"))
+            {
+                adPackages = adPackages.Where(a => a.Price <= Convert.ToDecimal(price)).ToList();
+            }
+            return adPackages.Count();
+        }
+
+        public IEnumerable<AdPackage> SearchAdsPackagePage(string status, string name, string price, int page)
         {
             IEnumerable<AdPackage> adPackages = null;
             if (status.Equals("true"))
@@ -150,12 +185,12 @@ namespace NETAPI_SEM3.Services
 
         public int GetPeriodDay(int id)
         {
-            return _db.AdPackages.FirstOrDefault(a => a.PackageId == id).Period ?? default(int);
+            return _db.AdPackages.FirstOrDefault(a => a.PackageId == id).Period;
         }
 
         public int GetPostLimit(int packageId)
         {
-            return _db.AdPackages.FirstOrDefault(a => a.PackageId == packageId).PostNumber ?? default(int);
+            return _db.AdPackages.FirstOrDefault(a => a.PackageId == packageId).PostNumber;
         }
 
         public int GetPackageIdByMemberId(int memberId)
@@ -178,6 +213,23 @@ namespace NETAPI_SEM3.Services
                 result = true;
             }
             return result;
+        }
+
+        public bool CheckPackage(int memberId)
+        {
+            try
+            {
+                var packageDetail = _db.MemberPackageDetails.First(pd => pd.MemberId == memberId);
+                if(packageDetail == null)
+                {
+                    return false;
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

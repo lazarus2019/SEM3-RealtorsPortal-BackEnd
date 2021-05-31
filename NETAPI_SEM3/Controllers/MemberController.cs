@@ -8,7 +8,7 @@ using NETAPI_SEM3.Security;
 namespace NETAPI_SEM3.Controllers
 {
     [Route("api/member")]
-    [MyAuthorize(Roles = "1")]
+    //[MyAuthorize(Roles = "SuperAdmin")]
     public class MemberController : Controller
     {
         private readonly MemberService _memberService;
@@ -29,9 +29,21 @@ namespace NETAPI_SEM3.Controllers
             {
                 return Ok(_memberService.GetAllMember());
             }
-            catch(Exception ex)
+            catch
             {
-                Console.WriteLine(ex.Message);
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("{page}")]
+        public IActionResult GetAllMemberPage(int page)
+        {
+            try
+            {
+                return Ok(_memberService.GetAllMemberPage(page));
+            }
+            catch
+            {
                 return BadRequest();
             }
         }
@@ -42,6 +54,19 @@ namespace NETAPI_SEM3.Controllers
             try
             {
                 return Ok(_memberService.SearchMember(fullName, roleId, status));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("search/{fullName}/{roleId}/{status}/{page}")]
+        public IActionResult SearchMemberPage(string fullName, string roleId, string status, int page)
+        {
+            try
+            {
+                return Ok(_memberService.SearchMemberPage(fullName, roleId, status, page));
             }
             catch
             {

@@ -23,10 +23,10 @@ namespace NETAPI_SEM3.Controllers
         private readonly UserManager<IdentityUser> _userManager;
 
         public PropertyController(
-            PropertyService propertyService, 
+            PropertyService propertyService,
             AdsPackageService adsPackageService,
             MemberService memberService,
-            IMapper mapper, 
+            IMapper mapper,
             UserManager<IdentityUser> userManager)
         {
             this._propertyService = propertyService;
@@ -38,15 +38,28 @@ namespace NETAPI_SEM3.Controllers
 
         [Produces("application/json")]
         [HttpGet]
-       // [Authorize(Roles = "Admin")]
-
         public IActionResult GetAllProperty()
         {
             try
             {
                 return Ok(_propertyService.GetAllProperty());
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest();
+            }
+        }
+
+        [Produces("application/json")]
+        [HttpGet("getallpage/{page}")]
+        public IActionResult GetAllPropertyPage(int page)
+        {
+            try
+            {
+                return Ok(_propertyService.GetAllPropertyPage(page));
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return BadRequest();
@@ -117,14 +130,15 @@ namespace NETAPI_SEM3.Controllers
             }
         }
 
-        [HttpPost("create")]
-        public IActionResult CreateProperty([FromBody] PropertyViewModel model)
+        [HttpPost("create/{userId}")]
+        public IActionResult CreateProperty([FromBody] PropertyViewModel model, string userId)
         {
             try
             {
                 model.UploadDate = DateTime.Now;
                 model.StatusId = 4;
-                model.MemberId = 3;
+                model.MemberId = _memberService.GetMemberId(userId);
+                model.CityId = 1;
                 var property = _mapper.Map<Property>(model);
 
                 return Ok(_propertyService.CreateProperty(property));
@@ -141,12 +155,21 @@ namespace NETAPI_SEM3.Controllers
         {
             try
             {
-                var claimIdentity = User.Identity as IdentityUser;
-                if (partners.Equals(partners))
-                {
-                    partners = "agent";
-                }
                 return Ok(_propertyService.SearchProperty(title, partners, categoryId, statusId));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Produces("application/json")]
+        [HttpGet("search/{title}/{partners}/{categoryId}/{statusId}/{page}")]
+        public IActionResult SearchPropertyPage(string title, string partners, string categoryId, string statusId, int page)
+        {
+            try
+            {
+                return Ok(_propertyService.SearchPropertyPage(title, partners, categoryId, statusId, page));
             }
             catch
             {
@@ -176,15 +199,21 @@ namespace NETAPI_SEM3.Controllers
                 var packageId = _adsPackageService.GetPackageIdByMemberId(memberId);
                 var postLimit = _adsPackageService.GetPostLimit(packageId);
                 var countProperty = _propertyService.CountProperty(memberId);
+                var checkPackage = _adsPackageService.CheckPackage(memberId);
 
                 var result = true;
-                if(countProperty < postLimit)
+                if (countProperty < postLimit)
                 {
                     result = true;
-                } else
+                } else if (checkPackage == true)
+                {
+                    result = true;
+                }
+                else
                 {
                     result = false;
                 }
+
                 return Ok(result);
             }
             catch

@@ -12,7 +12,7 @@ namespace NETAPI_SEM3.Models
             Countries = new HashSet<Country>();
         }
 
-        public string RegionId { get; set; }
+        public int RegionId { get; set; }
         public string Name { get; set; }
 
         public virtual ICollection<Country> Countries { get; set; }

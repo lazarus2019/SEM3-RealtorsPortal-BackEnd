@@ -8,20 +8,23 @@ namespace NETAPI_SEM3.Services
 {
     public interface AdsPackageService
     {
-        public IEnumerable<AdPackage> GetAllAdsPackage();
-        public IEnumerable<AdPackage> GetAllAdsPackageForSalePage();
+        public int GetAllAdsPackage();
+        public IEnumerable<AdPackage> GetAllAdsPackagePage(int page);
+        public int GetAllAdsPackageForSalePage();
+        public IEnumerable<AdPackage> GetAllAdsPackageForSalePagePerPage(int page);
         public double GetMaxPrice();
         public int GetPeriodDay(int id);
         public int GetPostLimit(int packageId);
         public int GetPackageIdByMemberId(int memberId);
         public bool CheckExpiryDate(int memberId);
+        public bool CheckPackage(int memberId);
         public AdPackage CreateAdsPackage(AdPackage adPackage);
         public MemberPackageDetail CreateMemberPackageDetail(MemberPackageDetail memberPackageDetail);
         public bool DeleteAdsPackage(int id);
         public bool UpdateStatus(int id, bool status);
         public bool UpdateAdsPackage(AdPackage adPackage);
         public AdPackage GetAdPackageByid(int id);
-        public IEnumerable<AdPackage> SearchAdsPackage(string status, string name, string price);
-        //public IEnumerable<AdPackage> SearchAdsPackageForSalePage(bool status, string price, string name);
+        public int SearchAdsPackage(string status, string name, string price);
+        public IEnumerable<AdPackage> SearchAdsPackagePage(string status, string name, string price, int page);
     }
 }

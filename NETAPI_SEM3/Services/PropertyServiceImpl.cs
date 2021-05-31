@@ -33,16 +33,63 @@ namespace NETAPI_SEM3.Services
             }
         }
 
-        public IEnumerable<Property> GetAllProperty()
+        public IEnumerable<Property> GetAllPropertyPage(int page)
         {
-            return _db.Properties.OrderBy(p => p.StatusId == 4)
+            var start = 10 * (page - 1);
+            var listProperty = _db.Properties
+             .Include(p => p.Member)
+             .Include(p => p.Category)
+             .Include(p => p.Status)
+             //.Include(p => p.Images.Any() && p.Images.Where(i => i.PropertyId == p.PropertyId).First())
+             //.Include(p => p.City)
+             //.ThenInclude(ci => ci.Country)
+             //.ThenInclude(co => co.Region)
+             .ToList();
+            listProperty = listProperty.Skip(start).Take(10).ToList();
+            return listProperty;
+
+        }
+
+        public int GetAllProperty()
+        {
+            return _db.Properties
              .Include(p => p.Member)
              .Include(p => p.Category)
              //.Include(p => p.City)
              //.ThenInclude(ci => ci.Country)
              //.ThenInclude(co => co.Region)
              .Include(p => p.Status)
+             .Count();
+        }
+        public IEnumerable<Property> GetAllPropertyPageByMember(int memberId, int page)
+        {
+            var start = 10 * (page - 1);
+            var listProperty = _db.Properties
+             .Include(p => p.Member)
+             .Include(p => p.Category)
+             .Include(p => p.Status)
+             //.Include(p => p.Images.Any() && p.Images.Where(i => i.PropertyId == p.PropertyId).First())
+             //.Include(p => p.City)
+             //.ThenInclude(ci => ci.Country)
+             //.ThenInclude(co => co.Region)
+             .Where(p => p.MemberId == memberId)
              .ToList();
+            listProperty = listProperty.Skip(start).Take(10).ToList();
+            return listProperty;
+
+        }
+
+        public int GetAllPropertyByMember(int memberId)
+        {
+            return _db.Properties
+             .Include(p => p.Member)
+             .Include(p => p.Category)
+             //.Include(p => p.City)
+             //.ThenInclude(ci => ci.Country)
+             //.ThenInclude(co => co.Region)
+             .Include(p => p.Status)
+             .Where(p => p.MemberId == memberId)
+             .Count();
         }
 
         public Property GetPropertyByid(int id)
@@ -115,7 +162,38 @@ namespace NETAPI_SEM3.Services
             }
         }
 
-        public IEnumerable<Property> SearchProperty(string title, string partners, string categoryId, string statusId)
+        public IEnumerable<Property> SearchPropertyPage(string title, string partners, string categoryId, string statusId, int page)
+        {
+            var start = 10 * (page - 1);
+            IEnumerable<Property> properties = _db.Properties
+                     .Include(p => p.Member)
+                     .Include(p => p.Category)
+                     .Include(p => p.Status)
+                     .Include(p => p.Images)
+                     //.Include(p => p.City)
+                     //.ThenInclude(ci => ci.Country)
+                     //.ThenInclude(co => co.Region)
+                     .ToList();
+            if (!title.Equals(".all"))
+            {
+                properties = properties.Where(p => p.Title.ToLower().Contains(title.ToLower())).ToList();
+            }
+            if (!partners.Equals(".all"))
+            {
+                properties = properties.Where(p => p.Member.FullName.ToLower().Contains(partners.ToLower()) || p.Member.Username.Equals(partners)).ToList();
+            }
+            if (!categoryId.Equals("all"))
+            {
+                properties = properties.Where(p => p.CategoryId == int.Parse(categoryId)).ToList();
+            }
+            if (!statusId.Equals("all"))
+            {
+                properties = properties.Where(p => p.StatusId == int.Parse(statusId)).ToList();
+            }
+            return properties.Skip(start).Take(10).ToList();
+        }
+
+        public int SearchProperty(string title, string partners, string categoryId, string statusId)
         {
             IEnumerable<Property> properties = _db.Properties
                      .Include(p => p.Member)
@@ -141,7 +219,7 @@ namespace NETAPI_SEM3.Services
             {
                 properties = properties.Where(p => p.StatusId == int.Parse(statusId)).ToList();
             }
-            return properties;
+            return properties.Count();
         }
 
         public List<Image> GetGallery(int propertyId)

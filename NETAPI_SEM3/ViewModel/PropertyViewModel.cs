@@ -11,6 +11,12 @@ namespace NETAPI_SEM3.ViewModel
     {
         public int PropertyId { get; set; }
         public string Title { get; set; }
+        public int CityId { get; set; }
+        public string CityName { get; set; }
+        public int CityCountryId { get; set; }
+        public string CityCountryName { get; set; }
+        public int CityCountryRegionId { get; set; }
+        public string CityCountryRegionName { get; set; }
         public string Address { get; set; }
         public decimal Price { get; set; }
         public int BedNumber { get; set; }
@@ -26,5 +32,6 @@ namespace NETAPI_SEM3.ViewModel
         public string MemberFullName { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }
+        public string ImageName { get; set; }
     }
 }
