@@ -20,15 +20,22 @@ namespace NETAPI_SEM3.Services.User
             setting = _userService.GetSetting(); 
         }
 
-        public List<Category> LoadCategories()
-        {
-        var setting = userService.GetSetting(); 
-            return db.Categories.ToList(); 
+        public List<NewCategory> LoadCategories()
+        {        
+            return db.Categories.Select(c => new NewCategory { 
+                CategoryId = c.CategoryId , 
+                Name = c.Name , 
+                IsShow  = c.IsShow 
+            }).ToList(); 
         }
 
-        public List<Country> LoadCountries()
+        public List<NewCountry> LoadCountries()
         {
-            return db.Countries.ToList(); 
+            return db.Countries.Select( c =>new  NewCountry { 
+                CountryId = c.CountryId ,  
+                Name = c.Name ,
+                RegionId  = c.RegionId 
+            }).ToList(); 
         }
 
         public List<PopularLocations> LoadPopularLocations()
@@ -70,7 +77,12 @@ namespace NETAPI_SEM3.Services.User
                     StatusName = p.Status.Name,
                     Title = p.Title,
                     Type = p.Type,
-                    Images = p.Images.ToList()
+                    Images = p.Images.Select(i => new NewImageProperty
+                    {
+                        ImageId = i.ImageId,
+                        Name = i.Name,
+                        PropertyId = i.PropertyId ?? default(int)
+                    }).ToList()
                 })
                 .ToList();
 

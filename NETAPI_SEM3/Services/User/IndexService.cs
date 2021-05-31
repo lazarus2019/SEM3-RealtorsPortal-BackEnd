@@ -11,8 +11,8 @@ namespace NETAPI_SEM3.Services.User
     {
         public List<NewProperty> LoadTopProperty() ;
         
-        public List<Country> LoadCountries();
-        public List<Category> LoadCategories();
+        public List<NewCountry> LoadCountries();
+        public List<NewCategory> LoadCategories();
         public List<PopularLocations> LoadPopularLocations(); 
 
     }

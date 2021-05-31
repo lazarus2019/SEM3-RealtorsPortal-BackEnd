@@ -15,6 +15,7 @@ namespace NETAPI_SEM3.Services.User
             db = _db;
         }
 
+        
         public List<Category> getAllCategory()
         {
             return db.Categories.ToList();
@@ -46,7 +47,12 @@ namespace NETAPI_SEM3.Services.User
                     Title = p.Title,
                     Type = p.Type,
 
-                    Images = p.Images.ToList()
+                    Images = p.Images.Select(i => new NewImageProperty
+                    {
+                        ImageId = i.ImageId,
+                        Name = i.Name,
+                        PropertyId = i.PropertyId ?? default(int)
+                    }).ToList()
                 }).ToList(); 
         }
     }

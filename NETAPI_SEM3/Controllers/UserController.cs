@@ -26,9 +26,9 @@ namespace NETAPI_SEM3.Controllers
 				var setting = userService.GetSetting();
 				return Ok(setting);
 			}
-			catch
+			catch (Exception e2)
 			{
-				return BadRequest();
+				return BadRequest(e2.Message);
 			}
 		}
 

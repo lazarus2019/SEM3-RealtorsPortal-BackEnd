@@ -25,7 +25,8 @@ namespace NETAPI_SEM3.Services
 
         public Setting GetSetting()
         {
-			return db.Settings.SingleOrDefault(s => s.SettingId == 1);
+			var setting = db.Settings.First();
+			return setting;
         }
     }
 }

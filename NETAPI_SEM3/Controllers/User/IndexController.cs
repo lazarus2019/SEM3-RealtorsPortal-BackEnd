@@ -48,6 +48,7 @@ namespace NETAPI_SEM3.Controllers.User
                 return BadRequest();
             }
         }
+        [Produces("application/json")]
         [HttpGet("loadcountries")]
         public IActionResult LoadCountries()
         {
@@ -56,11 +57,12 @@ namespace NETAPI_SEM3.Controllers.User
                 var countries = indexService.LoadCountries();
                 return Ok(countries); 
             }
-            catch
+            catch ( Exception e2 )
             {
-                return BadRequest();
+                return BadRequest(e2.Message);
             }
         }
+        [Produces("application/json")]
         [HttpGet("loadcategories")]
         public IActionResult LoadCategories()
         {
@@ -69,9 +71,9 @@ namespace NETAPI_SEM3.Controllers.User
                 var countries = indexService.LoadCategories();
                 return Ok(countries); 
             }
-            catch
+            catch (Exception e2)
             {
-                return BadRequest();
+                return BadRequest(e2.Message);
             }
         }
 
