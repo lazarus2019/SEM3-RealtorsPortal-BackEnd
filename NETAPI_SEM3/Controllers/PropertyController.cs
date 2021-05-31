@@ -67,6 +67,38 @@ namespace NETAPI_SEM3.Controllers
         }
 
         [Produces("application/json")]
+        [HttpGet("getallbymember/{userId}")]
+        public IActionResult GetAllPropertyByMember(string userId)
+        {
+            try
+            {
+                var memberId = _memberService.GetMemberId(userId);
+                return Ok(_propertyService.GetAllPropertyByMember(memberId));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest();
+            }
+        }
+
+        [Produces("application/json")]
+        [HttpGet("getallpagebymember/{userId}/{page}")]
+        public IActionResult GetAllPropertyPageByMember(string userId, int page)
+        {
+            try
+            {
+                var memberId = _memberService.GetMemberId(userId);
+                return Ok(_propertyService.GetAllPropertyPageByMember(memberId, page));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest();
+            }
+        }
+
+        [Produces("application/json")]
         [HttpGet("{id:int}")]
         public IActionResult GetPropertyById(int id)
         {
@@ -177,6 +209,36 @@ namespace NETAPI_SEM3.Controllers
             }
         }
 
+        [Produces("application/json")]
+        [HttpGet("search/{userId}/{title}/{partners}/{categoryId}/{statusId}")]
+        public IActionResult SearchPropertyByMember(string userId, string title, string partners, string categoryId, string statusId)
+        {
+            try
+            {
+                var memberId = _memberService.GetMemberId(userId);
+                return Ok(_propertyService.SearchPropertyByMember(memberId, title, partners, categoryId, statusId));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Produces("application/json")]
+        [HttpGet("search/{userId}/{title}/{partners}/{categoryId}/{statusId}/{page}")]
+        public IActionResult SearchPropertyPageByMember(string userId, string title, string partners, string categoryId, string statusId, int page)
+        {
+            try
+            {
+                var memberId = _memberService.GetMemberId(userId);
+                return Ok(_propertyService.SearchPropertyPageByMember(memberId, title, partners, categoryId, statusId, page));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpGet("getGallery/{propertyId}")]
         public IActionResult GetGallery(int propertyId)
         {
@@ -195,17 +257,13 @@ namespace NETAPI_SEM3.Controllers
         {
             try
             {
+                var result = true;
                 var memberId = _memberService.GetMemberId(userId);
                 var packageId = _adsPackageService.GetPackageIdByMemberId(memberId);
                 var postLimit = _adsPackageService.GetPostLimit(packageId);
                 var countProperty = _propertyService.CountProperty(memberId);
-                var checkPackage = _adsPackageService.CheckPackage(memberId);
 
-                var result = true;
                 if (countProperty < postLimit)
-                {
-                    result = true;
-                } else if (checkPackage == true)
                 {
                     result = true;
                 }
@@ -215,6 +273,42 @@ namespace NETAPI_SEM3.Controllers
                 }
 
                 return Ok(result);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("checkbuypackage/{userId}")]
+        public IActionResult CheckBuyPackage(string userId)
+        {
+            try
+            {
+                var result = true;
+                var memberId = _memberService.GetMemberId(userId);
+                var checkPackage = _adsPackageService.CheckPackage(memberId);
+                if (checkPackage > 0)
+                {
+                    result = true;
+                } else
+                {
+                    result = false;
+                }
+                return Ok(result);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("countpropertypending")]
+        public IActionResult CountPropertyPending()
+        {
+            try
+            {
+                return Ok(_propertyService.CountPropertyPending());
             }
             catch
             {

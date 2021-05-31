@@ -54,25 +54,21 @@ namespace NETAPI_SEM3.Services
             return _db.Members.FirstOrDefault(m => m.AccountId.Equals(userId)).MemberId;
         }
 
-        public IEnumerable<string> GetPosition()
-        {
-            return _db.Members.Select(m => m.Position).ToList();
-        }
 
-        public int SearchMember(string fullName, string roleId, string status)
+        public int SearchMember(string fullName, string position, string status)
         {
             try
             {
 
-                IEnumerable<Member> members = _db.Members.Where(m => m.RoleId != "1").ToList();
+                IEnumerable<Member> members = _db.Members.Where(m => m.RoleId != "SuperAdmin").ToList();
                 if (!fullName.Equals(".all"))
                 {
                     members = members.Where(m => m.FullName.ToLower().Contains(fullName.ToLower())).ToList();
                 }
 
-                if (!roleId.Equals("all"))
+                if (!position.Equals("all"))
                 {
-                    members = members.Where(m => m.RoleId == roleId).ToList();
+                    members = members.Where(m => m.Position.Equals(position)).ToList();
                 }
                 if (!status.Equals("all"))
                 {
@@ -88,20 +84,20 @@ namespace NETAPI_SEM3.Services
             }
         }
 
-        public IEnumerable<Member> SearchMemberPage(string fullName, string roleId, string status, int page)
+        public IEnumerable<Member> SearchMemberPage(string fullName, string position, string status, int page)
         {
             try
             {
                 var start = 10 * (page - 1);
-                IEnumerable<Member> members = _db.Members.Where(m => m.RoleId != "1").ToList();
+                IEnumerable<Member> members = _db.Members.Where(m => m.RoleId != "SuperAdmin").ToList();
                 if (!fullName.Equals(".all"))
                 {
                     members = members.Where(m => m.FullName.ToLower().Contains(fullName.ToLower())).ToList();
                 }
 
-                if (!roleId.Equals("all"))
+                if (!position.Equals("all"))
                 {
-                    members = members.Where(m => m.RoleId == roleId).ToList();
+                    members = members.Where(m => m.Position.Equals(position)).ToList();
                 }
                 if (!status.Equals("all"))
                 {

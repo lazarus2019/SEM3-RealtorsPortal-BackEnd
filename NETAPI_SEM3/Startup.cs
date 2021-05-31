@@ -61,6 +61,7 @@ namespace NETAPI_SEM3
             services.AddScoped<ImageService, ImageServiceImpl>();
             services.AddScoped<InvoiceService, InvoiceServiceImpl>();
             services.AddScoped<AccountService, AccountServiceImpl>();
+            services.AddScoped<AddressService, AddressServiceImpl>();
 
 
             var emailConfig = configuration

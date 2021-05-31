@@ -94,7 +94,8 @@ namespace NETAPI_SEM3.Services
             if (status.Equals("true"))
             {
                 adPackages = _db.AdPackages.Where(a => a.IsDelete == false && a.StatusBuy == bool.Parse(status)).ToList();
-            } else
+            }
+            else
             {
                 adPackages = _db.AdPackages.Where(a => a.IsDelete == false).ToList();
             }
@@ -115,7 +116,8 @@ namespace NETAPI_SEM3.Services
             if (status.Equals("true"))
             {
                 adPackages = _db.AdPackages.Where(a => a.IsDelete == false && a.StatusBuy == bool.Parse(status)).ToList();
-            } else
+            }
+            else
             {
                 adPackages = _db.AdPackages.Where(a => a.IsDelete == false).ToList();
             }
@@ -190,45 +192,56 @@ namespace NETAPI_SEM3.Services
 
         public int GetPostLimit(int packageId)
         {
-            return _db.AdPackages.FirstOrDefault(a => a.PackageId == packageId).PostNumber;
+            var postNumber = 0;
+            if (packageId > 0)
+            {
+                postNumber = _db.AdPackages.FirstOrDefault(a => a.PackageId == packageId).PostNumber;
+            }
+            return postNumber;
         }
 
         public int GetPackageIdByMemberId(int memberId)
         {
-            return _db.MemberPackageDetails.SingleOrDefault(pd => pd.MemberId == memberId).PackageId;
+            var packageDetail = _db.MemberPackageDetails.SingleOrDefault(pd => pd.MemberId == memberId);
+            var packageId = 0;
+            if (packageDetail != null)
+            {
+                packageId = packageDetail.PackageId;
+            }
+            return packageId;
         }
 
         public bool CheckExpiryDate(int memberId)
         {
-            var expiryDate = _db.MemberPackageDetails.SingleOrDefault(pd => pd.MemberId == memberId).ExpiryDate ?? default(DateTime);
-            var today = DateTime.Now;
+            var packageDetail = _db.MemberPackageDetails.SingleOrDefault(pd => pd.MemberId == memberId);
             var result = true;
 
-            if (today.CompareTo(expiryDate) > 0)
+            if (packageDetail != null)
             {
-                result = false;
-            }
-            else if (today.CompareTo(expiryDate) <= 0)
-            {
-                result = true;
+                var expiryDate = packageDetail.ExpiryDate ?? default(DateTime);
+                var today = DateTime.Now;
+
+                if (today.CompareTo(expiryDate) > 0)
+                {
+                    result = false;
+                }
+                else if (today.CompareTo(expiryDate) <= 0)
+                {
+                    result = true;
+                }
             }
             return result;
         }
 
-        public bool CheckPackage(int memberId)
+        public int CheckPackage(int memberId)
         {
             try
             {
-                var packageDetail = _db.MemberPackageDetails.First(pd => pd.MemberId == memberId);
-                if(packageDetail == null)
-                {
-                    return false;
-                }
-                return true;
+                return _db.MemberPackageDetails.Count(pd => pd.MemberId == memberId);
             }
             catch
             {
-                return false;
+                return 0;
             }
         }
     }

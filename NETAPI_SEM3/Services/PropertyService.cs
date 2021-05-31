@@ -10,12 +10,15 @@ namespace NETAPI_SEM3.Services
     {
         public IEnumerable<Property> GetAllPropertyPage(int page);
         public int GetAllProperty();
+        public IEnumerable<Property> SearchPropertyPage(string title, string partners, string categoryId, string statusId, int page);
+        public int SearchProperty(string title, string partners, string categoryId, string statusId);
         public IEnumerable<Property> GetAllPropertyPageByMember(int memberId, int page);
         public int GetAllPropertyByMember(int memberId);
-        public IEnumerable<Property> SearchPropertyPage(string title, string roleId, string categoryId, string statusId, int page);
-        public int SearchProperty(string title, string roleId, string categoryId, string statusId);
+        public IEnumerable<Property> SearchPropertyPageByMember(int memberId, string title, string partners, string categoryId, string statusId, int page);
+        public int SearchPropertyByMember(int memberId, string title, string partners, string categoryId, string statusId);
         public Property GetPropertyByid(int id);
         public int CountProperty(int memberId);
+        public int CountPropertyPending();
         public bool DeleteProperty(int id);
         public bool UpdateProperty(Property property);
         public bool UpdateStatus(int id, int statusId);

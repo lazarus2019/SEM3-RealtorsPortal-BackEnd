@@ -373,10 +373,6 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.BedNumber).HasColumnName("Bed_Number");
 
-                entity.Property(e => e.BuildYear)
-                    .HasColumnType("date")
-                    .HasColumnName("Build_Year");
-
                 entity.Property(e => e.CategoryId).HasColumnName("Category_Id");
 
                 entity.Property(e => e.CityId).HasColumnName("City_Id");

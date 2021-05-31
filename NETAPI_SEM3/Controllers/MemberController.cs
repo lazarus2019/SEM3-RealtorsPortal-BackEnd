@@ -4,6 +4,9 @@ using NETAPI_SEM3.Services;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using NETAPI_SEM3.Security;
+using Microsoft.AspNetCore.Identity;
+using NETAPI_SEM3.ViewModel;
+using NETAPI_SEM3.Models;
 
 namespace NETAPI_SEM3.Controllers
 {
@@ -14,12 +17,14 @@ namespace NETAPI_SEM3.Controllers
         private readonly MemberService _memberService;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public MemberController(MemberService memberService, IMapper mapper, IConfiguration _configuration)
+        public MemberController(MemberService memberService, IMapper mapper, IConfiguration _configuration, UserManager<IdentityUser> userManager)
         {
             this._memberService = memberService;
             this._mapper = mapper;
             this._configuration = _configuration;
+            this._userManager = userManager;
         }
 
         [HttpGet]
@@ -48,12 +53,12 @@ namespace NETAPI_SEM3.Controllers
             }
         }
 
-        [HttpGet("search/{fullName}/{roleId}/{status}")]
-        public IActionResult SearchMember(string fullName, string roleId, string status)
+        [HttpGet("search/{fullName}/{position}/{status}")]
+        public IActionResult SearchMember(string fullName, string position, string status)
         {
             try
             {
-                return Ok(_memberService.SearchMember(fullName, roleId, status));
+                return Ok(_memberService.SearchMember(fullName, position, status));
             }
             catch
             {
@@ -61,12 +66,12 @@ namespace NETAPI_SEM3.Controllers
             }
         }
 
-        [HttpGet("search/{fullName}/{roleId}/{status}/{page}")]
-        public IActionResult SearchMemberPage(string fullName, string roleId, string status, int page)
+        [HttpGet("search/{fullName}/{position}/{status}/{page}")]
+        public IActionResult SearchMemberPage(string fullName, string position, string status, int page)
         {
             try
             {
-                return Ok(_memberService.SearchMemberPage(fullName, roleId, status, page));
+                return Ok(_memberService.SearchMemberPage(fullName, position, status, page));
             }
             catch
             {
@@ -74,15 +79,17 @@ namespace NETAPI_SEM3.Controllers
             }
         }
 
-        [HttpPut("updateStatus/{id:int}")]
-        public IActionResult UpdateStatus(int id, [FromBody] bool status)
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [HttpPut("updateStatus")]
+        public IActionResult UpdateStatus([FromBody] MemberViewModel model)
         {
             try
             {
-                _memberService.UpdateStatus(id, status);
+                _memberService.UpdateStatus(model.MemberId, model.Status);
                 return Ok();
             }
-            catch
+            catch(Exception ex)
             {
                 return BadRequest();
             }

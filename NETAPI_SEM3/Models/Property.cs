@@ -25,7 +25,6 @@ namespace NETAPI_SEM3.Models
         public double Area { get; set; }
         public DateTime? SoldDate { get; set; }
         public DateTime UploadDate { get; set; }
-        public DateTime BuildYear { get; set; }
         public int StatusId { get; set; }
         public int CategoryId { get; set; }
         public int MemberId { get; set; }

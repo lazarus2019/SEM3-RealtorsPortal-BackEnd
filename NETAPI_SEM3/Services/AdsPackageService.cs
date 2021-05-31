@@ -17,7 +17,7 @@ namespace NETAPI_SEM3.Services
         public int GetPostLimit(int packageId);
         public int GetPackageIdByMemberId(int memberId);
         public bool CheckExpiryDate(int memberId);
-        public bool CheckPackage(int memberId);
+        public int CheckPackage(int memberId);
         public AdPackage CreateAdsPackage(AdPackage adPackage);
         public MemberPackageDetail CreateMemberPackageDetail(MemberPackageDetail memberPackageDetail);
         public bool DeleteAdsPackage(int id);

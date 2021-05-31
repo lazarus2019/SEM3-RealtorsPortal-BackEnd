@@ -40,10 +40,10 @@ namespace NETAPI_SEM3.Services
              .Include(p => p.Member)
              .Include(p => p.Category)
              .Include(p => p.Status)
-             //.Include(p => p.Images.Any() && p.Images.Where(i => i.PropertyId == p.PropertyId).First())
-             //.Include(p => p.City)
-             //.ThenInclude(ci => ci.Country)
-             //.ThenInclude(co => co.Region)
+             .Include(p => p.Images)
+             .Include(p => p.City)
+             .ThenInclude(ci => ci.Country)
+             .ThenInclude(co => co.Region)
              .ToList();
             listProperty = listProperty.Skip(start).Take(10).ToList();
             return listProperty;
@@ -55,10 +55,11 @@ namespace NETAPI_SEM3.Services
             return _db.Properties
              .Include(p => p.Member)
              .Include(p => p.Category)
-             //.Include(p => p.City)
-             //.ThenInclude(ci => ci.Country)
-             //.ThenInclude(co => co.Region)
              .Include(p => p.Status)
+             .Include(p => p.Images)
+             .Include(p => p.City)
+             .ThenInclude(ci => ci.Country)
+             .ThenInclude(co => co.Region)
              .Count();
         }
         public IEnumerable<Property> GetAllPropertyPageByMember(int memberId, int page)
@@ -68,10 +69,10 @@ namespace NETAPI_SEM3.Services
              .Include(p => p.Member)
              .Include(p => p.Category)
              .Include(p => p.Status)
-             //.Include(p => p.Images.Any() && p.Images.Where(i => i.PropertyId == p.PropertyId).First())
-             //.Include(p => p.City)
-             //.ThenInclude(ci => ci.Country)
-             //.ThenInclude(co => co.Region)
+             .Include(p => p.Images)
+             .Include(p => p.City)
+             .ThenInclude(ci => ci.Country)
+             .ThenInclude(co => co.Region)
              .Where(p => p.MemberId == memberId)
              .ToList();
             listProperty = listProperty.Skip(start).Take(10).ToList();
@@ -84,10 +85,11 @@ namespace NETAPI_SEM3.Services
             return _db.Properties
              .Include(p => p.Member)
              .Include(p => p.Category)
-             //.Include(p => p.City)
-             //.ThenInclude(ci => ci.Country)
-             //.ThenInclude(co => co.Region)
              .Include(p => p.Status)
+             .Include(p => p.Images)
+             .Include(p => p.City)
+             .ThenInclude(ci => ci.Country)
+             .ThenInclude(co => co.Region)
              .Where(p => p.MemberId == memberId)
              .Count();
         }
@@ -170,9 +172,9 @@ namespace NETAPI_SEM3.Services
                      .Include(p => p.Category)
                      .Include(p => p.Status)
                      .Include(p => p.Images)
-                     //.Include(p => p.City)
-                     //.ThenInclude(ci => ci.Country)
-                     //.ThenInclude(co => co.Region)
+                     .Include(p => p.City)
+                     .ThenInclude(ci => ci.Country)
+                     .ThenInclude(co => co.Region)
                      .ToList();
             if (!title.Equals(".all"))
             {
@@ -199,9 +201,10 @@ namespace NETAPI_SEM3.Services
                      .Include(p => p.Member)
                      .Include(p => p.Category)
                      .Include(p => p.Status)
-                     //.Include(p => p.City)
-                     //.ThenInclude(ci => ci.Country)
-                     //.ThenInclude(co => co.Region)
+                     .Include(p => p.Images)
+                     .Include(p => p.City)
+                     .ThenInclude(ci => ci.Country)
+                     .ThenInclude(co => co.Region)
                      .ToList();
             if (!title.Equals(".all"))
             {
@@ -230,6 +233,74 @@ namespace NETAPI_SEM3.Services
         public int CountProperty(int memberId)
         {
             return _db.Properties.Count(p => p.MemberId == memberId && p.StatusId == 1);
+        }
+
+        public int CountPropertyPending()
+        {
+            return _db.Properties.Count(p => p.Status.Name.Equals("Pending"));
+        }
+
+        public IEnumerable<Property> SearchPropertyPageByMember(int memberId, string title, string partners, string categoryId, string statusId, int page)
+        {
+            var start = 10 * (page - 1);
+            IEnumerable<Property> properties = _db.Properties
+                     .Include(p => p.Member)
+                     .Include(p => p.Category)
+                     .Include(p => p.Status)
+                     .Include(p => p.Images)
+                     .Include(p => p.City)
+                     .ThenInclude(ci => ci.Country)
+                     .ThenInclude(co => co.Region)
+                     .Where(p => p.MemberId == memberId)
+                     .ToList();
+            if (!title.Equals(".all"))
+            {
+                properties = properties.Where(p => p.Title.ToLower().Contains(title.ToLower())).ToList();
+            }
+            if (!partners.Equals(".all"))
+            {
+                properties = properties.Where(p => p.Member.FullName.ToLower().Contains(partners.ToLower()) || p.Member.Username.Equals(partners)).ToList();
+            }
+            if (!categoryId.Equals("all"))
+            {
+                properties = properties.Where(p => p.CategoryId == int.Parse(categoryId)).ToList();
+            }
+            if (!statusId.Equals("all"))
+            {
+                properties = properties.Where(p => p.StatusId == int.Parse(statusId)).ToList();
+            }
+            return properties.Skip(start).Take(10).ToList();
+        }
+
+        public int SearchPropertyByMember(int memberId, string title, string partners, string categoryId, string statusId)
+        {
+            IEnumerable<Property> properties = _db.Properties
+                                 .Include(p => p.Member)
+                                 .Include(p => p.Category)
+                                 .Include(p => p.Status)
+                                 .Include(p => p.Images)
+                                 .Include(p => p.City)
+                                 .ThenInclude(ci => ci.Country)
+                                 .ThenInclude(co => co.Region)
+                                 .Where(p => p.MemberId == memberId)
+                                 .ToList();
+            if (!title.Equals(".all"))
+            {
+                properties = properties.Where(p => p.Title.ToLower().Contains(title.ToLower())).ToList();
+            }
+            if (!partners.Equals(".all"))
+            {
+                properties = properties.Where(p => p.Member.FullName.ToLower().Contains(partners.ToLower()) || p.Member.Username.Equals(partners)).ToList();
+            }
+            if (!categoryId.Equals("all"))
+            {
+                properties = properties.Where(p => p.CategoryId == int.Parse(categoryId)).ToList();
+            }
+            if (!statusId.Equals("all"))
+            {
+                properties = properties.Where(p => p.StatusId == int.Parse(statusId)).ToList();
+            }
+            return properties.Count();
         }
     }
 }
