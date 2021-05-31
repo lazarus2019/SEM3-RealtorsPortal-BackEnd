@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NETAPI_SEM3.Models;
 using NETAPI_SEM3.Services;
+using NETAPI_SEM3.Services.Admin;
 using NETAPI_SEM3.Services.User;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,7 @@ namespace NETAPI_SEM3
             services.AddScoped<CategoryService, CategoryServiceImpl>();
             services.AddScoped<MailboxService, MailboxServiceImpl>();
             services.AddScoped<UserService,UserServiceImpl>();
+            services.AddScoped<ReportService,ReportServiceImpl>();
 
 
         }
