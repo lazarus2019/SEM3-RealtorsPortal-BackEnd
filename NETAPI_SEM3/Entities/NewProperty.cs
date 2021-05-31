@@ -10,7 +10,7 @@ namespace NETAPI_SEM3.Entities
     {
         public int PropertyId { get; set; }
         public string Title { get; set; }
-        public string CityId { get; set; }
+        public int CityId { get; set; }
         public string CityName { get; set; }
         public string Address { get; set; }
         public string GoogleMap { get; set; }
@@ -28,9 +28,11 @@ namespace NETAPI_SEM3.Entities
         public string CategoryName { get; set; }
         public int MemberId { get; set; }
         public string MemberName { get; set; }
+        public string MemberEmail { get; set; }
+        public string MemberPhone { get; set; }
         public string MemberType { get; set; }
-        public string Description { get; set; }
-        public List<Image> Images { get; set; }
+        public string Description { get; set; } 
+        public List<NewImageProperty> Images { get; set; }
 
     }
 }

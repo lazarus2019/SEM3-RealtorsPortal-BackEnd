@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace NETAPI_SEM3.Models
+namespace NETAPI_SEM3.Entities
 {
-    public partial class Member
+    public class NewMember
     {
-        public Member()
-        {
-            Invoices = new HashSet<Invoice>();
-            MemberPackageDetails = new HashSet<MemberPackageDetail>();
-            Properties = new HashSet<Property>();
-        }
-
         public int MemberId { get; set; }
         public string AccountId { get; set; }
         public string Position { get; set; }
@@ -27,9 +20,5 @@ namespace NETAPI_SEM3.Models
         public string Photo { get; set; }
         public DateTime CreateDate { get; set; }
         public bool? IsShowMail { get; set; }
-
-        public virtual ICollection<Invoice> Invoices { get; set; }
-        public virtual ICollection<MemberPackageDetail> MemberPackageDetails { get; set; }
-        public virtual ICollection<Property> Properties { get; set; }
     }
 }

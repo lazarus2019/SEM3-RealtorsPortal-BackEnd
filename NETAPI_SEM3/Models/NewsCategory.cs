@@ -14,6 +14,7 @@ namespace NETAPI_SEM3.Models
 
         public int NewsCategoryId { get; set; }
         public string Name { get; set; }
+        public bool IsShow { get; set; }
 
         public virtual ICollection<News> News { get; set; }
     }

@@ -15,7 +15,7 @@ namespace NETAPI_SEM3.Models
         public int NumProperty { get; set; }
         public int NumMaxImageProperty { get; set; }
         public int NumMaxImageNews { get; set; }
-        public int? NumSatisfiedCustomer { get; set; }
+        public int NumSatisfiedCustomer { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }

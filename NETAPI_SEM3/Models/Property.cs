@@ -15,7 +15,7 @@ namespace NETAPI_SEM3.Models
 
         public int PropertyId { get; set; }
         public string Title { get; set; }
-        public string CityId { get; set; }
+        public int CityId { get; set; }
         public string Address { get; set; }
         public string GoogleMap { get; set; }
         public decimal Price { get; set; }

@@ -48,7 +48,7 @@ namespace NETAPI_SEM3.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=THUNGUYENVAN\\SQLEXPRESS;Database=ProjectSem3DB;user id=thu ;password=thu123abc");
+                optionsBuilder.UseSqlServer("Server=THUNGUYENVAN\\SQLEXPRESS;Database=ProjectSem3DBVer2;user id=thu ;password=thu123abc");
             }
         }
 
@@ -64,11 +64,11 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.AboutId).HasColumnName("About_Id");
 
-                entity.Property(e => e.Description).HasColumnType("text");
+                entity.Property(e => e.Description).IsUnicode(false);
 
-                entity.Property(e => e.Question).HasColumnType("text");
+                entity.Property(e => e.Question).IsUnicode(false);
 
-                entity.Property(e => e.Title).HasColumnType("text");
+                entity.Property(e => e.Title).IsUnicode(false);
             });
 
             modelBuilder.Entity<AdPackage>(entity =>
@@ -79,12 +79,16 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.PackageId).HasColumnName("Package_Id");
 
-                entity.Property(e => e.Description).HasColumnType("text");
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .IsUnicode(false);
 
                 entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
                 entity.Property(e => e.NameAdPackage)
-                    .HasColumnType("text")
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
                     .HasColumnName("Name_AdPackage");
 
                 entity.Property(e => e.Price).HasColumnType("money");
@@ -171,28 +175,26 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.CategoryId).HasColumnName("Category_Id");
 
-                entity.Property(e => e.Name).HasColumnType("text");
+                entity.Property(e => e.IsShow).HasColumnName("isShow");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(299)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<City>(entity =>
             {
                 entity.ToTable("City");
 
-                entity.Property(e => e.CityId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("City_Id");
-
-                entity.Property(e => e.CountryId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("Country_Id");
-
-                entity.Property(e => e.Name).HasColumnType("text");
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.Cities)
                     .HasForeignKey(d => d.CountryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_City_Country");
             });
 
@@ -200,21 +202,15 @@ namespace NETAPI_SEM3.Models
             {
                 entity.ToTable("Country");
 
-                entity.Property(e => e.CountryId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("Country_Id");
-
-                entity.Property(e => e.Name).HasColumnType("text");
-
-                entity.Property(e => e.RegionId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("Region_Id");
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Region)
                     .WithMany(p => p.Countries)
                     .HasForeignKey(d => d.RegionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Country_Region");
             });
 
@@ -224,7 +220,7 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.FaqId).HasColumnName("FAQ_Id");
 
-                entity.Property(e => e.Description).HasColumnType("text");
+                entity.Property(e => e.Description).IsUnicode(false);
 
                 entity.Property(e => e.Title)
                     .HasMaxLength(50)
@@ -238,6 +234,7 @@ namespace NETAPI_SEM3.Models
                 entity.Property(e => e.ImageId).HasColumnName("Image_Id");
 
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
@@ -320,7 +317,7 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.IsRead).HasColumnName("isRead");
 
-                entity.Property(e => e.Message).HasColumnType("text");
+                entity.Property(e => e.Message).IsUnicode(false);
 
                 entity.Property(e => e.Phone)
                     .HasMaxLength(50)
@@ -342,15 +339,25 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.MemberId).HasColumnName("Member_Id");
 
-                entity.Property(e => e.AccountId).HasMaxLength(250);
+                entity.Property(e => e.AccountId)
+                    .IsRequired()
+                    .HasMaxLength(250);
 
                 entity.Property(e => e.CreateDate)
                     .HasColumnType("date")
                     .HasColumnName("Create_Date");
 
+                entity.Property(e => e.Description).IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FullName)
                     .HasMaxLength(250)
                     .IsUnicode(false);
+
+                entity.Property(e => e.IsShowMail).HasColumnName("isShowMail");
 
                 entity.Property(e => e.Phone)
                     .HasMaxLength(50)
@@ -360,7 +367,12 @@ namespace NETAPI_SEM3.Models
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Position)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.RoleId)
+                    .IsRequired()
                     .HasMaxLength(450)
                     .HasColumnName("Role_Id");
 
@@ -409,7 +421,7 @@ namespace NETAPI_SEM3.Models
                     .HasColumnType("date")
                     .HasColumnName("Created_Date");
 
-                entity.Property(e => e.Description).HasColumnType("text");
+                entity.Property(e => e.Description).IsUnicode(false);
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(50)
@@ -430,6 +442,8 @@ namespace NETAPI_SEM3.Models
                 entity.ToTable("News_Category");
 
                 entity.Property(e => e.NewsCategoryId).HasColumnName("News_Category_Id");
+
+                entity.Property(e => e.IsShow).HasColumnName("isShow");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
@@ -455,15 +469,11 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.CategoryId).HasColumnName("Category_Id");
 
-                entity.Property(e => e.CityId)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("City_Id");
+                entity.Property(e => e.CityId).HasColumnName("City_Id");
 
-                entity.Property(e => e.Description).HasColumnType("text");
+                entity.Property(e => e.Description).IsUnicode(false);
 
-                entity.Property(e => e.GoogleMap).HasColumnType("text");
+                entity.Property(e => e.GoogleMap).IsUnicode(false);
 
                 entity.Property(e => e.MemberId).HasColumnName("Member_Id");
 
@@ -519,12 +529,10 @@ namespace NETAPI_SEM3.Models
             {
                 entity.ToTable("Region");
 
-                entity.Property(e => e.RegionId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("Region_Id");
-
-                entity.Property(e => e.Name).HasColumnType("text");
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Setting>(entity =>
@@ -557,17 +565,11 @@ namespace NETAPI_SEM3.Models
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ThumbnailAboutUs)
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
+                entity.Property(e => e.ThumbnailAboutUs).IsUnicode(false);
 
-                entity.Property(e => e.ThumbnailHome)
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
+                entity.Property(e => e.ThumbnailHome).IsUnicode(false);
 
-                entity.Property(e => e.ThumbnailWebsite)
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
+                entity.Property(e => e.ThumbnailWebsite).IsUnicode(false);
             });
 
             modelBuilder.Entity<Status>(entity =>
