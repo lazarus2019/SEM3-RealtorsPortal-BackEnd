@@ -17,26 +17,26 @@ namespace NETAPI_SEM3.Services
 {
     public class AccountServiceImpl : AccountService
     {
-        private readonly DatabaseContext _db;
+        private readonly DatabaseContext DatabaseContext;
 
 
         public AccountServiceImpl(DatabaseContext db
 
             )
         {
-            this._db = db;
+            this.DatabaseContext = db;
 
         }
 
         public IEnumerable<Member> GetAllMember()
         {
-            return _db.Members.Where(m => m.Status == true).ToList();
+            return DatabaseContext.Members.Where(m => m.Status == true).ToList();
         }
 
 
         public Member Find(string username)
         {
-            return _db.Members.SingleOrDefault(m => m.Username.Equals(username));
+            return DatabaseContext.Members.SingleOrDefault(m => m.Username.Equals(username));
         }
 
     }

@@ -11,8 +11,8 @@ namespace NETAPI_SEM3.Services
         public IEnumerable<AdPackage> GetAllAdsPackage();
         public IEnumerable<AdPackage> GetAllAdsPackageForSalePage();
         public double GetMaxPrice();
-        public int GetPeriodDay(int id);
-        public int GetPostLimit(int packageId);
+        //public int GetPeriodDay(int id);
+        //public int GetPostLimit(int packageId);
         public int GetPackageIdByMemberId(int memberId);
         public bool CheckExpiryDate(int memberId);
         public AdPackage CreateAdsPackage(AdPackage adPackage);

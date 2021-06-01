@@ -11,9 +11,9 @@ namespace NETAPI_SEM3.Services
 
 		//private MyDBContext db;
 
-		//public CategoryServiceImpl(MyDBContext _db)
+		//public CategoryServiceImpl(MyDBContext DatabaseContext)
 		//{
-		//	db = _db;
+		//	db = DatabaseContext;
 		//} 
 		#endregion
 

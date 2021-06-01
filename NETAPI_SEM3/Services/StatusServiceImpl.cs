@@ -9,16 +9,16 @@ namespace NETAPI_SEM3.Services
 {
     public class StatusServiceImpl: StatusService
     {
-        private readonly DatabaseContext _db;
+        private readonly DatabaseContext DatabaseContext;
 
         public StatusServiceImpl(DatabaseContext db)
         {
-            this._db = db;
+            this.DatabaseContext = db;
         }
 
         public IEnumerable<Status> GetAllStatus()
         {
-            return _db.Statuses.ToList();
+            return DatabaseContext.Statuses.ToList();
         }
     }
 }

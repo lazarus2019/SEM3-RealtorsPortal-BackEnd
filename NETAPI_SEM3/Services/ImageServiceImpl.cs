@@ -10,19 +10,19 @@ namespace NETAPI_SEM3.Services
 {
     public class ImageServiceImpl: ImageService
     {
-		private readonly DatabaseContext _db;
+		private readonly DatabaseContext DatabaseContext;
 
 		public ImageServiceImpl(DatabaseContext db)
 		{
-			this._db = db;
+			this.DatabaseContext = db;
 		}
 
 		public bool createImage(Image image)
 		{
 			try
 			{
-				_db.Images.Add(image);
-				_db.SaveChanges();
+				DatabaseContext.Images.Add(image);
+				DatabaseContext.SaveChanges();
 				return true;
 			}
 			catch
@@ -35,9 +35,9 @@ namespace NETAPI_SEM3.Services
 		{
 			try
 			{
-				var Image = _db.Images.Find(imageId);
-				_db.Images.Remove(Image);
-				_db.SaveChanges();
+				var Image = DatabaseContext.Images.Find(imageId);
+				DatabaseContext.Images.Remove(Image);
+				DatabaseContext.SaveChanges();
 				return true;
 			}
 			catch
@@ -50,9 +50,9 @@ namespace NETAPI_SEM3.Services
 		{
 			try
 			{
-				var Image = _db.Images.Where(i => i.PropertyId == PropertyId).ToList();
-				_db.Images.RemoveRange(Image);
-				_db.SaveChanges();
+				var Image = DatabaseContext.Images.Where(i => i.PropertyId == PropertyId).ToList();
+				DatabaseContext.Images.RemoveRange(Image);
+				DatabaseContext.SaveChanges();
 				return true;
 			}
 			catch

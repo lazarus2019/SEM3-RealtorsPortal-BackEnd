@@ -8,8 +8,10 @@ namespace NETAPI_SEM3.Services
 {
     public interface PropertyService
     {
-        public IEnumerable<Property> GetAllProperty();
-        public IEnumerable<Property> SearchProperty(string title, string roleId, string categoryId, string statusId);
+        public IEnumerable<Property> GetAllProperty(int page);
+        public int PropertyCount();
+        public IEnumerable<Property> SearchProperty(int page, string title, string roleId, string categoryId, string statusId);
+        public int SearchPropertyCount(string title, string roleId, string categoryId, string statusId);
         public Property GetPropertyByid(int id);
         public int CountProperty(int memberId);
         public bool DeleteProperty(int id);

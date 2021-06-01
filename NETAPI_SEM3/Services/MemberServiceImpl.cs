@@ -13,11 +13,11 @@ namespace NETAPI_SEM3.Services
 {
     public class MemberServiceImpl : MemberService
     {
-        private readonly DatabaseContext _db;
+        private readonly DatabaseContext DatabaseContext;
 
         public MemberServiceImpl(DatabaseContext db)
         {
-            this._db = db;
+            this.DatabaseContext = db;
         }
 
         public bool CreateMember(Member member)
@@ -26,8 +26,8 @@ namespace NETAPI_SEM3.Services
             {
                 if (member != null)
                 {
-                    _db.Members.Add(member);
-                    _db.SaveChanges();
+                    DatabaseContext.Members.Add(member);
+                    DatabaseContext.SaveChanges();
                 }
                 return true;
             }
@@ -39,12 +39,12 @@ namespace NETAPI_SEM3.Services
 
         public IEnumerable<Member> GetAllMember()
         {
-            return _db.Members.Where(m => m.RoleId != "1").ToList();
+            return DatabaseContext.Members.Where(m => m.RoleId != "1").ToList();
         }
 
         public int GetMemberId(string userId)
         {
-            return _db.Members.FirstOrDefault(m => m.AccountId.Equals(userId)).MemberId;
+            return DatabaseContext.Members.FirstOrDefault(m => m.AccountId.Equals(userId)).MemberId;
         }
 
         public IEnumerable<Member> SearchMember(string fullName, string roleId, string status)
@@ -52,7 +52,7 @@ namespace NETAPI_SEM3.Services
             try
             {
 
-                IEnumerable<Member> members = _db.Members.Where(m => m.RoleId != "1").ToList();
+                IEnumerable<Member> members = DatabaseContext.Members.Where(m => m.RoleId != "1").ToList();
                 if (!fullName.Equals(".all"))
                 {
                     members = members.Where(m => m.FullName.ToLower().Contains(fullName.ToLower())).ToList();
@@ -80,7 +80,7 @@ namespace NETAPI_SEM3.Services
         {
             try
             {
-                var member = _db.Members.Find(id);
+                var member = DatabaseContext.Members.Find(id);
                 if (status == true)
                 {
                     member.Status = false;
@@ -89,8 +89,8 @@ namespace NETAPI_SEM3.Services
                 {
                     member.Status = true;
                 }
-                _db.Members.Update(member);
-                _db.SaveChanges();
+                DatabaseContext.Members.Update(member);
+                DatabaseContext.SaveChanges();
                 return true;
             }
             catch

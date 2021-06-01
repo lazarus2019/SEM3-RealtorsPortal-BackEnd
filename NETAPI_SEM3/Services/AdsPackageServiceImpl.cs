@@ -11,18 +11,18 @@ namespace NETAPI_SEM3.Services
     public class AdsPackageServiceImpl : AdsPackageService
     {
 
-        private readonly DatabaseContext _db;
+        private readonly DatabaseContext DatabaseContext;
 
         public AdsPackageServiceImpl(DatabaseContext db)
         {
-            this._db = db;
+            this.DatabaseContext = db;
         }
 
         public AdPackage GetAdPackageByid(int id)
         {
             try
             {
-                return _db.AdPackages.Find(id);
+                return DatabaseContext.AdPackages.Find(id);
 
             }
             catch
@@ -36,10 +36,10 @@ namespace NETAPI_SEM3.Services
         {
             try
             {
-                var adsPackage = _db.AdPackages.Find(id);
+                var adsPackage = DatabaseContext.AdPackages.Find(id);
                 adsPackage.IsDelete = true;
-                _db.AdPackages.Update(adsPackage);
-                _db.SaveChanges();
+                DatabaseContext.AdPackages.Update(adsPackage);
+                DatabaseContext.SaveChanges();
                 return true;
             }
             catch
@@ -50,17 +50,17 @@ namespace NETAPI_SEM3.Services
 
         public IEnumerable<AdPackage> GetAllAdsPackage()
         {
-            return _db.AdPackages.Where(a => a.IsDelete == false).ToList();
+            return DatabaseContext.AdPackages.Where(a => a.IsDelete == false).ToList();
         }
 
         public bool UpdateStatus(int id, bool status)
         {
             try
             {
-                var adsPackage = _db.AdPackages.Find(id);
+                var adsPackage = DatabaseContext.AdPackages.Find(id);
                 adsPackage.StatusBuy = status;
-                _db.AdPackages.Update(adsPackage);
-                _db.SaveChanges();
+                DatabaseContext.AdPackages.Update(adsPackage);
+                DatabaseContext.SaveChanges();
                 return true;
             }
             catch
@@ -71,7 +71,7 @@ namespace NETAPI_SEM3.Services
 
         public IEnumerable<AdPackage> GetAllAdsPackageForSalePage()
         {
-            return _db.AdPackages.Where(a => a.IsDelete == false && a.StatusBuy == true).ToList();
+            return DatabaseContext.AdPackages.Where(a => a.IsDelete == false && a.StatusBuy == true).ToList();
         }
 
         public IEnumerable<AdPackage> SearchAdsPackage(string status, string name, string price)
@@ -79,10 +79,10 @@ namespace NETAPI_SEM3.Services
             IEnumerable<AdPackage> adPackages = null;
             if (status.Equals("true"))
             {
-                adPackages = _db.AdPackages.Where(a => a.IsDelete == false && a.StatusBuy == bool.Parse(status)).ToList();
+                adPackages = DatabaseContext.AdPackages.Where(a => a.IsDelete == false && a.StatusBuy == bool.Parse(status)).ToList();
             } else
             {
-                adPackages = _db.AdPackages.Where(a => a.IsDelete == false).ToList();
+                adPackages = DatabaseContext.AdPackages.Where(a => a.IsDelete == false).ToList();
             }
             if (!name.Equals(".all"))
             {
@@ -97,15 +97,15 @@ namespace NETAPI_SEM3.Services
 
         public double GetMaxPrice()
         {
-            return (double)_db.AdPackages.Where(a => a.IsDelete == false).Select(a => a.Price).Max();
+            return (double)DatabaseContext.AdPackages.Where(a => a.IsDelete == false).Select(a => a.Price).Max();
         }
 
         public bool UpdateAdsPackage(AdPackage adPackage)
         {
             try
             {
-                _db.AdPackages.Update(adPackage);
-                _db.SaveChanges();
+                DatabaseContext.AdPackages.Update(adPackage);
+                DatabaseContext.SaveChanges();
                 return true;
             }
             catch
@@ -120,8 +120,8 @@ namespace NETAPI_SEM3.Services
             {
                 if (adPackage != null)
                 {
-                    _db.AdPackages.Add(adPackage);
-                    _db.SaveChanges();
+                    DatabaseContext.AdPackages.Add(adPackage);
+                    DatabaseContext.SaveChanges();
                 }
                 return adPackage;
             }
@@ -137,8 +137,8 @@ namespace NETAPI_SEM3.Services
             {
                 if (memberPackageDetail != null)
                 {
-                    _db.MemberPackageDetails.Add(memberPackageDetail);
-                    _db.SaveChanges();
+                    DatabaseContext.MemberPackageDetails.Add(memberPackageDetail);
+                    DatabaseContext.SaveChanges();
                 }
                 return memberPackageDetail;
             }
@@ -148,24 +148,24 @@ namespace NETAPI_SEM3.Services
             }
         }
 
-        public int GetPeriodDay(int id)
-        {
-            return _db.AdPackages.FirstOrDefault(a => a.PackageId == id).Period ?? default(int);
-        }
+        //public int GetPeriodDay(int id)
+        //{
+        //    return DatabaseContext.AdPackages.FirstOrDefault(a => a.PackageId == id).Period ?? default(int);
+        //}
 
-        public int GetPostLimit(int packageId)
-        {
-            return _db.AdPackages.FirstOrDefault(a => a.PackageId == packageId).PostNumber ?? default(int);
-        }
+        //public int GetPostLimit(int packageId)
+        //{
+        //    return DatabaseContext.AdPackages.FirstOrDefault(a => a.PackageId == packageId).PostNumber ?? default(int);
+        //}
 
         public int GetPackageIdByMemberId(int memberId)
         {
-            return _db.MemberPackageDetails.SingleOrDefault(pd => pd.MemberId == memberId).PackageId;
+            return DatabaseContext.MemberPackageDetails.SingleOrDefault(pd => pd.MemberId == memberId).PackageId;
         }
 
         public bool CheckExpiryDate(int memberId)
         {
-            var expiryDate = _db.MemberPackageDetails.SingleOrDefault(pd => pd.MemberId == memberId).ExpiryDate ?? default(DateTime);
+            var expiryDate = DatabaseContext.MemberPackageDetails.SingleOrDefault(pd => pd.MemberId == memberId).ExpiryDate ?? default(DateTime);
             var today = DateTime.Now;
             var result = true;
 

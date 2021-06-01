@@ -11,20 +11,22 @@ namespace NETAPI_SEM3.Services
 {
     public class PropertyServiceImpl : PropertyService
     {
-        private readonly DatabaseContext _db;
+        private readonly DatabaseContext db;
+        private Setting setting; 
 
         public PropertyServiceImpl(DatabaseContext db)
         {
-            this._db = db;
+            this.db = db;
+            setting = db.Settings.First(); 
         }
 
         public bool DeleteProperty(int id)
         {
             try
             {
-                var property = _db.Properties.Find(id);
-                _db.Properties.Remove(property);
-                _db.SaveChanges();
+                var property = db.Properties.Find(id);
+                db.Properties.Remove(property);
+                db.SaveChanges();
                 return true;
             }
             catch
@@ -33,15 +35,17 @@ namespace NETAPI_SEM3.Services
             }
         }
 
-        public IEnumerable<Property> GetAllProperty()
+        public IEnumerable<Property> GetAllProperty(int page)
         {
-            return _db.Properties.OrderBy(p => p.StatusId == 4)
+            return db.Properties.OrderBy(p => p.StatusId == 4)
              .Include(p => p.Member)
              .Include(p => p.Category)
              //.Include(p => p.City)
              //.ThenInclude(ci => ci.Country)
              //.ThenInclude(co => co.Region)
              .Include(p => p.Status)
+             .Skip((page-1)*setting.NumProperty)
+             .Take(setting.NumProperty)
              .ToList();
         }
 
@@ -49,7 +53,7 @@ namespace NETAPI_SEM3.Services
         {
             try
             {
-                return _db.Properties
+                return db.Properties
                 .Include(p => p.Member)
                 .Include(p => p.Category)
                 .Include(p => p.Status)
@@ -69,10 +73,10 @@ namespace NETAPI_SEM3.Services
         {
             try
             {
-                //var p = _db.Properties.Find(property.PropertyId);
+                //var p = db.Properties.Find(property.PropertyId);
                 //p = property;
-                _db.Properties.Update(property);
-                _db.SaveChanges();
+                db.Properties.Update(property);
+                db.SaveChanges();
                 return true;
             }
             catch (Exception ex)
@@ -87,8 +91,8 @@ namespace NETAPI_SEM3.Services
             {
                 if (property != null)
                 {
-                    _db.Properties.Add(property);
-                    _db.SaveChanges();
+                    db.Properties.Add(property);
+                    db.SaveChanges();
                 }
                 return property.PropertyId;
             }
@@ -103,10 +107,10 @@ namespace NETAPI_SEM3.Services
         {
             try
             {
-                var property = _db.Properties.Find(id);
+                var property = db.Properties.Find(id);
                 property.StatusId = statusId;
-                _db.Properties.Update(property);
-                _db.SaveChanges();
+                db.Properties.Update(property);
+                db.SaveChanges();
                 return true;
             }
             catch
@@ -115,9 +119,9 @@ namespace NETAPI_SEM3.Services
             }
         }
 
-        public IEnumerable<Property> SearchProperty(string title, string partners, string categoryId, string statusId)
+        public IEnumerable<Property> SearchProperty(int page , string title, string partners, string categoryId, string statusId)
         {
-            IEnumerable<Property> properties = _db.Properties
+            IEnumerable<Property> properties = db.Properties
                      .Include(p => p.Member)
                      .Include(p => p.Category)
                      .Include(p => p.Status)
@@ -141,17 +145,27 @@ namespace NETAPI_SEM3.Services
             {
                 properties = properties.Where(p => p.StatusId == int.Parse(statusId)).ToList();
             }
-            return properties;
+            return properties.Skip((page - 1) * setting.NumProperty).Take(setting.NumProperty).ToList();
         }
 
         public List<Image> GetGallery(int propertyId)
         {
-            return _db.Images.Where(i => i.PropertyId == propertyId).ToList();
+            return db.Images.Where(i => i.PropertyId == propertyId).ToList();
         }
 
         public int CountProperty(int memberId)
         {
-            return _db.Properties.Count(p => p.MemberId == memberId && p.StatusId == 1);
+            return db.Properties.Count(p => p.MemberId == memberId && p.StatusId == 1);
+        }
+
+        public int PropertyCount()
+        {
+            return db.Properties.Where( p=>p.StatusId == 1 ).Count(); 
+        }
+
+        public int SearchPropertyCount(string title, string roleId, string categoryId, string statusId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

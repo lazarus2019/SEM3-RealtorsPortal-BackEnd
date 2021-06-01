@@ -11,17 +11,21 @@ namespace NETAPI_SEM3.Services
 {
     public class RoleServiceImpl: RoleService
     {
-        private readonly DatabaseContext _db;
+        private readonly DatabaseContext db;
 
         public RoleServiceImpl(DatabaseContext db)
         {
-            this._db = db;
+            this.db = db;
         }
 
         public IEnumerable<IdentityRole> GetAllRoll()
         {
-            return _db.Roles.ToList();
-            
+            return db.Roles.ToList();
+        }
+
+        public IdentityRole GetRollByID(string roleId)
+        {
+            return db.Roles.Find(roleId);
         }
     }
 }

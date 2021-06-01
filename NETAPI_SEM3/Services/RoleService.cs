@@ -10,5 +10,6 @@ namespace NETAPI_SEM3.Services
     public interface RoleService
     {
         public IEnumerable<IdentityRole> GetAllRoll();
+        public IdentityRole GetRollByID(string roleId);
     }
 }

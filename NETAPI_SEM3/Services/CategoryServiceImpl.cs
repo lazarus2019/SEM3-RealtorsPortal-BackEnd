@@ -9,16 +9,16 @@ namespace NETAPI_SEM3.Services
 {
     public class CategoryServiceImpl : CategoryService
     {
-        private readonly DatabaseContext _db;
+        private readonly DatabaseContext DatabaseContext;
 
         public CategoryServiceImpl(DatabaseContext db)
         {
-            this._db = db;
+            this.DatabaseContext = db;
         }
 
         public IEnumerable<Category> GetAllCategory()
         {
-            return _db.Categories.ToList();
+            return DatabaseContext.Categories.ToList();
         }
     }
 }
