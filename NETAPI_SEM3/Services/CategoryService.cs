@@ -9,5 +9,6 @@ namespace NETAPI_SEM3.Services
     public interface CategoryService
     {
         public IEnumerable<Category> GetAllCategory();
+        public int createCategory(Category category);
     }
 }

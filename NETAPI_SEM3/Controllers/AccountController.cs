@@ -170,7 +170,7 @@ namespace NETAPI_SEM3.Controllers
             var hasEmail = await _userManager.FindByEmailAsync(model.Email);
             if (hasEmail != null)
             {
-                return BadRequest(new { e = "Your email was exist, choose another." });
+                return BadRequest("Email was exist, choose another.");
             }
 
             var user = new IdentityUser
@@ -179,13 +179,23 @@ namespace NETAPI_SEM3.Controllers
                 Email = model.Email
             };
 
+            var role = "";
+            if (model.Position.Equals("Agent") || model.Position.Equals("Private Seller"))
+            {
+                role = "Admin";
+            }
+            else
+            {
+                role = "User";
+            }
+
             // create account aspnetuser
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
                 // set role
-                await _userManager.AddToRoleAsync(user, model.Role);
+                await _userManager.AddToRoleAsync(user, role);
 
                 // create Member
                 var member = new Member
@@ -195,7 +205,8 @@ namespace NETAPI_SEM3.Controllers
                     FullName = model.FullName,
                     Status = true,
                     Email = user.Email,
-                    RoleId = model.Role,
+                    RoleId = role,
+                    Position = model.Position,
                     Photo = "avatar.png",
                     CreateDate = DateTime.Now
                 };
@@ -214,9 +225,9 @@ namespace NETAPI_SEM3.Controllers
 
                 var message = new SendMailMessage(new string[] { model.Email }, "Email Confirmation", callback, null);
                 await _emailService.SendEmailAsync(message);
+                return Ok();
             }
-            return Ok();
-
+            return BadRequest();
         }
 
         [HttpGet("emailconfirmation")]
@@ -251,12 +262,14 @@ namespace NETAPI_SEM3.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("Please enter right email.");
             }
 
             var user = await _userManager.FindByEmailAsync(forgotPassword.Email);
             if (user == null)
+            {
                 return BadRequest("Account not found.");
+            }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedEmailToken = Encoding.UTF8.GetBytes(token);
@@ -298,7 +311,7 @@ namespace NETAPI_SEM3.Controllers
             {
                 var errors = resetPassResult.Errors.Select(e => e.Description);
 
-                return BadRequest(new { Errors = errors });
+                return BadRequest("Invalid token, please resend email to resset password.");
             }
 
             return Ok();

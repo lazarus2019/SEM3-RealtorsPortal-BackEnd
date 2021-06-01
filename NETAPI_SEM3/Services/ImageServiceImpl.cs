@@ -60,5 +60,10 @@ namespace NETAPI_SEM3.Services
 				return false;
 			}
 		}
-	}
+
+        public int GetMaxNumberImageProperty()
+        {
+			return _db.Settings.Select(s => s.NumMaxImageProperty).First();
+        }
+    }
 }

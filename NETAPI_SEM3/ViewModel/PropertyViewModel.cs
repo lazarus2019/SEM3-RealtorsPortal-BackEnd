@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NETAPI_SEM3.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -30,8 +31,9 @@ namespace NETAPI_SEM3.ViewModel
         public string CategoryName { get; set; }
         public int MemberId { get; set; }
         public string MemberFullName { get; set; }
+        public string Email { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }
-        public string ImageName { get; set; }
+        public List<Image> Images { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NETAPI_SEM3.Models;
+using NETAPI_SEM3.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -40,10 +41,10 @@ namespace NETAPI_SEM3.Services
              .Include(p => p.Member)
              .Include(p => p.Category)
              .Include(p => p.Status)
-             .Include(p => p.Images)
              .Include(p => p.City)
              .ThenInclude(ci => ci.Country)
              .ThenInclude(co => co.Region)
+             .Include(p => p.Images)
              .ToList();
             listProperty = listProperty.Skip(start).Take(10).ToList();
             return listProperty;
@@ -99,13 +100,45 @@ namespace NETAPI_SEM3.Services
             try
             {
                 return _db.Properties
-                .Include(p => p.Member)
-                .Include(p => p.Category)
-                .Include(p => p.Status)
-                //.Include(p => p.City)
-                //.ThenInclude(ci => ci.Country)
-                //.ThenInclude(co => co.Region)
-                .FirstOrDefault(p => p.PropertyId == id);
+             .Include(p => p.Member)
+             .Include(p => p.Category)
+             .Include(p => p.Status)
+             .Include(p => p.Images)
+             .Include(p => p.City)
+             .ThenInclude(ci => ci.Country)
+             .ThenInclude(co => co.Region)
+             .SingleOrDefault(p => p.PropertyId == id);
+                //return _db.Properties.Select(p => new PropertyViewModel
+                //{
+                //    PropertyId = p.PropertyId,
+                //    Address = p.Address,
+                //    Area = p.Area,
+                //    BedNumber = p.BedNumber,
+                //    CategoryId = p.CategoryId,
+                //    CategoryName = p.Category.Name,
+                //    CityId = p.CityId,
+                //    CityName = p.City.Name,
+                //    CityCountryId = p.City.Country.CountryId,
+                //    CityCountryName = p.City.Country.Name,
+                //    CityCountryRegionId = p.City.Country.Region.RegionId,
+                //    CityCountryRegionName = p.City.Country.Region.Name,
+                //    Description = p.Description,
+                //    MemberId = p.MemberId,
+                //    MemberFullName = p.Member.FullName,
+                //    Email = p.Member.Email,
+                //    //emberPhone = p.Member.Phone,
+                //    //MemberType = _db.Roles.SingleOrDefault(r => r.Id.Equals(p.Member.RoleId)).Name,
+                //    Price = (decimal)p.Price,
+                //    RoomNumber = p.RoomNumber,
+                //    SoldDate = p.SoldDate,
+                //    UploadDate = p.UploadDate,
+                //    StatusId = p.StatusId,
+                //    StatusName = p.Status.Name,
+                //    Title = p.Title,
+                //    Type = p.Type,
+
+
+                //}).SingleOrDefault(p => p.PropertyId == id);
             }
             catch
             {
@@ -118,8 +151,6 @@ namespace NETAPI_SEM3.Services
         {
             try
             {
-                //var p = _db.Properties.Find(property.PropertyId);
-                //p = property;
                 _db.Properties.Update(property);
                 _db.SaveChanges();
                 return true;

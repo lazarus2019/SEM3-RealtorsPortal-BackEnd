@@ -81,15 +81,27 @@ namespace NETAPI_SEM3.Controllers
 
         [Produces("application/json")]
         [Consumes("application/json")]
-        [HttpPut("updateStatus")]
-        public IActionResult UpdateStatus([FromBody] MemberViewModel model)
+        [HttpPut("updateStatus/{memberId}/{userId}")]
+        public IActionResult UpdateStatus(int memberId, string userId, [FromBody] bool status)
         {
             try
             {
-                _memberService.UpdateStatus(model.MemberId, model.Status);
+                var userTask = _userManager.FindByIdAsync(userId);
+                userTask.Wait();
+                var user = userTask.Result;
+
+                if (status == true)
+                {
+                    _userManager.SetLockoutEnabledAsync(user, false);
+                }
+                else
+                {
+                    _userManager.SetLockoutEnabledAsync(user, true);
+                }
+                _memberService.UpdateStatus(memberId, status);
                 return Ok();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest();
             }

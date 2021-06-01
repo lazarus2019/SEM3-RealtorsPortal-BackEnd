@@ -20,5 +20,20 @@ namespace NETAPI_SEM3.Services
         {
             return _db.Categories.ToList();
         }
+
+        public int createCategory(Category category)
+        {
+            try
+            {
+                _db.Categories.Add(category);
+                _db.SaveChanges();
+                var lastId = _db.Categories.Max(category => category.CategoryId);
+                return lastId;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
     }
 }

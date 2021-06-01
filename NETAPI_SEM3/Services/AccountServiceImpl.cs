@@ -36,7 +36,11 @@ namespace NETAPI_SEM3.Services
 
         public Member Find(string username)
         {
-            return _db.Members.SingleOrDefault(m => m.Username.Equals(username));
+            if (username != null)
+            {
+                return _db.Members.SingleOrDefault(m => m.Username.Equals(username));
+            }
+            return null;
         }
 
     }

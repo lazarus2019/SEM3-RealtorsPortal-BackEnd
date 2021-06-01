@@ -13,5 +13,7 @@ namespace NETAPI_SEM3.Services
         public bool deleteImage(int imageId);
 
         public bool deleteImageByPropertyId(int PropertyId);
+
+        public int GetMaxNumberImageProperty();
     }
 }

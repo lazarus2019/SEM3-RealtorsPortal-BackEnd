@@ -32,7 +32,7 @@ namespace NETAPI_SEM3
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             //Configure SqlServer
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<DatabaseContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
+            services.AddDbContext<DatabaseContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString), ServiceLifetime.Transient);
 
             services.Configure<IdentityOptions>(options =>
             {

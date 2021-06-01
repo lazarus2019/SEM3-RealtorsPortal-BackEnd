@@ -30,12 +30,12 @@ namespace NETAPI_SEM3.Controllers
             }
         }
 
-        [HttpGet("getcountry")]
-        public IActionResult GetCountryy()
+        [HttpGet("getcountry/{regionId}")]
+        public IActionResult GetCountry(int regionId)
         {
             try
             {
-                return Ok(_addressService.GetAllCountry());
+                return Ok(_addressService.GetAllCountry(regionId));
             }
             catch
             {
@@ -43,12 +43,12 @@ namespace NETAPI_SEM3.Controllers
             }
         }
 
-        [HttpGet("getcity")]
-        public IActionResult GetCity()
+        [HttpGet("getcity/{countryId}")]
+        public IActionResult GetCity(int countryId)
         {
             try
             {
-                return Ok(_addressService.GetAllCity());
+                return Ok(_addressService.GetAllCity(countryId));
             }
             catch
             {

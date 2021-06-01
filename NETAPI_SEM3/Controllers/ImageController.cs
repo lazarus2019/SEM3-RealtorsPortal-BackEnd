@@ -34,7 +34,7 @@ namespace NETAPI_SEM3.Controllers
         [HttpPost("upload/{id}/{directName}")]
         public IActionResult UploadNews(int id, string directName, IFormFile file)
         {
-           
+
             try
             {
                 var folderName = Path.Combine("images", directName);
@@ -170,6 +170,19 @@ namespace NETAPI_SEM3.Controllers
             {
                 _imageService.deleteImageByPropertyId(id);
                 return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("getmaxpropertyimage")]
+        public IActionResult GetMaxPropertyImage()
+        {
+            try
+            {
+                return Ok(_imageService.GetMaxNumberImageProperty());
             }
             catch
             {

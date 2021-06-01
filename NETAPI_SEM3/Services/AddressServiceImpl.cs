@@ -33,14 +33,25 @@ namespace NETAPI_SEM3.Services
             return _db.Regions.ToList();
         }
 
-        public IEnumerable<Country> GetAllCountry()
+        public IEnumerable<CountryViewModel> GetAllCountry(int regionId)
         {
-            return _db.Countries.ToList();
+            return _db.Countries.Where(c => c.RegionId == regionId).Select(c => new CountryViewModel
+            {
+                RegionId = c.RegionId,
+                CountryId = c.CountryId,
+                Name = c.Name,
+            }).ToList();
         }
 
-        public IEnumerable<City> GetAllCity()
+        public IEnumerable<CityViewModel> GetAllCity(int countryId)
         {
-            return _db.Cities.ToList();
+            return _db.Cities.Where(c => c.CountryId == countryId).Select(c => new CityViewModel
+            {
+                CityId = c.CityId,
+                Name = c.Name,
+                CountryId = c.CountryId
+            }).ToList();
+            //return _db.Cities.Where(c => c.CountryId == countryId).ToList();
         }
     }
 }

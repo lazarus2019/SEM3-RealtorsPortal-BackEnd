@@ -11,8 +11,8 @@ namespace NETAPI_SEM3.Services
     {
 
         public IEnumerable<Region> GetAllRegion();
-        public IEnumerable<Country> GetAllCountry();
-        public IEnumerable<City> GetAllCity();
+        public IEnumerable<CountryViewModel> GetAllCountry(int regionId);
+        public IEnumerable<CityViewModel> GetAllCity(int countryId);
 
     }
 }

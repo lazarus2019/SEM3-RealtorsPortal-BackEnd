@@ -105,11 +105,13 @@ namespace NETAPI_SEM3.Controllers
             try
             {
                 var property = _propertyService.GetPropertyByid(id);
-                return Ok(_mapper.Map<Property, PropertyViewModel>(property));
+                return Ok(property);
+                //return Ok(_mapper.Map<Property, PropertyViewModel>(property));
             }
-            catch
+            catch( Exception e2)
             {
-                return BadRequest();
+
+                return BadRequest(e2.Message);
             }
         }
 
@@ -170,7 +172,7 @@ namespace NETAPI_SEM3.Controllers
                 model.UploadDate = DateTime.Now;
                 model.StatusId = 4;
                 model.MemberId = _memberService.GetMemberId(userId);
-                model.CityId = 1;
+                //model.CityId = 1;
                 var property = _mapper.Map<Property>(model);
 
                 return Ok(_propertyService.CreateProperty(property));
@@ -297,7 +299,7 @@ namespace NETAPI_SEM3.Controllers
                 }
                 return Ok(result);
             }
-            catch
+            catch(Exception ex)
             {
                 return BadRequest();
             }
