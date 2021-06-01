@@ -10,6 +10,7 @@ namespace NETAPI_SEM3.Services.User
     public interface CategoryService
     {
         public List<Category> getAllCategory();
-        public List<NewProperty> PropertyByCategory(int categoryId); 
+        public List<NewProperty> PropertyByCategory(int categoryId , int page); 
+        public int PropertyByCategoryCount(int categoryId); 
     }
 }

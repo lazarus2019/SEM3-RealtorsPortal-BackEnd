@@ -35,13 +35,26 @@ namespace NETAPI_SEM3.Controllers.User
         }
 
         [Produces("application/json")]
-        [Consumes("application/json")]
-        [HttpGet("propertybycategory/{categoryId}")]
+        [HttpGet("propertybycategory/{categoryId}/{page}")]
+        public IActionResult PropertyByCategory(int categoryId, int page)
+        {
+            try
+            {
+                var properties = categoryService.PropertyByCategory(categoryId,page);
+                return Ok(properties);
+            }
+            catch (Exception e2)
+            {
+                return BadRequest(e2.Message);
+            }
+        }
+        [Produces("application/json")]
+        [HttpGet("propertybycategorycount/{categoryId}")]
         public IActionResult PropertyByCategory(int categoryId)
         {
             try
             {
-                var properties = categoryService.PropertyByCategory(categoryId);
+                var properties = categoryService.PropertyByCategoryCount(categoryId);
                 return Ok(properties);
             }
             catch (Exception e2)

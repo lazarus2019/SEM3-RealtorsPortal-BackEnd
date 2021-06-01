@@ -31,8 +31,8 @@ namespace NETAPI_SEM3.Services.User
         }
         public List<NewProperty> GetAllListing(int page)
         {
-            var skip = (page - 1) * setting.NumProperty;
             var listing = new List<NewProperty>() ; 
+            var skip = (page - 1) * setting.NumProperty;
             if ( page != 1 )
             {
                 listing = db.Properties.Where(p => p.StatusId == 1 || p.StatusId == 5).Select(p => new NewProperty
