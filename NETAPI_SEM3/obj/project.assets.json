@@ -10653,19 +10653,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Viet Nguyen\\.nuget\\packages\\": {}
+    "C:\\Users\\LENOVO\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Viet Nguyen\\Source\\Repos\\SEM3-RealtorsPortal-BackEnd\\NETAPI_SEM3\\NETAPI_SEM3.csproj",
+      "projectUniqueName": "C:\\Users\\LENOVO\\source\\repos\\ProjectSem3BackEndAdmin\\NETAPI_SEM3\\NETAPI_SEM3.csproj",
       "projectName": "NETAPI_SEM3",
-      "projectPath": "C:\\Users\\Viet Nguyen\\Source\\Repos\\SEM3-RealtorsPortal-BackEnd\\NETAPI_SEM3\\NETAPI_SEM3.csproj",
-      "packagesPath": "C:\\Users\\Viet Nguyen\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Viet Nguyen\\Source\\Repos\\SEM3-RealtorsPortal-BackEnd\\NETAPI_SEM3\\obj\\",
+      "projectPath": "C:\\Users\\LENOVO\\source\\repos\\ProjectSem3BackEndAdmin\\NETAPI_SEM3\\NETAPI_SEM3.csproj",
+      "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\LENOVO\\source\\repos\\ProjectSem3BackEndAdmin\\NETAPI_SEM3\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Viet Nguyen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -10794,16 +10794,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[3.1.10, 3.1.10]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[3.1.14, 3.1.14]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -10812,7 +10802,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }
