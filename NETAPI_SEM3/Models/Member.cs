@@ -9,28 +9,26 @@ namespace NETAPI_SEM3.Models
     {
         public Member()
         {
-            InvoiceMemberAs = new HashSet<Invoice>();
-            InvoiceMemberBs = new HashSet<Invoice>();
+            Invoices = new HashSet<Invoice>();
             MemberPackageDetails = new HashSet<MemberPackageDetail>();
             Properties = new HashSet<Property>();
         }
 
         public int MemberId { get; set; }
-        public int? RoleId { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string EmailPassword { get; set; }
-        public string FullName { get; set; }
-        public string Phone { get; set; }
+        public string AccountId { get; set; }
+        public string Position { get; set; }
         public string Email { get; set; }
+        public string RoleId { get; set; }
+        public string Username { get; set; }
+        public string FullName { get; set; }
+        public string Description { get; set; }
+        public string Phone { get; set; }
         public bool Status { get; set; }
+        public bool IsShowMail { get; set; }
         public string Photo { get; set; }
         public DateTime CreateDate { get; set; }
-        public string VerifyCode { get; set; }
 
-        public virtual Role Role { get; set; }
-        public virtual ICollection<Invoice> InvoiceMemberAs { get; set; }
-        public virtual ICollection<Invoice> InvoiceMemberBs { get; set; }
+        public virtual ICollection<Invoice> Invoices { get; set; }
         public virtual ICollection<MemberPackageDetail> MemberPackageDetails { get; set; }
         public virtual ICollection<Property> Properties { get; set; }
     }

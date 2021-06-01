@@ -30,7 +30,21 @@ namespace NETAPI_SEM3.Controllers
 			}
 			catch
 			{
-				return BadRequest();
+				return StatusCode(500, "Can not get amount news");
+			}
+		}
+		
+		[Produces("application/json")]
+		[HttpGet("getNewsPerPage/{page}")]
+		public IActionResult getNewsPerPage(int page)
+		{
+			try
+			{
+				return Ok(newsService.getNewsPerPage(page));
+			}
+			catch
+			{
+				return StatusCode(500, "Can not get news per page");
 			}
 		}
 
@@ -38,18 +52,18 @@ namespace NETAPI_SEM3.Controllers
 		[HttpGet("findNews/{newsId}")]
 		public IActionResult findNews(int newsId)
 		{
+			
 			try
 			{
 				return Ok(newsService.findNews(newsId));
 			}
 			catch
 			{
-				return BadRequest();
+				return StatusCode(500, "Can not get news");
 			}
 		}
 
-		[Produces("text/plain")]
-		[HttpDelete("delete/{newId}")]
+		[HttpDelete("deleteNews/{newId}")]
 		public IActionResult deleteNews(int newId)
 		{
 			try
@@ -58,11 +72,11 @@ namespace NETAPI_SEM3.Controllers
 				{
 					return Ok();
 				}
-				return BadRequest();
+				return StatusCode(500, "Can not delete news - Func");
 			}
 			catch
 			{
-				return BadRequest();
+				return StatusCode(500, "Can not delete news");
 			}
 		}
 
@@ -73,21 +87,16 @@ namespace NETAPI_SEM3.Controllers
 		{
 			try
 			{
-				Debug.WriteLine(news.CategoryId);
-				Debug.WriteLine(news.Description);
-				Debug.WriteLine(news.CreatedDate);
-				Debug.WriteLine(news.Status);
-				Debug.WriteLine(news.Title);
 				var returnId = newsService.createNews(news);
 				if (returnId != 0)
 				{
 					return Ok(returnId);
 				}
-				return BadRequest();
+				return StatusCode(500, "Can not update create news - Func");
 			}
 			catch
 			{
-				return BadRequest();
+				return StatusCode(500, "Can not update create news");
 			}
 		}
 
@@ -102,39 +111,58 @@ namespace NETAPI_SEM3.Controllers
 				{
 					return Ok();
 				}
-				return BadRequest();
+				return StatusCode(500, "Can not update news - Func");
 			}
 			catch
 			{
-				return BadRequest();
+				return StatusCode(500, "Can not update news");
 			}
 		}
 
 		[Produces("application/json")]
-		[HttpGet("sortFilterNews/{title}/{category}/{status}")]
-		public IActionResult sortFilterNews(string title, string category, string status)
+		[HttpPut("updateStatus")]
+		[Consumes("application/json")]
+		public IActionResult updateStatus([FromBody] News news)
 		{
 			try
 			{
-				return Ok(newsService.sortFilterNews(title, category, status));
+				if (newsService.updateStatus(news))
+				{
+					return Ok();
+				}
+				return StatusCode(500, "Can not update status - Func");
 			}
 			catch
 			{
-				return BadRequest();
+				return StatusCode(500, "Can not update status");
 			}
 		}
 
 		[Produces("application/json")]
-		[HttpGet("getAllNewsCategory")]
-		public IActionResult getAllNewsCategory()
+		[HttpGet("filterNewsPerPage/{page}/{title}/{category}/{status}/{sortDate}")]
+		public IActionResult filterNewsPerPage(int page, string title, string category, string status, string sortDate)
 		{
 			try
 			{
-				return Ok(newsService.getAllNewsCategory());
+				return Ok(newsService.filterNewsPerPage(page, title, category, status, sortDate));
 			}
 			catch
 			{
-				return BadRequest();
+				return StatusCode(500, "Can not get any data");
+			}
+		}
+
+		[Produces("application/json")]
+		[HttpGet("getAllFilterNews/{title}/{category}/{status}/{sortDate}")]
+		public IActionResult getAllFilterNews(string title, string category, string status, string sortDate)
+		{
+			try
+			{
+				return Ok(newsService.getAllFilterNews(title, category, status, sortDate));
+			}
+			catch
+			{
+				return StatusCode(500, "Can not get amount news");
 			}
 		}
 
@@ -148,7 +176,7 @@ namespace NETAPI_SEM3.Controllers
 			}
 			catch
 			{
-				return BadRequest();
+				return StatusCode(500, "Can not get gallery");
 			}
 		}
 

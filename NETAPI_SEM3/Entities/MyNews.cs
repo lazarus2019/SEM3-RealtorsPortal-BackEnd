@@ -12,7 +12,7 @@ namespace NETAPI_SEM3.Entities
 		public string Description { get; set; }
 		public string CategoryName { get; set; }
 		public int CategoryId { get; set; }
-		public DateTime? CreatedDate { get; set; }
+		public DateTime CreatedDate { get; set; }
 		public string Status { get; set; }
 
 		public string ThumbnailName { get; set; }

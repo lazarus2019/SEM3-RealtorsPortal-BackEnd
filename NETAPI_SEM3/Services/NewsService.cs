@@ -9,19 +9,15 @@ namespace NETAPI_SEM3.Services
 {
 	public interface NewsService
 	{
-		public List<MyNews> getAllNews();
+		public int getAllNews();
 		public MyNews findNews(int newsId);
-
 		public int createNews(News news);
-
 		public bool updateNews(News news);
-
 		public bool deleteNew(int newId);
-
-		public List<MyNews> sortFilterNews(string title, string category, string status);
-
-		public List<NewsCategory> getAllNewsCategory();
-
+		public bool updateStatus(News news);
+		public List<MyNews> filterNewsPerPage(int page, string title, string category, string status, string sortDate);
+		public int getAllFilterNews(string title, string category, string status, string sortDate);
 		public List<Image> getGallery(int newsId);
+		public List<MyNews> getNewsPerPage(int page);
 	}
 }

@@ -9,6 +9,7 @@ namespace NETAPI_SEM3.Models
     {
         public AdPackage()
         {
+            Invoices = new HashSet<Invoice>();
             MemberPackageDetails = new HashSet<MemberPackageDetail>();
         }
 
@@ -17,8 +18,11 @@ namespace NETAPI_SEM3.Models
         public int? Period { get; set; }
         public decimal? Price { get; set; }
         public string Description { get; set; }
-        public int? Amount { get; set; }
+        public bool? StatusBuy { get; set; }
+        public int? PostNumber { get; set; }
+        public bool? IsDelete { get; set; }
 
+        public virtual ICollection<Invoice> Invoices { get; set; }
         public virtual ICollection<MemberPackageDetail> MemberPackageDetails { get; set; }
     }
 }

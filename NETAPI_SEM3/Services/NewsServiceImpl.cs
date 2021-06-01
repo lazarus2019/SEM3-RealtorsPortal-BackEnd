@@ -2,6 +2,7 @@
 using NETAPI_SEM3.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,12 +38,19 @@ namespace NETAPI_SEM3.Services
 			}
 		}
 
-		public List<MyNews> getAllNews()
+		public int getAllNews()
 		{
-			var listNews = db.News.Join(
-				db.NewsCategories,
-				news => news.CategoryId,
-				category => category.NewsCategoryId,
+			var listNews = db.News.Count();
+			return listNews;
+		}
+
+		public List<MyNews> getNewsPerPage(int page)
+		{
+			var start = 10 * (page - 1);
+			var listNews = db.News.Skip(start).Take(10).Join(
+					db.NewsCategories,
+					news => news.CategoryId,
+					category => category.NewsCategoryId,
 				(news, category) => new MyNews
 				{
 					NewsId = news.NewsId,
@@ -53,6 +61,7 @@ namespace NETAPI_SEM3.Services
 					CategoryName = category.Name,
 					ThumbnailName = db.Images.First(image => image.NewsId == news.NewsId).Name
 				}).ToList();
+			listNews = listNews.OrderByDescending(news => news.CreatedDate).ToList();
 			return listNews;
 		}
 
@@ -96,11 +105,36 @@ namespace NETAPI_SEM3.Services
 			}
 		}
 
+		public bool updateStatus(News news)
+		{
+			try
+			{
+				var oldNews = db.News.Find(news.NewsId);
+				if (oldNews != null)
+				{
+					oldNews.Status = news.Status;
+					db.SaveChanges();
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			catch
+			{
+				return false;
+			}
+
+		}
+
 		public bool deleteNew(int newId)
 		{
 			try
 			{
 				var news = db.News.Find(newId);
+				var listImage = db.Images.Where(image => image.NewsId == news.NewsId).ToList();
+				db.Images.RemoveRange(listImage);
 				db.News.Remove(news);
 				db.SaveChanges();
 				return true;
@@ -114,10 +148,11 @@ namespace NETAPI_SEM3.Services
 		#endregion
 
 		#region News Sort & Filter
-
-		public List<MyNews> sortFilterNews(string title, string category, string status)
+		public int getAllFilterNews(string title, string category, string status, string sortDate)
 		{
 			var rawListNews = new List<News>();
+
+			// Sort Title
 			if (title.Equals(".all"))
 			{
 				rawListNews = db.News.ToList();
@@ -126,14 +161,70 @@ namespace NETAPI_SEM3.Services
 			{
 				rawListNews = db.News.Where(news => news.Title.ToLower().Contains(title.ToLower())).ToList();
 			}
+
+			// Sort Category
 			if (!category.Equals("all"))
 			{
 				rawListNews = rawListNews.Where(news => news.Category.Name.ToLower().Equals(category.ToLower())).ToList();
 			}
+
+			// Sort Status
 			if (!status.Equals("all"))
 			{
 				rawListNews = rawListNews.Where(news => news.Status.ToLower().Equals(status.ToLower())).ToList();
 			}
+
+			// Sort Date
+			if (sortDate.Equals("asc"))
+			{
+				rawListNews = rawListNews.OrderBy(news => news.CreatedDate).ToList();
+			}
+			if (sortDate.Equals("desc"))
+			{
+				rawListNews = rawListNews.OrderByDescending(news => news.CreatedDate).ToList();
+			}
+
+			return rawListNews.Count;
+
+		}
+
+		public List<MyNews> filterNewsPerPage(int page, string title, string category, string status, string sortDate)
+		{
+			var start = 10 * (page - 1);
+			var rawListNews = new List<News>();
+
+			// Sort Title
+			if (title.Equals(".all"))
+			{
+				rawListNews = db.News.ToList();
+			}
+			else
+			{
+				rawListNews = db.News.Where(news => news.Title.ToLower().Contains(title.ToLower())).ToList();
+			}
+
+			// Sort Category
+			if (!category.Equals("all"))
+			{
+				rawListNews = rawListNews.Where(news => news.Category.Name.ToLower().Equals(category.ToLower())).ToList();
+			}
+
+			// Sort Status
+			if (!status.Equals("all"))
+			{
+				rawListNews = rawListNews.Where(news => news.Status.ToLower().Equals(status.ToLower())).ToList();
+			}
+
+			// Sort Date
+			if (sortDate.Equals("asc"))
+			{
+				rawListNews = rawListNews.OrderBy(news => news.CreatedDate).ToList();
+			}
+			if (sortDate.Equals("desc"))
+			{
+				rawListNews = rawListNews.OrderByDescending(news => news.CreatedDate).ToList();
+			}
+
 			var listNews = rawListNews.Join(
 					db.NewsCategories,
 					news => news.CategoryId,
@@ -145,20 +236,18 @@ namespace NETAPI_SEM3.Services
 						Description = news.Description,
 						CreatedDate = news.CreatedDate,
 						Status = news.Status,
-						CategoryName = category.Name
+						CategoryName = category.Name,
+						ThumbnailName = db.Images.First(image => image.NewsId == news.NewsId).Name
 					}).ToList();
+
+			listNews = listNews.Skip(start).Take(10).ToList();
 			return listNews;
 
 		}
 
 		#endregion
 
-		#region NewsCategory, Gallery, Thumbnail
-
-		public List<NewsCategory> getAllNewsCategory()
-		{
-			return db.NewsCategories.ToList();
-		}
+		#region Gallery
 
 		public List<Image> getGallery(int newsId)
 		{
