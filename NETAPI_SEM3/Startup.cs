@@ -41,6 +41,8 @@ namespace NETAPI_SEM3
 			services.AddScoped<SellerService, SellerServiceImpl>();
 			services.AddScoped<NewsBlogService, NewsBlogServiceImpl>();
 			services.AddScoped<AboutUsService, AboutUsServiceImpl>();
+			services.AddScoped<MailboxService, MailboxServiceImpl>();
+			services.AddScoped<SettingService, SettingServiceImpl>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
