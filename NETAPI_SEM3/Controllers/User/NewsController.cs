@@ -17,13 +17,14 @@ namespace NETAPI_SEM3.Controllers.User
             newsBlogService = _newsBlogService;
         }
 
+        //Get News Start
         [Produces("application/json")]
-        [HttpGet("loadnews")]
-        public IActionResult LoadSeller()
+        [HttpGet("getallnews/{page}/{numNewsPerPage}")]
+        public IActionResult GetAllNews(int page, int numNewsPerPage)
         {
             try
             {
-                var news = newsBlogService.loadnewCategory();
+                var news = newsBlogService.getAllNews(page, numNewsPerPage);
 
                 return Ok(news);
             }
@@ -32,14 +33,94 @@ namespace NETAPI_SEM3.Controllers.User
                 return BadRequest();
             }
         }
+
         [Produces("application/json")]
-        [HttpGet("newpropertyID/{propertyId}")]
-        public IActionResult LoadPropertyId(int propertyId)
+        [HttpGet("getallnewscount")]
+        public IActionResult getAllNewsCount()
         {
             try
             {
-                var detail = newsBlogService.loadnewCategoryId(propertyId);
+                var count = newsBlogService.getIdNews();
+                return Ok(count);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        // news property
+        [Produces("application/json")]
+        [HttpGet("getallnewsid/{newsid}")]
+        public IActionResult LoadPropertyId(int newsid)
+        {
+            try
+            {
+                var detail = newsBlogService.getAllNewsId(newsid);
                 return Ok(detail);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        // top 3 news find id
+        [Produces("application/json")]
+        [HttpGet("getallpropertys/{propertyID}")]
+        public IActionResult LoadAllProperty(int propertyID)
+        {
+            try
+            {
+                var results = newsBlogService.getAllProperty(propertyID);
+                return Ok(results);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        //Get News Search
+        [Produces("application/json")]
+        [HttpGet("searchnewsresult/{titles}/{categoryId}")]
+        public IActionResult SearchPropertyListingCount(string titles, int categoryId)
+        {
+            try
+            {
+                var newsresult = newsBlogService.getReasultNewsSearch( titles, categoryId);
+                return Ok(newsresult);
+            }
+            catch (Exception e2)
+            {
+                return BadRequest(e2.Message);
+            }
+        }
+
+        [Produces("application/json")]
+        [HttpGet("searchnews/{page}/{titles}/{categoryId}")]
+        public IActionResult SearchPropertyListing(int page, string titles, int categoryId)
+        {
+            try
+            {
+                var news = newsBlogService.getAllNewsSearch(page, titles, categoryId);
+                return Ok(news);
+            }
+            catch (Exception e2)
+            {
+                return BadRequest(e2.Message);
+            }
+        }
+
+        //Get All newcategory
+        [Produces("application/json")]
+        [HttpGet("getallnewscategory")]
+        public IActionResult LoadNewsCategory()
+        {
+            try
+            {
+                var newscategories = newsBlogService.getAllNewsCategory();
+                return Ok(newscategories);
             }
             catch
             {

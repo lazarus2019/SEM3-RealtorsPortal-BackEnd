@@ -18,15 +18,16 @@ namespace NETAPI_SEM3.Controllers.User
             sellerService = _sellerService;
         }
 
+
         [Produces("application/json")]
-        [HttpGet("loadseller")]
-        public IActionResult LoadSeller()
+        [HttpGet("getsellerId")]
+        public IActionResult LoadSellerId()
         {
             try
             {
-                var seller = sellerService.LoadSeller();
+                var sellers = sellerService.getIdSeller();
 
-                return Ok(seller);
+                return Ok(sellers);
             }
             catch
             {
@@ -35,12 +36,30 @@ namespace NETAPI_SEM3.Controllers.User
         }
 
         [Produces("application/json")]
-        [HttpGet("loadagent")]
-        public IActionResult LoadAgent()
+        [HttpGet("getallseller/{page}")]
+        public IActionResult GetAllSeller(int page)
         {
             try
             {
-                var agent = sellerService.LoadAgent();
+                var sellers = sellerService.getAllSeller(page);
+
+                return Ok(sellers);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        // 
+
+        [Produces("application/json")]
+        [HttpGet("getagentId")]
+        public IActionResult LoadAgentId()
+        {
+            try
+            {
+                var agent = sellerService.getIdAgent();
 
                 return Ok(agent);
             }
@@ -49,6 +68,23 @@ namespace NETAPI_SEM3.Controllers.User
                 return BadRequest();
             }
         }
+
+        [Produces("application/json")]
+        [HttpGet("getallagent/{page}")]
+        public IActionResult GetAllAgent(int page)
+        {
+            try
+            {
+                var agent = sellerService.getAllAgent(page);
+
+                return Ok(agent);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
         [Produces("application/json")]
         [HttpGet("sellerID/{sellerId}")]
         public IActionResult SellerDetails(int sellerId)
