@@ -14,6 +14,7 @@ namespace NETAPI_SEM3.Models
 
         public int CategoryId { get; set; }
         public string Name { get; set; }
+        public bool? IsShow { get; set; }
 
         public virtual ICollection<Property> Properties { get; set; }
     }

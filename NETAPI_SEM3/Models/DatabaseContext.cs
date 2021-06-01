@@ -1,8 +1,8 @@
 ﻿using System;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 #nullable disable
 
@@ -21,6 +21,13 @@ namespace NETAPI_SEM3.Models
 
         public virtual DbSet<AboutU> AboutUs { get; set; }
         public virtual DbSet<AdPackage> AdPackages { get; set; }
+        //public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+        //public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
+        //public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+        //public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
+        //public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
+        //public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
+        //public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
@@ -37,6 +44,14 @@ namespace NETAPI_SEM3.Models
         public virtual DbSet<Setting> Settings { get; set; }
         public virtual DbSet<Status> Statuses { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=THUNGUYENVAN\\SQLEXPRESS;Database=ProjectSem3DBVer2;user id=thu ;password=thu123abc");
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -49,11 +64,11 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.AboutId).HasColumnName("About_Id");
 
-                entity.Property(e => e.Description).HasColumnType("text");
+                entity.Property(e => e.Description).IsUnicode(false);
 
-                entity.Property(e => e.Question).HasColumnType("text");
+                entity.Property(e => e.Question).IsUnicode(false);
 
-                entity.Property(e => e.Title).HasColumnType("text");
+                entity.Property(e => e.Title).IsUnicode(false);
             });
 
             modelBuilder.Entity<AdPackage>(entity =>
@@ -64,15 +79,94 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.PackageId).HasColumnName("Package_Id");
 
-                entity.Property(e => e.Description).HasColumnType("text");
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .IsUnicode(false);
 
                 entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
                 entity.Property(e => e.NameAdPackage)
-                    .HasColumnType("text")
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
                     .HasColumnName("Name_AdPackage");
 
                 entity.Property(e => e.Price).HasColumnType("money");
+            });
+
+            modelBuilder.Entity<AspNetRole>(entity =>
+            {
+                entity.Property(e => e.Name).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedName).HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<AspNetRoleClaim>(entity =>
+            {
+                entity.Property(e => e.RoleId)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AspNetRoleClaims)
+                    .HasForeignKey(d => d.RoleId);
+            });
+
+            modelBuilder.Entity<AspNetUser>(entity =>
+            {
+                entity.Property(e => e.Email).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+
+                entity.Property(e => e.UserName).HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<AspNetUserClaim>(entity =>
+            {
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserClaims)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserLogin>(entity =>
+            {
+                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserLogins)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserRole>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoleId });
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AspNetUserRoles)
+                    .HasForeignKey(d => d.RoleId);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserRoles)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserToken>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserTokens)
+                    .HasForeignKey(d => d.UserId);
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -81,28 +175,26 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.CategoryId).HasColumnName("Category_Id");
 
-                entity.Property(e => e.Name).HasColumnType("text");
+                entity.Property(e => e.IsShow).HasColumnName("isShow");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(299)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<City>(entity =>
             {
                 entity.ToTable("City");
 
-                entity.Property(e => e.CityId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("City_Id");
-
-                entity.Property(e => e.CountryId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("Country_Id");
-
-                entity.Property(e => e.Name).HasColumnType("text");
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.Cities)
                     .HasForeignKey(d => d.CountryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_City_Country");
             });
 
@@ -110,21 +202,15 @@ namespace NETAPI_SEM3.Models
             {
                 entity.ToTable("Country");
 
-                entity.Property(e => e.CountryId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("Country_Id");
-
-                entity.Property(e => e.Name).HasColumnType("text");
-
-                entity.Property(e => e.RegionId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("Region_Id");
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Region)
                     .WithMany(p => p.Countries)
                     .HasForeignKey(d => d.RegionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Country_Region");
             });
 
@@ -134,7 +220,7 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.FaqId).HasColumnName("FAQ_Id");
 
-                entity.Property(e => e.Description).HasColumnType("text");
+                entity.Property(e => e.Description).IsUnicode(false);
 
                 entity.Property(e => e.Title)
                     .HasMaxLength(50)
@@ -148,6 +234,7 @@ namespace NETAPI_SEM3.Models
                 entity.Property(e => e.ImageId).HasColumnName("Image_Id");
 
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
@@ -230,7 +317,7 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.IsRead).HasColumnName("isRead");
 
-                entity.Property(e => e.Message).HasColumnType("text");
+                entity.Property(e => e.Message).IsUnicode(false);
 
                 entity.Property(e => e.Phone)
                     .HasMaxLength(50)
@@ -252,11 +339,15 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.MemberId).HasColumnName("Member_Id");
 
-                entity.Property(e => e.AccountId).HasMaxLength(250);
+                entity.Property(e => e.AccountId)
+                    .IsRequired()
+                    .HasMaxLength(250);
 
                 entity.Property(e => e.CreateDate)
                     .HasColumnType("date")
                     .HasColumnName("Create_Date");
+
+                entity.Property(e => e.Description).IsUnicode(false);
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(250)
@@ -266,6 +357,8 @@ namespace NETAPI_SEM3.Models
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
+                entity.Property(e => e.IsShowMail).HasColumnName("isShowMail");
+
                 entity.Property(e => e.Phone)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -274,7 +367,12 @@ namespace NETAPI_SEM3.Models
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Position)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.RoleId)
+                    .IsRequired()
                     .HasMaxLength(450)
                     .HasColumnName("Role_Id");
 
@@ -323,7 +421,7 @@ namespace NETAPI_SEM3.Models
                     .HasColumnType("date")
                     .HasColumnName("Created_Date");
 
-                entity.Property(e => e.Description).HasColumnType("text");
+                entity.Property(e => e.Description).IsUnicode(false);
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(50)
@@ -345,6 +443,8 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.NewsCategoryId).HasColumnName("News_Category_Id");
 
+                entity.Property(e => e.IsShow).HasColumnName("isShow");
+
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -363,11 +463,17 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.BedNumber).HasColumnName("Bed_Number");
 
+                entity.Property(e => e.BuildYear)
+                    .HasColumnType("date")
+                    .HasColumnName("Build_Year");
+
                 entity.Property(e => e.CategoryId).HasColumnName("Category_Id");
 
-                entity.Property(e => e.Description).IsRequired();
+                entity.Property(e => e.CityId).HasColumnName("City_Id");
 
-                entity.Property(e => e.GoogleMap).HasColumnType("text");
+                entity.Property(e => e.Description).IsUnicode(false);
+
+                entity.Property(e => e.GoogleMap).IsUnicode(false);
 
                 entity.Property(e => e.MemberId).HasColumnName("Member_Id");
 
@@ -381,7 +487,9 @@ namespace NETAPI_SEM3.Models
 
                 entity.Property(e => e.StatusId).HasColumnName("Status_Id");
 
-                entity.Property(e => e.Title).IsRequired();
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Type)
                     .IsRequired()
@@ -397,6 +505,12 @@ namespace NETAPI_SEM3.Models
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Property_Category");
+
+                entity.HasOne(d => d.City)
+                    .WithMany(p => p.Properties)
+                    .HasForeignKey(d => d.CityId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Property_City");
 
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.Properties)
@@ -415,12 +529,10 @@ namespace NETAPI_SEM3.Models
             {
                 entity.ToTable("Region");
 
-                entity.Property(e => e.RegionId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("Region_Id");
-
-                entity.Property(e => e.Name).HasColumnType("text");
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Setting>(entity =>
@@ -437,7 +549,7 @@ namespace NETAPI_SEM3.Models
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Description).HasColumnType("text");
+                entity.Property(e => e.Description).IsUnicode(false);
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(250)
@@ -447,17 +559,17 @@ namespace NETAPI_SEM3.Models
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Reviews).HasColumnType("text");
+                entity.Property(e => e.Reviews).IsUnicode(false);
 
                 entity.Property(e => e.Services)
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ThumbnailAboutUs).HasColumnType("text");
+                entity.Property(e => e.ThumbnailAboutUs).IsUnicode(false);
 
-                entity.Property(e => e.ThumbnailHome).HasColumnType("text");
+                entity.Property(e => e.ThumbnailHome).IsUnicode(false);
 
-                entity.Property(e => e.ThumbnailWebsite).HasColumnType("text");
+                entity.Property(e => e.ThumbnailWebsite).IsUnicode(false);
             });
 
             modelBuilder.Entity<Status>(entity =>
