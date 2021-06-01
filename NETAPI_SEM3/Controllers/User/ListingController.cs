@@ -208,10 +208,21 @@ namespace NETAPI_SEM3.Controllers.User
             {
                 return BadRequest(e2.Message);
             }
-        } 
+        }
 
 
-
+        [HttpGet("getGallery/{propertyId}")]
+        public IActionResult GetGallery(int propertyId)
+        {
+            try
+            {
+                return Ok(listingService.GetGallery(propertyId));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
 
     }
 }

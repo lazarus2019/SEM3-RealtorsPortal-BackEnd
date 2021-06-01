@@ -25,7 +25,7 @@ namespace NETAPI_SEM3.Services.User
         public int SearchPropertyCount(  string keyword, int categoryId, int countryId);
         public List<NewProperty> SearchPropertyListing(string keyword, int categoryId, int countryId ,int city , string type , double area , int bed, int room, double price, int page);
         public int SearchPropertyListingCount( string keyword, int categoryId, int countryId ,int city , string type , double area , int bed, int room, double price);
-
+        public List<NewImageProperty> GetGallery(int propertyId);
 
     }
 }

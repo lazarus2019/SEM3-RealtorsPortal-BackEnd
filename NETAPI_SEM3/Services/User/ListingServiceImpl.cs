@@ -496,6 +496,17 @@ namespace NETAPI_SEM3.Services.User
                 }).ToList();
         }
 
-    
+        public List<NewImageProperty> GetGallery(int propertyId)
+        {
+            return db.Images.Where(i => i.PropertyId == propertyId)
+                .Select( i => new NewImageProperty
+                {
+                    ImageId = i.ImageId , 
+                    Name = i.Name , 
+                    PropertyId = i.PropertyId ?? default(int)
+                })
+                .ToList();
+        }
+
     }
 }

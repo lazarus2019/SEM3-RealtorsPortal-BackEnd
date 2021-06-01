@@ -28,5 +28,6 @@ namespace NETAPI_SEM3.Services
 			var setting = db.Settings.First();
 			return setting;
         }
+
     }
 }
