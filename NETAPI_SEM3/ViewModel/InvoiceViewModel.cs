@@ -15,6 +15,8 @@ namespace NETAPI_SEM3.ViewModel
         public string PaymentCard { get; set; }
         public string PaymentCode { get; set; }
         public int MemberId { get; set; }
-        public int PackageId { get; set; }
+        public int PackageId { get; set; } 
+        public MemberViewModel Member { get; set; }
+        public AdspackageViewModel AdsPackage { get;set; }
     }
 }
