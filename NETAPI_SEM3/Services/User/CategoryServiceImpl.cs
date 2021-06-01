@@ -37,7 +37,7 @@ namespace NETAPI_SEM3.Services.User
                     Description = p.Description,
                     MemberId = p.MemberId,
                     MemberName = p.Member.FullName,
-                    MemberType = "Chua fix",
+                    MemberType = db.Roles.SingleOrDefault(r => r.Id.Equals(p.Member.RoleId)).Name,
                     Price = (double)p.Price,
                     RoomNumber = p.RoomNumber,
                     SoldDate = p.SoldDate,
