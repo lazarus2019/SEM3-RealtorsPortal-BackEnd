@@ -11,7 +11,6 @@ namespace NETAPI_SEM3.Services.User
     public class ListingServiceImpl : ListingService
     {
         private DatabaseContext db;
-        private UserService userService;
         private Setting setting;
 
 
@@ -50,6 +49,7 @@ namespace NETAPI_SEM3.Services.User
                     MemberId = p.MemberId,                    
                     MemberName = p.Member.FullName,
                     MemberType = db.Roles.SingleOrDefault(r => r.Id.Equals(p.Member.RoleId)).Name,
+                    MemberPhoto = p.Member.Photo ,                    
                     Price = (double)p.Price,
                     RoomNumber = p.RoomNumber,
                     SoldDate = p.SoldDate,
@@ -58,13 +58,13 @@ namespace NETAPI_SEM3.Services.User
                     StatusName = p.Status.Name,
                     Title = p.Title,
                     Type = p.Type,
-
                     Images = p.Images.Select(i => new NewImageProperty
                     {
                         ImageId = i.ImageId,
                         Name = i.Name,
                         PropertyId = i.PropertyId ?? default(int)
                     }).ToList()
+
                 })
                 .Skip(skip)
                 .Take(setting.NumProperty).ToList();
@@ -85,6 +85,7 @@ namespace NETAPI_SEM3.Services.User
                 MemberId = p.MemberId,
                 MemberName = p.Member.FullName,
                 MemberType = db.Roles.SingleOrDefault(r => r.Id.Equals(p.Member.RoleId)).Name,
+                MemberPhoto = p.Member.Photo,
                 //MemberType = "AbC" ,
                 Price = (double)p.Price,
                 RoomNumber = p.RoomNumber,
@@ -141,6 +142,7 @@ namespace NETAPI_SEM3.Services.User
                 MemberName = p.Member.FullName,
                 MemberEmail = p.Member.Email ,
                 MemberPhone = p.Member.Phone , 
+                MemberPhoto = p.Member.Photo , 
                 MemberType = db.Roles.SingleOrDefault(r => r.Id.Equals(p.Member.RoleId)).Name,
                 Price = (double)p.Price,
                 RoomNumber = p.RoomNumber,
@@ -192,6 +194,7 @@ namespace NETAPI_SEM3.Services.User
                     MemberId = p.MemberId,
                     MemberType = db.Roles.SingleOrDefault(r => r.Id.Equals(p.Member.RoleId)).Name ,
                     MemberName = p.Member.FullName,
+                    MemberPhoto = p.Member.Photo,
                     Price = (double)p.Price,
                     RoomNumber = p.RoomNumber,
                     SoldDate = p.SoldDate,
@@ -226,6 +229,7 @@ namespace NETAPI_SEM3.Services.User
                     MemberId = p.MemberId,
                     MemberType = db.Roles.SingleOrDefault(r => r.Id.Equals(p.Member.RoleId)).Name , 
                     MemberName = p.Member.FullName,
+                    MemberPhoto = p.Member.Photo,
                     Price = (double)p.Price,
                     RoomNumber = p.RoomNumber,
                     SoldDate = p.SoldDate,
@@ -343,6 +347,7 @@ namespace NETAPI_SEM3.Services.User
                 MemberId = p.MemberId,
                 MemberType = db.Roles.SingleOrDefault(r => r.Id.Equals(p.Member.RoleId)).Name ,
                 MemberName = p.Member.FullName,
+                MemberPhoto = p.Member.Photo ,
                 Price = (double)p.Price,
                 RoomNumber = p.RoomNumber,
                 SoldDate = p.SoldDate,
@@ -481,7 +486,8 @@ namespace NETAPI_SEM3.Services.User
                 StatusName = p.Status.Name,
                 Title = p.Title,
                 Type = p.Type,
-                Images = p.Images.Select(i => new NewImageProperty
+                MemberPhoto = p.Member.Photo,
+               Images = p.Images.Select(i => new NewImageProperty
                     {
                         ImageId = i.ImageId,
                         Name = i.Name,

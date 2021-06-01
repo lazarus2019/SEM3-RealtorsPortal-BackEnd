@@ -31,7 +31,9 @@ namespace NETAPI_SEM3.Entities
         public string MemberEmail { get; set; }
         public string MemberPhone { get; set; }
         public string MemberType { get; set; }
+        public string MemberPhoto { get; set; }
         public string Description { get; set; } 
+
         public List<NewImageProperty> Images { get; set; }
 
     }
