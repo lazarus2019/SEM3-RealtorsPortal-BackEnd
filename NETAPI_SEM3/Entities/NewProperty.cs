@@ -17,18 +17,14 @@ namespace NETAPI_SEM3.Entities
         public int BedNumber { get; set; }
         public int RoomNumber { get; set; }
         public double Area { get; set; }
-       
         public DateTime UploadDate { get; set; }
         public DateTime BuildYear { get; set; }
         public int StatusId { get; set; } 
-      
         public string Type { get; set; } 
         public int CategoryId { get; set; }
-      
         public int MemberId { get; set; }
-  
         public string Description { get; set; }
-        
+        //public string ThumbailName { get; set; }
 
     }
 }
