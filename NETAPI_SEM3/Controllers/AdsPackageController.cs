@@ -149,7 +149,7 @@ namespace NETAPI_SEM3.Controllers
         {
             try
             {
-                var periodDay = _adsPackageService.GetPeriodDay(model.PackageId);
+                var periodDay = _adsPackageService.GetAdPackageByid(model.PackageId).Period;
                 model.ExpiryDate = DateTime.UtcNow.AddDays(periodDay);
                 model.MemberId = 4;
                 var adPackageDetail = _mapper.Map<MemberPackageDetail>(model);

@@ -20,7 +20,7 @@ using NETAPI_SEM3.Security;
 namespace NETAPI_SEM3.Controllers
 {
     [Route("api/member")]
-    [MyAuthorize(Roles = "1")]
+    [MyAuthorize(Roles = "SuperAdmin")]
     public class MemberController : Controller
     {
         private readonly MemberService _memberService;

@@ -167,6 +167,7 @@ namespace NETAPI_SEM3.Controllers
                     Status = true,
                     Email = user.Email,
                     RoleId = model.Role,
+
                     Phone = "avatar.png",
                     CreateDate = DateTime.Now
                 };

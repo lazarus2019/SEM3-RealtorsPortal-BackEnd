@@ -40,11 +40,11 @@ namespace NETAPI_SEM3.Controllers
         [HttpGet]
        // [Authorize(Roles = "Admin")]
 
-        public IActionResult GetAllProperty()
+        public IActionResult GetAllProperty(int page)
         {
             try
             {
-                return Ok(_propertyService.GetAllProperty());
+                return Ok(_propertyService.GetAllProperty(page));
             }
             catch(Exception ex)
             {
@@ -136,8 +136,8 @@ namespace NETAPI_SEM3.Controllers
         }
 
         [Produces("application/json")]
-        [HttpGet("search/{title}/{partners}/{categoryId}/{statusId}")]
-        public IActionResult SearchProperty(string title, string partners, string categoryId, string statusId)
+        [HttpGet("search/{page}/{title}/{partners}/{categoryId}/{statusId}")]
+        public IActionResult SearchProperty(int page ,string title, string partners, string categoryId, string statusId)
         {
             try
             {
@@ -146,7 +146,7 @@ namespace NETAPI_SEM3.Controllers
                 {
                     partners = "agent";
                 }
-                return Ok(_propertyService.SearchProperty(title, partners, categoryId, statusId));
+                return Ok(_propertyService.SearchProperty(page ,  title, partners, categoryId, statusId));
             }
             catch
             {
@@ -174,7 +174,7 @@ namespace NETAPI_SEM3.Controllers
             {
                 var memberId = _memberService.GetMemberId(userId);
                 var packageId = _adsPackageService.GetPackageIdByMemberId(memberId);
-                var postLimit = _adsPackageService.GetPostLimit(packageId);
+                var postLimit =  _adsPackageService.GetAdPackageByid(packageId).PostNumber;
                 var countProperty = _propertyService.CountProperty(memberId);
 
                 var result = true;

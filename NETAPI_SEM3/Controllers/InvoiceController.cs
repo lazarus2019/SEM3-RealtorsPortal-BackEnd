@@ -45,5 +45,64 @@ namespace NETAPI_SEM3.Controllers
             }
         }
 
+        [Produces("application/json")] 
+        [HttpGet("getallinvoice/{page}")]
+        public IActionResult GetAllInvoice(int page)
+        {
+            try
+            {
+                var invoices = _invoiceService.getAllInvoice(page);
+                return Ok(invoices);
+            }
+            catch ( Exception e2)
+            {
+                return BadRequest(e2.Message); 
+            }
+        } 
+              [Produces("application/json")] 
+        [HttpGet("getallinvoicecount")]
+        public IActionResult GetAllInvoiceCount()
+        {
+            try
+            {
+                var invoices = _invoiceService.getAllInvoiceCount();
+                return Ok(invoices);
+            }
+            catch ( Exception e2)
+            {
+                return BadRequest(e2.Message); 
+            }
+        } 
+        
+        [Produces("application/json")] 
+        [HttpGet("searchinvoice/{keyword}/{page}")]
+        public IActionResult SearchInvoice(string keyword, int page)
+        {
+            try
+            {
+                var invoices = _invoiceService.searchInvoice(keyword,page);
+                return Ok(invoices);
+            }
+            catch ( Exception e2)
+            {
+                return BadRequest(e2.Message); 
+            }
+        }
+        
+        [Produces("application/json")] 
+        [HttpGet("searchinvoicecount/{keyword}")]
+        public IActionResult SearchInvoiceCount(string keyword)
+        {
+            try
+            {
+                var invoices = _invoiceService.searchInvoiceCount(keyword);
+                return Ok(invoices);
+            }
+            catch ( Exception e2)
+            {
+                return BadRequest(e2.Message); 
+            }
+        }
+   
     }
 }
