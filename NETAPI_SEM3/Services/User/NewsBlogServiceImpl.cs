@@ -15,11 +15,10 @@ namespace NETAPI_SEM3.Services.User
             db = _db;
         }
 
-        public List<NewCategory> loadnewCategory()
+        public int getIdNews()
         {
             var results = db.News
-                 .OrderByDescending(n => n.CreatedDate)
-                 .Take(6).Select(n => new NewCategory
+                 .Select(n => new NewCategory
                  {
                      NewsId = n.NewsId,
                      Title = n.Title,
@@ -27,11 +26,29 @@ namespace NETAPI_SEM3.Services.User
                      CreatedDate = n.CreatedDate,
                      Status = n.Status,
                      ThumbailName = db.Images.First(image => image.NewsId == n.NewsId).Name
-                 }).Where(m=> m.Status.Equals("public")).ToList();
+                 }).Where(m => m.Status.Equals("public")).ToList();
+            return results.Count;
+        }
+
+        public List<NewCategory> getAllNews(int page, int numNewsPerPage)
+        {
+            var test = db.Settings.First().NumNews;
+            var start = test * (page - 1);
+            var results = db.News.Select(n => new NewCategory
+            {
+                NewsId = n.NewsId,
+                Title = n.Title,
+                Description = n.Description,
+                CreatedDate = n.CreatedDate,
+                Status = n.Status,
+                ThumbailName = db.Images.First(image => image.NewsId == n.NewsId).Name
+            }).Where(m => m.Status.Equals("public")).ToList();
+            results = results.Skip(start).Take(test).ToList();
+            results = results.OrderByDescending(n => n.CreatedDate).ToList();
             return results;
         }
 
-        public NewCategory loadnewCategoryId(int categoryId)
+        public NewCategory getAllNewsId(int categoryId)
         {
             return db.News.Select(k => new NewCategory
             {
@@ -45,12 +62,67 @@ namespace NETAPI_SEM3.Services.User
             }).SingleOrDefault(p => p.NewsId == categoryId);
         }
 
+        public List<NewCategory> getAllNewsSearch(int page, string titles, int categoryId)
+        {
+            var test = db.Settings.First().NumNews;
+            var start = test * (page - 1);
+            var news = db.News.Where(p => p.CategoryId.Equals(categoryId)).ToList();
+            if (titles != "all")
+            {
+                news = news.Where(p => p.Title.ToLower().Contains(titles.Trim().ToLower())).ToList();
+            }
+
+            var newss = news.Select(p => new NewCategory
+            {
+                NewsId = p.NewsId,
+                Description = p.Description,
+                CategoryId = p.CategoryId,
+                Title = p.Title,
+                CreatedDate = p.CreatedDate,
+                Status = p.Status,
+                ThumbailName = db.Images.First(image => image.NewsId == p.NewsId).Name
+            }).ToList();
+            newss = newss.Skip(start).Take(test).ToList();
+            return newss;
+        }
+        public int getReasultNewsSearch(string titles, int categoryId)
+        {
+            var news = db.News.Where(p => p.CategoryId.Equals(categoryId)).ToList();
+            if (titles != "all")
+            {
+                news = news.Where(p => p.Title.ToLower().Contains(titles.Trim().ToLower())).ToList();
+            }
+            var newss = news.Select(p => new NewCategory
+            {
+                NewsId = p.NewsId,
+                Description = p.Description,
+                CategoryId = p.CategoryId,
+                Title = p.Title,
+                CreatedDate = p.CreatedDate,
+                Status = p.Status,
+                ThumbailName = db.Images.First(image => image.NewsId == p.NewsId).Name
+            }).ToList();
+            return newss.Count;
+
+        }
+
+        public List<NewsCategory> getAllNewsCategory()
+        {
+            return db.NewsCategories.ToList();
+        }
+
+        public List<Property> getAllProperty(int propertyID)
+        {
+            return db.Properties.Where(k => k.MemberId == propertyID).OrderByDescending(k=> k.UploadDate).Take(3).ToList();
+        }
+
         #region NewsCategory, Gallery, Thumbnail
         public List<Image> getGallery(int newsId)
         {
             return db.Images.Where(image => image.NewsId == newsId).ToList();
         }
 
+        
         #endregion
     }
 

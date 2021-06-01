@@ -17,12 +17,20 @@ namespace NETAPI_SEM3.Services.User
 
         public List<Member> loadAgentAU()
         {
-            var result1 = db.Members.Where(m => m.RoleId.Equals("2"))
+            var result1 = db.Members.Where(m => m.RoleId.Equals("2")).Take(4)
                .ToList();
 
             return result1;
         }
 
+        public int RentCount()
+        {
+            return db.Properties.Where(p => p.Type.Equals("Rent")).ToList().Count();
+        }
+        public int SaleCount()
+        {
+            return db.Properties.Where(p => p.Type.Equals("Sale")).ToList().Count();
+        }
         public List<Setting> loadSetting()
         {
             var setting = db.Settings.Where(p => p.SettingId == 1).ToList();
@@ -30,6 +38,10 @@ namespace NETAPI_SEM3.Services.User
             return setting;
         }
 
-        
+        public List<Faq> getAllFAQ()
+        {
+            return db.Faqs.ToList();
+        }
+
     }
 }

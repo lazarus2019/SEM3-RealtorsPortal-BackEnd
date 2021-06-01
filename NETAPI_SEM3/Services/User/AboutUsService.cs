@@ -11,5 +11,9 @@ namespace NETAPI_SEM3.Services.User
     {
         public List<Member> loadAgentAU();
         public List<Setting> loadSetting();
+        public int RentCount();
+        public int SaleCount();
+        public List<Faq> getAllFAQ();
+
     }
 }

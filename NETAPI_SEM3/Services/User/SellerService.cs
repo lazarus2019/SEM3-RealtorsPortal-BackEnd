@@ -9,11 +9,13 @@ namespace NETAPI_SEM3.Services.User
 {
     public interface SellerService
     {
-        public List<Member> LoadSearchSeller();
-        public List<Member> LoadSeller();
-        public List<Member> LoadAgent();
+        public List<Member> getAllSeller(int page);
+        public int getIdSeller();
+        public List<Member> getAllAgent(int page);
+        public int getIdAgent();
         public NewMember SellerDetails(int sellerId);
         public List<Property> LoadPropertyId(int sellerId);
+        public List<Image> getGallery(int newsId);
 
     }
 }

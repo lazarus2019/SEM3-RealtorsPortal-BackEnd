@@ -9,8 +9,13 @@ namespace NETAPI_SEM3.Services.User
 {
     public interface NewsBlogService
     {
-        public List<NewCategory> loadnewCategory();
-        public NewCategory loadnewCategoryId(int categoryId);
+        public int getIdNews();
+        public List<NewCategory> getAllNews(int page, int numNewsPerPage);
+        public NewCategory getAllNewsId(int categoryId);
+        public List<NewCategory> getAllNewsSearch(int page, string titles, int categoryId );
+        public int getReasultNewsSearch(string titles, int categoryId);
+        public List<NewsCategory> getAllNewsCategory();
+        public List<Property> getAllProperty(int propertyID);
         public List<Image> getGallery(int newsId);
     }
 }
