@@ -127,18 +127,17 @@ namespace NETAPI_SEM3.Services
                         .ToList()
                         .ForEach(i =>
                         {
-                            results.Add(i); 
-                            Debug.WriteLine(" Day : " + i.Created.Day);
-                            Debug.WriteLine(" Created : " + i.Created.ToString());
+                            results.Add(i);                             
                         });
             }
             else if (duration == "yesterday")
             {
-                invoices.Where(i => (date - i.Created).TotalDays <= 1).ToList().ForEach(i =>
+
+                invoices.Where(i => (date - i.Created).TotalDays < 2).ToList().ForEach(i =>
                 {
+                    
+                    Debug.WriteLine(i.Name); 
                     results.Add(i);
-                    Debug.WriteLine(" Day : " + i.Created.Day);
-                    Debug.WriteLine(" Created : " + i.Created.ToString());
                 });
             }
             else if (duration == "week")
@@ -146,21 +145,24 @@ namespace NETAPI_SEM3.Services
                 invoices.Where(i => (date - i.Created).TotalDays > 0 && (date - i.Created).TotalDays < 7).ToList().ForEach(i =>
                         {
                             results.Add(i); 
-                            Debug.WriteLine(" Day : " + i.Created.Day);
-                            Debug.WriteLine(" Created : " + i.Created.ToString());
+                            
                         });
             }
             else if (duration == "month")
-            {
-                invoices.Where(i => i.Created.Day == date.Day)
-                            .Where(i => i.Created.Month >= (date.Month - 1) && i.Created.Month <= date.Month)
-                            .Where(i => i.Created.Year == date.Year).ToList().ForEach(i =>
+            { 
+                var month = (date.Month == 1) ? 12 : date.Month - 1;
+                var year = (date.Month == 1) ? date.Year - 1 : date.Year; 
+                var fromDate = new DateTime(year, month, date.Day);  
+                
+                invoices.Where(i => i.Created.Date > fromDate.Date && i.Created.Date < date.Date ).ToList().ForEach(i =>
                         {
                             results.Add(i); 
-                            Debug.WriteLine(" Day : " + i.Created.Day);
-                            Debug.WriteLine(" Created : " + i.Created.ToString());
+                            
                         });
-            };
+            }
+            else {
+                results = invoices; 
+            }
 
             return results
                 .Select(i => new InvoiceViewModel
@@ -257,9 +259,14 @@ namespace NETAPI_SEM3.Services
             else if ( duration == "month")
             {
                 var month = DateTime.Today;
-                month = month.AddMonths(-1);                
+                month = month.AddMonths(-1);
+                Debug.WriteLine(month); 
                 report.MemberCount = db.Members.Where(n => n.CreateDate.Date >= month.Date && n.CreateDate.Date <= date).Count();
                 report.InvoiceCount = db.Invoices.Where(n => n.Created.Date >= month.Date && n.Created.Date <= date).ToList().Count();
+            }
+            else
+            {
+                report = getReport();
             }
 
             return report;
