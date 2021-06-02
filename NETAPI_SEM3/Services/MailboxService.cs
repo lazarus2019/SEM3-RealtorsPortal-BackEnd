@@ -10,6 +10,7 @@ namespace NETAPI_SEM3.Services
 	public interface MailboxService
 	{
 		public List<MailboxEntities> getMailboxByMemberId(int memberId);
+		public List<MailboxEntities> getMailboxAdmin();
 
 		public MailboxEntities findMailbox(int mailboxId);
 
@@ -20,7 +21,9 @@ namespace NETAPI_SEM3.Services
 		public bool readMailbox(int mailboxId);
 
 		public int getAmountMailboxUnread(int memberId);
+		public int getAmountMailboxAdminUnread();
 
 		public List<MailboxEntities> filterMail(int memberId, string sortDate, string status);
+		public List<MailboxEntities> filterMailAdmin(string sortDate, string status);
 	}
 }

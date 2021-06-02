@@ -35,6 +35,20 @@ namespace NETAPI_SEM3.Controllers
 		}
 
 		[Produces("application/json")]
+		[HttpGet("getMailboxAdmin")]
+		public IActionResult getMailboxAdmin()
+		{
+			try
+			{
+				return Ok(mailboxService.getMailboxAdmin());
+			}
+			catch
+			{
+				return StatusCode(500, "Can not get mailbox of member!");
+			}
+		}
+
+		[Produces("application/json")]
 		[HttpGet("findMailbox/{mailboxId}")]
 		public IActionResult findMailbox(int mailboxId)
 		{
@@ -118,6 +132,20 @@ namespace NETAPI_SEM3.Controllers
 				return StatusCode(500, "Can not get amount of mailbox!");
 			}
 		}
+		
+		[Produces("application/json")]
+		[HttpGet("getAmountMailboxAdminUnread")]
+		public IActionResult getAmountMailboxAdminUnread()
+		{
+			try
+			{
+				return Ok(mailboxService.getAmountMailboxAdminUnread());
+			}
+			catch
+			{
+				return StatusCode(500, "Can not get amount of mailbox!");
+			}
+		}
 
 		[Produces("application/json")]
 		[HttpGet("filterMail/{memberId}/{sortDate}/{status}")]
@@ -126,6 +154,19 @@ namespace NETAPI_SEM3.Controllers
 			try
 			{
 				return Ok(mailboxService.filterMail(memberId, sortDate, status));
+			}
+			catch
+			{
+				return StatusCode(500, "Can not get mailbox of member!");
+			}
+		}
+		[Produces("application/json")]
+		[HttpGet("filterMailAdmin/{sortDate}/{status}")]
+		public IActionResult filterMailAdmin(string sortDate, string status)
+		{
+			try
+			{
+				return Ok(mailboxService.filterMailAdmin(sortDate, status));
 			}
 			catch
 			{

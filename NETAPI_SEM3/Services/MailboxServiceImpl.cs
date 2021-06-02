@@ -76,6 +76,12 @@ namespace NETAPI_SEM3.Services
 			}
 			return result;
 		}
+		public int getAmountMailboxAdminUnread()
+		{
+			var mailbox = db.Mailboxes.Where(mailBox => mailBox.PropertyId == null && mailBox.IsRead == false).ToList();
+
+			return mailbox.Count();
+		}
 
 		public List<MailboxEntities> getMailboxByMemberId(int memberId)
 		{
@@ -101,6 +107,23 @@ namespace NETAPI_SEM3.Services
 			listMailbox = listMailbox.OrderByDescending(mailbox => mailbox.Time).ToList();
 			return listMailbox;
 		}
+		public List<MailboxEntities> getMailboxAdmin()
+		{
+			var mailbox = db.Mailboxes.Where(mailBox => mailBox.PropertyId == null).Select(mail => new MailboxEntities
+			{
+				MailId = mail.MailId,
+				Message = mail.Message,
+				PropertyId = mail.PropertyId,
+				Phone = mail.Phone,
+				Email = mail.Email,
+				IsRead = mail.IsRead,
+				FullName = mail.FullName,
+				Time = mail.Time
+			}).ToList();
+
+			mailbox = mailbox.OrderByDescending(mailbox => mailbox.Time).ToList();
+			return mailbox;
+		}
 
 		#endregion
 
@@ -110,6 +133,27 @@ namespace NETAPI_SEM3.Services
 		{
 
 			var listMailbox = getMailboxByMemberId(memberId);
+
+			if (!status.Equals("all"))
+			{
+				listMailbox = listMailbox.Where(mailbox => mailbox.IsRead.ToString().Equals(status)).ToList();
+			}
+
+			if (sortDate.Equals("asc"))
+			{
+				listMailbox = listMailbox.OrderBy(mailbox => mailbox.Time).ToList();
+			}
+			if (sortDate.Equals("desc"))
+			{
+				listMailbox = listMailbox.OrderByDescending(mailbox => mailbox.Time).ToList();
+			}
+
+			return listMailbox;
+		}
+		public List<MailboxEntities> filterMailAdmin(string sortDate, string status)
+		{
+
+			var listMailbox = getMailboxAdmin();
 
 			if (!status.Equals("all"))
 			{

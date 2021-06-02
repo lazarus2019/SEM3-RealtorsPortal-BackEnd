@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\NTS2019\\SEM3_Project\\SEM3-RealtorsPortal-BackEnd\\NETAPI_SEM3\\NETAPI_SEM3.csproj": {}
+    "C:\\Users\\mmofo\\OneDrive - ASHA DEVI POLYTECHNIC COLLEGE\\Desktop\\SEM3\\backend _Viet\\SEM3-RealtorsPortal-BackEnd_nst\\NETAPI_SEM3\\NETAPI_SEM3.csproj": {}
   },
   "projects": {
-    "D:\\NTS2019\\SEM3_Project\\SEM3-RealtorsPortal-BackEnd\\NETAPI_SEM3\\NETAPI_SEM3.csproj": {
+    "C:\\Users\\mmofo\\OneDrive - ASHA DEVI POLYTECHNIC COLLEGE\\Desktop\\SEM3\\backend _Viet\\SEM3-RealtorsPortal-BackEnd_nst\\NETAPI_SEM3\\NETAPI_SEM3.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\NTS2019\\SEM3_Project\\SEM3-RealtorsPortal-BackEnd\\NETAPI_SEM3\\NETAPI_SEM3.csproj",
+        "projectUniqueName": "C:\\Users\\mmofo\\OneDrive - ASHA DEVI POLYTECHNIC COLLEGE\\Desktop\\SEM3\\backend _Viet\\SEM3-RealtorsPortal-BackEnd_nst\\NETAPI_SEM3\\NETAPI_SEM3.csproj",
         "projectName": "NETAPI_SEM3",
-        "projectPath": "D:\\NTS2019\\SEM3_Project\\SEM3-RealtorsPortal-BackEnd\\NETAPI_SEM3\\NETAPI_SEM3.csproj",
+        "projectPath": "C:\\Users\\mmofo\\OneDrive - ASHA DEVI POLYTECHNIC COLLEGE\\Desktop\\SEM3\\backend _Viet\\SEM3-RealtorsPortal-BackEnd_nst\\NETAPI_SEM3\\NETAPI_SEM3.csproj",
         "packagesPath": "C:\\Users\\mmofo\\.nuget\\packages\\",
-        "outputPath": "D:\\NTS2019\\SEM3_Project\\SEM3-RealtorsPortal-BackEnd\\NETAPI_SEM3\\obj\\",
+        "outputPath": "C:\\Users\\mmofo\\OneDrive - ASHA DEVI POLYTECHNIC COLLEGE\\Desktop\\SEM3\\backend _Viet\\SEM3-RealtorsPortal-BackEnd_nst\\NETAPI_SEM3\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -43,6 +43,22 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "dependencies": {
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[8.1.1, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[3.1.15, )"
+            },
+            "Microsoft.AspNetCore.Identity": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[3.1.15, )"
+            },
             "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
               "target": "Package",
               "version": "[3.1.15, )"
@@ -73,9 +89,39 @@
               "target": "Package",
               "version": "[5.0.0, )"
             },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[6.11.1, )"
+            },
+            "Microsoft.OpenApi": {
+              "target": "Package",
+              "version": "[1.2.3, )"
+            },
+            "Microsoft.TypeScript.MSBuild": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[4.3.2, )"
+            },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[3.1.5, )"
+            },
+            "NETCore.MailKit": {
+              "target": "Package",
+              "version": "[2.0.3, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[6.11.1, )"
             }
           },
           "imports": [

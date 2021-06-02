@@ -110,12 +110,12 @@ namespace NETAPI_SEM3.Controllers
         [HttpPost("CheckPasswordDB")]
         public async Task<IActionResult> CheckPasswordDB([FromBody] AccountViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
 
-            var user = await _userManager.FindByNameAsync(model.Username);
+			var user = await _userManager.FindByNameAsync(model.Username);
 
             //check password
             if (!await _userManager.CheckPasswordAsync(user, model.Password))
@@ -193,7 +193,7 @@ namespace NETAPI_SEM3.Controllers
                     CreateDate = DateTime.Now,
                     Position = "xxxxx",
                     IsShowMail = true,
-                    Description = "test",
+                    Description = "",
 
                 };
                 _memberService.CreateMember(member);
