@@ -11,8 +11,7 @@ namespace NETAPI_SEM3.Controllers.User
     public class ListingController : Controller
     {
         private ListingService listingService;
-
-        
+               
         public ListingController(ListingService _listingService)
         {
             listingService = _listingService;

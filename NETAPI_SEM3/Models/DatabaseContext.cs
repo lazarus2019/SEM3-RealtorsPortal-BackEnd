@@ -44,18 +44,11 @@ namespace NETAPI_SEM3.Models
         public virtual DbSet<Setting> Settings { get; set; }
         public virtual DbSet<Status> Statuses { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=THUNGUYENVAN\\SQLEXPRESS;Database=ProjectSem3DBVer2;user id=thu ;password=thu123abc");
-            }
-        }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
 
+            base.OnModelCreating(modelBuilder);
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
             modelBuilder.Entity<AboutU>(entity =>
@@ -186,6 +179,8 @@ namespace NETAPI_SEM3.Models
             {
                 entity.ToTable("City");
 
+                entity.Property(e => e.CityId).HasColumnName("City_Id");
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(250)
@@ -202,10 +197,14 @@ namespace NETAPI_SEM3.Models
             {
                 entity.ToTable("Country");
 
+                entity.Property(e => e.CountryId).HasColumnName("Country_Id");
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
+
+                entity.Property(e => e.RegionId).HasColumnName("Region_Id");
 
                 entity.HasOne(d => d.Region)
                     .WithMany(p => p.Countries)
@@ -528,6 +527,8 @@ namespace NETAPI_SEM3.Models
             modelBuilder.Entity<Region>(entity =>
             {
                 entity.ToTable("Region");
+
+                entity.Property(e => e.RegionId).HasColumnName("Region_Id");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
