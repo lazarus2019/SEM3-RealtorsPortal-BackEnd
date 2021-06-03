@@ -16,7 +16,7 @@ namespace NETAPI_SEM3.Services.User
         public int getReasultNewsSearch(string titles, int categoryId);
      
         public List<NewsCategory> getAllNewsCategory();
-        public List<Property> getAllProperty(int propertyID);
+        public List<PropertyNews> getAllProperty(int propertyID);
         public List<Image> getGallery(int newsId);
     }
 }

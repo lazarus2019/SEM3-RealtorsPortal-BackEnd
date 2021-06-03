@@ -111,9 +111,30 @@ namespace NETAPI_SEM3.Services.User
             return db.NewsCategories.ToList();
         }
 
-        public List<Property> getAllProperty(int propertyID)
+        public List<PropertyNews> getAllProperty(int propertyID)
         {
-            return db.Properties.Where(k => k.MemberId == propertyID).OrderByDescending(k=> k.UploadDate).Take(3).ToList();
+            return db.Properties.Where(k => k.MemberId == propertyID)
+
+             .Select(k => new PropertyNews
+             {
+                 PropertyId = k.PropertyId,
+                 Title = k.Title,
+                 CityId = k.CityId,
+                 Address = k.Address,
+                 GoogleMap = k.GoogleMap,
+                 Price = (double)k.Price,
+                 BedNumber = k.BedNumber,
+                 RoomNumber = k.RoomNumber,
+                 Area = k.Area,
+                 UploadDate = k.UploadDate,
+                 BuildYear = k.BuildYear,
+                 StatusId = k.StatusId,
+                 Type = k.Type,
+                 CategoryId = k.CategoryId,
+                 MemberId = k.MemberId,
+                 Description = k.Description,
+                 ThumbailName = db.Images.First(image => image.PropertyId == k.PropertyId).Name
+             }).OrderByDescending(k => k.UploadDate).Take(3).ToList();
         }
 
         #region NewsCategory, Gallery, Thumbnail
