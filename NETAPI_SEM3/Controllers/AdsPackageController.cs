@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 namespace NETAPI_SEM3.Controllers
 {
     [Route("api/adspackage")]
+    [MyAuthorize(Roles = "SuperAdmin,Admin")]
     public class AdsPackageController : Controller
     {
         private readonly IMapper _mapper;
@@ -176,6 +177,8 @@ namespace NETAPI_SEM3.Controllers
         {
             try
             {
+                var memberId = _memberService.GetMemberId(userId);
+                _adsPackageService.DeletePackageDetail(memberId);
                 model.MemberId = _memberService.GetMemberId(userId);
                 var periodDay = _adsPackageService.GetPeriodDay(model.PackageId);
                 model.ExpiryDate = DateTime.UtcNow.AddDays(periodDay);

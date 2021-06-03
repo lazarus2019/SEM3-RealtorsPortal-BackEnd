@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NETAPI_SEM3.Security;
 using NETAPI_SEM3.Services;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 namespace NETAPI_SEM3.Controllers
 {
     [Route("api/address")]
+    [MyAuthorize(Roles = "SuperAdmin,Admin")]
     public class AddressController : ControllerBase
     {
         private readonly AddressService _addressService;

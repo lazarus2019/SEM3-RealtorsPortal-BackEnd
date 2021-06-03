@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NETAPI_SEM3.Models;
+using NETAPI_SEM3.Security;
 using NETAPI_SEM3.Services;
 using NETAPI_SEM3.ViewModel;
 using System;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 namespace NETAPI_SEM3.Controllers
 {
     [Route("api/property")]
+    [MyAuthorize(Roles = "SuperAdmin,Admin")]
     public class PropertyController : Controller
     {
         private readonly PropertyService _propertyService;

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NETAPI_SEM3.Models;
+using NETAPI_SEM3.Security;
 using NETAPI_SEM3.Services;
 using Newtonsoft.Json.Linq;
 using System;
@@ -17,6 +18,7 @@ namespace NETAPI_SEM3.Controllers
 
     [Route("api/image")]
     [ApiController]
+    [MyAuthorize(Roles = "SuperAdmin,Admin")]
     public class ImageController : ControllerBase
     {
         private ImageService _imageService;

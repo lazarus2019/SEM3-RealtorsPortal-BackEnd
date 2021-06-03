@@ -23,6 +23,7 @@ namespace NETAPI_SEM3.Services
         public bool DeleteAdsPackage(int id);
         public bool UpdateStatus(int id, bool status);
         public bool UpdateAdsPackage(AdPackage adPackage);
+        public bool DeletePackageDetail(int memberId);
         public AdPackage GetAdPackageByid(int id);
         public int SearchAdsPackage(string status, string name, string price);
         public IEnumerable<AdPackage> SearchAdsPackagePage(string status, string name, string price, int page);

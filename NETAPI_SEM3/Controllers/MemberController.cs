@@ -11,7 +11,7 @@ using NETAPI_SEM3.Models;
 namespace NETAPI_SEM3.Controllers
 {
     [Route("api/member")]
-    //[MyAuthorize(Roles = "SuperAdmin")]
+    [MyAuthorize(Roles = "SuperAdmin")]
     public class MemberController : Controller
     {
         private readonly MemberService _memberService;
@@ -81,12 +81,12 @@ namespace NETAPI_SEM3.Controllers
 
         [Produces("application/json")]
         [Consumes("application/json")]
-        [HttpPut("updateStatus/{memberId}/{userId}")]
-        public IActionResult UpdateStatus(int memberId, string userId, [FromBody] bool status)
+        [HttpPut("updateStatus/{memberId}/{email}")]
+        public IActionResult UpdateStatus(int memberId, string email, [FromBody] bool status)
         {
             try
             {
-                var userTask = _userManager.FindByIdAsync(userId);
+                var userTask = _userManager.FindByEmailAsync(email);
                 userTask.Wait();
                 var user = userTask.Result;
 
@@ -101,7 +101,7 @@ namespace NETAPI_SEM3.Controllers
                 _memberService.UpdateStatus(memberId, status);
                 return Ok();
             }
-            catch (Exception ex)
+            catch 
             {
                 return BadRequest();
             }

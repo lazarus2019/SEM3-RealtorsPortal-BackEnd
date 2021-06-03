@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using NETAPI_SEM3.Models;
+using NETAPI_SEM3.Security;
 using NETAPI_SEM3.Services;
 using NETAPI_SEM3.ViewModel;
 using System;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 namespace NETAPI_SEM3.Controllers
 {
     [Route("api/invoice")]
+    [MyAuthorize(Roles = "SuperAdmin")]
     public class InvoiceController : Controller
     {
         private readonly InvoiceService _invoiceService;
@@ -31,9 +33,6 @@ namespace NETAPI_SEM3.Controllers
             try
             {
                 var memberId = _memberService.GetMemberId(userId);
-
-                _invoiceService.CheckPackage(memberId);
-
                 model.MemberId = memberId;
                 var invoice = _mapper.Map<Invoice>(model);
 

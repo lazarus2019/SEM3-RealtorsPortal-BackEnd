@@ -30,10 +30,12 @@ using System.Net;
 using System.ComponentModel.DataAnnotations;
 using NETAPI_SEM3.Mails;
 using System.Net.Mail;
+using System.Data;
 
 namespace NETAPI_SEM3.Controllers
 {
     [Route("api/account")]
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly AccountService _accountService;
@@ -179,23 +181,24 @@ namespace NETAPI_SEM3.Controllers
                 Email = model.Email
             };
 
-            var role = "";
-            if (model.Position.Equals("Agent") || model.Position.Equals("Private Seller"))
-            {
-                role = "Admin";
-            }
-            else
-            {
-                role = "User";
-            }
+
 
             // create account aspnetuser
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
+                string userRole;
+                if (model.Position.Equals("Agent") || model.Position.Equals("Private Seller"))
+                {
+                    userRole = "Admin";
+                }
+                else
+                {
+                    userRole = "User";
+                }
                 // set role
-                await _userManager.AddToRoleAsync(user, role);
+                await _userManager.AddToRoleAsync(user, userRole);
 
                 // create Member
                 var member = new Member
@@ -205,10 +208,11 @@ namespace NETAPI_SEM3.Controllers
                     FullName = model.FullName,
                     Status = true,
                     Email = user.Email,
-                    RoleId = role,
+                    RoleId = userRole,
                     Position = model.Position,
                     Photo = "avatar.png",
-                    CreateDate = DateTime.Now
+                    CreateDate = DateTime.Now,
+                    IsShowMail = true
                 };
                 _memberService.CreateMember(member);
 

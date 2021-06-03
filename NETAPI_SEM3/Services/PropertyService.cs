@@ -17,7 +17,7 @@ namespace NETAPI_SEM3.Services
         public int GetAllPropertyByMember(int memberId);
         public IEnumerable<Property> SearchPropertyPageByMember(int memberId, string title, string partners, string categoryId, string statusId, int page);
         public int SearchPropertyByMember(int memberId, string title, string partners, string categoryId, string statusId);
-        public Property GetPropertyByid(int id);
+        public PropertyViewModel GetPropertyByid(int id);
         public int CountProperty(int memberId);
         public int CountPropertyPending();
         public bool DeleteProperty(int id);

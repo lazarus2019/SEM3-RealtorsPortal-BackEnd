@@ -185,6 +185,21 @@ namespace NETAPI_SEM3.Services
             }
         }
 
+        public bool DeletePackageDetail(int memberId)
+        {
+            try
+            {
+                var packageDetail = _db.MemberPackageDetails.SingleOrDefault(pd => pd.MemberId == memberId);
+                _db.Remove(packageDetail);
+                _db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public int GetPeriodDay(int id)
         {
             return _db.AdPackages.FirstOrDefault(a => a.PackageId == id).Period;
