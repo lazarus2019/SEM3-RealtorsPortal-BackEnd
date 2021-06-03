@@ -53,9 +53,9 @@ namespace NETAPI_SEM3.Services.User
         }
 
         // Load 1 Seller / Agent + Property By Id
-        public NewMember SellerDetails(int sellerId)
+        public MemberNews SellerDetails(int sellerId)
         {
-            return db.Members.Select( m => new NewMember
+            return db.Members.Select( m => new MemberNews
             {
                 MemberId = m.MemberId ,
                 FullName = m.FullName,
@@ -78,31 +78,31 @@ namespace NETAPI_SEM3.Services.User
             return db.Images.Where(image => image.NewsId == newsId).ToList();
         }
         #endregion
-        public List<Property> LoadPropertyId(int propertyId)
+        public List<PropertyNews> LoadPropertyId(int propertyId)
         {
-             return db.Properties.Where(k => k.MemberId == propertyId).ToList();
-            /*
-             .Select(k => new NewProperty
-            {
-                PropertyId = k.PropertyId,
-                Title = k.Title,
-                CityId = k.CityId,
-                Address = k.Address,
-                GoogleMap = k.GoogleMap,
-                Price = (double)k.Price,
-                BedNumber = k.BedNumber,
-                RoomNumber = k.RoomNumber,
-                Area = k.Area,
-                UploadDate = k.UploadDate,
-                BuildYear = k.BuildYear,
-                StatusId = k.StatusId,
-                Type = k.Type,
-                CategoryId = k.CategoryId,
-                MemberId = k.MemberId,
-                Description = k.Description,
-                ThumbailName = db.Images.First(image => image.PropertyId == k.PropertyId).Name
-            }).ToList();
-            */
+             return db.Properties.Where(k => k.MemberId == propertyId)
+            
+             .Select(k => new PropertyNews
+              {
+                  PropertyId = k.PropertyId,
+                  Title = k.Title,
+                  CityId = k.CityId,
+                  Address = k.Address,
+                  GoogleMap = k.GoogleMap,
+                  Price = (double)k.Price,
+                  BedNumber = k.BedNumber,
+                  RoomNumber = k.RoomNumber,
+                  Area = k.Area,
+                  UploadDate = k.UploadDate,
+                  BuildYear = k.BuildYear,
+                  StatusId = k.StatusId,
+                  Type = k.Type,
+                  CategoryId = k.CategoryId,
+                  MemberId = k.MemberId,
+                  Description = k.Description,
+                  ThumbailName = db.Images.First(image => image.PropertyId == k.PropertyId).Name
+              }).ToList();
+
 
         }
 

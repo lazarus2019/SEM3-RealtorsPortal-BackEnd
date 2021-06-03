@@ -18,7 +18,7 @@ namespace NETAPI_SEM3.Services.User
         public int getIdNews()
         {
             var results = db.News
-                 .Select(n => new NewCategory
+                 .Select(n => new CategoryNews
                  {
                      NewsId = n.NewsId,
                      Title = n.Title,
@@ -30,11 +30,11 @@ namespace NETAPI_SEM3.Services.User
             return results.Count;
         }
 
-        public List<NewCategory> getAllNews(int page, int numNewsPerPage)
+        public List<CategoryNews> getAllNews(int page, int numNewsPerPage)
         {
             var test = db.Settings.First().NumNews;
             var start = test * (page - 1);
-            var results = db.News.Select(n => new NewCategory
+            var results = db.News.Select(n => new CategoryNews
             {
                 NewsId = n.NewsId,
                 Title = n.Title,
@@ -48,9 +48,9 @@ namespace NETAPI_SEM3.Services.User
             return results;
         }
 
-        public NewCategory getAllNewsId(int categoryId)
+        public CategoryNews getAllNewsId(int categoryId)
         {
-            return db.News.Select(k => new NewCategory
+            return db.News.Select(k => new CategoryNews
             {
                 NewsId = k.NewsId,
                 Description = k.Description,
@@ -62,7 +62,7 @@ namespace NETAPI_SEM3.Services.User
             }).SingleOrDefault(p => p.NewsId == categoryId);
         }
 
-        public List<NewCategory> getAllNewsSearch(int page, string titles, int categoryId)
+        public List<CategoryNews> getAllNewsSearch(int page, string titles, int categoryId)
         {
             var test = db.Settings.First().NumNews;
             var start = test * (page - 1);
@@ -72,7 +72,7 @@ namespace NETAPI_SEM3.Services.User
                 news = news.Where(p => p.Title.ToLower().Contains(titles.Trim().ToLower())).ToList();
             }
 
-            var newss = news.Select(p => new NewCategory
+            var newss = news.Select(p => new CategoryNews
             {
                 NewsId = p.NewsId,
                 Description = p.Description,
@@ -92,7 +92,7 @@ namespace NETAPI_SEM3.Services.User
             {
                 news = news.Where(p => p.Title.ToLower().Contains(titles.Trim().ToLower())).ToList();
             }
-            var newss = news.Select(p => new NewCategory
+            var newss = news.Select(p => new CategoryNews
             {
                 NewsId = p.NewsId,
                 Description = p.Description,

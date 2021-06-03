@@ -13,8 +13,8 @@ namespace NETAPI_SEM3.Services.User
         public int getIdSeller();
         public List<Member> getAllAgent(int page);
         public int getIdAgent();
-        public NewMember SellerDetails(int sellerId);
-        public List<Property> LoadPropertyId(int sellerId);
+        public MemberNews SellerDetails(int sellerId);
+        public List<PropertyNews> LoadPropertyId(int sellerId);
         public List<Image> getGallery(int newsId);
 
     }
